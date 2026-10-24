@@ -1,0 +1,32 @@
+{
+  "page": {
+    "title": "Something went wrong",
+    "body": "This page could not be displayed.",
+    "reload": "Reload",
+    "requestId": "Request ID: {id}",
+    "chunk": "A new version was deployed. Reload the page.",
+    "retry": "Try again"
+  },
+  "common": {
+    "internal": "Internal error. Try again.",
+    "not_found": "Not found.",
+    "forbidden": "Permission denied.",
+    "unauthenticated": "Session expired. Sign in again.",
+    "rate_limited": "Too many attempts. Wait a few minutes and try again."
+  },
+  "auth": {
+    "not_allowed": "Your e-mail has no access. Ask the administrator.",
+    "email_not_verified": "Your e-mail is not verified by the login provider.",
+    "user_inactive": "Your account is disabled. Contact the administrator.",
+    "state_mismatch": "The login session expired. Please sign in again.",
+    "oidc_failed": "Sign-in is unavailable right now. Try again.",
+    "bad_credentials": "Wrong e-mail or password.",
+    "oidc_disabled": "Google sign-in is turned off on this server. Use your e-mail and password."
+  },
+  "event": {
+    "invalid_transition": "Transition not allowed in the current status.",
+    "transition_forbidden": "Your role cannot make this transition.",
+    "reason_required": "Choose a reason.",
+    "comment_required": "Write a comment."
+  }
+}

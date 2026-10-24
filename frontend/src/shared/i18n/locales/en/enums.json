@@ -1,0 +1,132 @@
+{
+  "Relevance": {
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low",
+    "IRRELEVANT": "Off-topic"
+  },
+  "Reliability": {
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low",
+    "UNKNOWN": "Unknown"
+  },
+  "EventStatus": {
+    "NEW": "New",
+    "REVIEWING": "Reviewing",
+    "SELECTED": "Selected",
+    "DRAFT": "Draft",
+    "READY": "Ready",
+    "PUBLISHED": "Published",
+    "REJECTED": "Rejected"
+  },
+  "Role": {
+    "researcher": "Researcher",
+    "editor": "Editor",
+    "admin": "Admin"
+  },
+  "ArticleState": {
+    "discovered": "Discovered",
+    "extracted": "Text fetched",
+    "enriched": "Tagged",
+    "clustered": "Clustered",
+    "failed": "Failed"
+  },
+  "FailureCode": {
+    "ssrf_blocked": "Address blocked for security",
+    "blocked_by_robots": "Blocked by robots.txt",
+    "fetch_http_4xx": "Page unavailable",
+    "fetch_http_5xx": "Site error",
+    "fetch_timeout": "Timed out",
+    "fetch_too_large": "Page too large",
+    "fetch_bad_content_type": "Not a web page",
+    "fetch_network": "Network error",
+    "extract_empty": "No text"
+  },
+  "ReliabilityFactor": {
+    "official_confirmed": "Confirmed by an official source",
+    "independent_tier_a_2plus": "2+ independent tier A sources",
+    "single_tier_a": "Single tier A source",
+    "independent_tier_b_2plus": "2+ independent tier B sources",
+    "tier_c_only": "Tier C sources only",
+    "rumor_markers": "Rumor markers",
+    "clickbait": "Clickbait",
+    "open_conflict_cap": "Lowered: sources contradict each other",
+    "single_source": "Single source",
+    "unknown_tier": "Source trust level not set",
+    "no_articles": "No articles",
+    "human_override": "Adjusted manually",
+    "untrusted_only": "Only untrusted sources"
+  },
+  "RejectionReason": {
+    "DUPLICATE": "Duplicate",
+    "IRRELEVANT": "Off-topic",
+    "LOW_QUALITY": "Low quality",
+    "INCORRECT": "Incorrect",
+    "OLD_NEWS": "Old news",
+    "NOT_TELEGRAM_WORTHY": "Not a fit for the channel",
+    "OTHER": "Other"
+  },
+  "AttachMethod": {
+    "new": "First article of the event",
+    "auto": "Added automatically",
+    "adjudicated": "Borderline — decided automatically",
+    "syndication": "Syndication",
+    "manual": "Manual"
+  },
+  "RelationKind": {
+    "related": "Related",
+    "follow_up": "Follow-up",
+    "possible_duplicate": "Possible duplicate",
+    "old_news": "Old news"
+  },
+  "TextOrigin": {
+    "ai": "AI",
+    "human": "Editor",
+    "source": "Source",
+    "template": "Template"
+  },
+  "SourceTier": {
+    "OFFICIAL": "Official",
+    "A": "A — major media",
+    "B": "B — reliable",
+    "C": "C — weak",
+    "UNTRUSTED": "Untrusted"
+  },
+  "SourceKind": {
+    "rss": "RSS feed",
+    "sitemap": "Sitemap",
+    "html": "Telegram channel or page",
+    "manual": "Manual only",
+    "calendar": "Holiday calendar"
+  },
+  "ContentPolicy": {
+    "transient_text": "Full text for a few days",
+    "snippet_only": "Title and first paragraph only"
+  },
+  "SettingOption": {
+    "rules": "Rules (free, instant)",
+    "llm": "AI model",
+    "template": "Template",
+    "ru": "Russian",
+    "en": "English",
+    "pt-BR": "Portuguese",
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low",
+    "on": "On",
+    "off": "Off"
+  },
+  "RelevanceBadge": {
+    "HIGH": "High relevance",
+    "MEDIUM": "Medium relevance",
+    "LOW": "Low relevance",
+    "IRRELEVANT": "Off-topic"
+  },
+  "ReliabilityBadge": {
+    "HIGH": "High trust",
+    "MEDIUM": "Medium trust",
+    "LOW": "Low trust",
+    "UNKNOWN": "Trust not rated"
+  }
+}

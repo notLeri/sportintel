@@ -1,0 +1,154 @@
+# Боевая установка на любой машине с Docker (Linux, macOS, Windows/WSL2).
+#   cp .env.deploy.example .env   # заполнить: DOMAIN, пароли, ИИ
+#   docker compose up -d --build  # установка и обновление (после git pull)
+# Подробно — deploy/README.md. Разработка — make (deploy/compose.local.yml).
+name: sportintel-server  # не sportintel: иначе общий volume базы с deploy/compose.local.yml
+
+x-logging: &logging
+  # Логи не съедают диск: 5 файлов по 10 МБ на контейнер
+  driver: json-file
+  options: { max-size: "10m", max-file: "5" }
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: deploy/Dockerfile
+    args: { VERSION: "${VERSION:-dev}" }
+  image: ${IMAGE:-sportintel:local}
+  env_file: .env
+  environment: &app-env
+    ENV: ${ENV:-production}
+    APP_BASE_URL: https://${DOMAIN:?set DOMAIN in .env}
+    DATABASE_URL: postgresql+psycopg://sportintel:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/sportintel
+    DATABASE_URL_MIGRATOR: postgresql+psycopg://sportintel:${POSTGRES_PASSWORD}@db:5432/sportintel
+    OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+    FETCH_USER_AGENT: SportIntelBot/1.0 (+https://${DOMAIN}/bot)
+    STATIC_DIR: /app/static
+    LOG_FORMAT: json
+  read_only: true
+  tmpfs: [/tmp]
+  logging: *logging
+  restart: unless-stopped
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: sportintel
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: sportintel
+    # Порт наружу не публикуется: база доступна только сервисам этого compose.
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/capacity.sql:/capacity.sql:ro # отчёт о нагрузке (docs/OPERATIONS.md)
+    shm_size: 256mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sportintel -d sportintel"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    stop_grace_period: 60s
+    logging: *logging
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    command: migrate
+    restart: "no"
+    depends_on:
+      db: { condition: service_healthy }
+
+  web:
+    <<: *app
+    command: web
+    healthcheck:
+      # /readyz: база отвечает и миграции применены (иначе 503)
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/readyz', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 4
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  worker:
+    <<: *app
+    command: worker
+    environment:
+      <<: *app-env
+      PORT: "8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8001/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 4
+    # SIGTERM → worker перестаёт брать задачи и дорабатывает текущие
+    stop_grace_period: 90s
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  caddy:
+    image: caddy:2.10
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # сертификаты: переживают перезапуск, не упираемся в лимиты Let's Encrypt
+      - caddy_config:/config
+    logging: *logging
+    restart: unless-stopped
+    depends_on:
+      web: { condition: service_healthy }
+
+  backup:
+    image: pgvector/pgvector:pg16
+    entrypoint: ["/bin/sh", "/backup.sh"]
+    command: loop
+    environment:
+      PGHOST: db
+      PGUSER: sportintel
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: sportintel
+      BACKUP_KEEP: ${BACKUP_KEEP:-14}
+      BACKUP_INTERVAL_H: ${BACKUP_INTERVAL_H:-24}
+    volumes:
+      - ./deploy/backup.sh:/backup.sh:ro
+      - ./backups:/backups
+    healthcheck:
+      # unhealthy, если свежего дампа нет дольше интервала + 2 ч
+      test: ["CMD-SHELL", "find /backups -name 'sportintel-*.dump' -mmin -$$(( (${BACKUP_INTERVAL_H:-24} + 2) * 60 )) | grep -q ."]
+      interval: 10m
+      start_period: 10m
+    logging: *logging
+    restart: unless-stopped
+    depends_on:
+      # после миграций: первый дамп — уже рабочей схемы, а не пустой базы
+      migrate: { condition: service_completed_successfully }
+
+  # Локальная LM (ADR-004): включается строкой COMPOSE_PROFILES=llm в .env. Нужно ≥16 ГБ RAM.
+  ollama:
+    image: ollama/ollama:0.12.3
+    profiles: [llm]
+    volumes: [ollama_models:/root/.ollama]
+    logging: *logging
+    restart: unless-stopped
+
+  ollama-pull:
+    image: ollama/ollama:0.12.3
+    profiles: [llm]
+    environment:
+      OLLAMA_HOST: ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-qwen3:14b}
+      TRANSLATION_MODEL: ${TRANSLATION_MODEL:-gemma3:12b}
+    # обе модели приложения: брифы (app_settings.llm_model) и переводы (translation_model)
+    entrypoint: ["/bin/sh", "-c", "until ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull \"$$LLM_MODEL\" && ollama pull \"$$TRANSLATION_MODEL\""]
+    restart: "no"
+    depends_on: [ollama]
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
+  ollama_models:

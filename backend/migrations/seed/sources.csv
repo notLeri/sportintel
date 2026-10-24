@@ -1,0 +1,3 @@
+name,domain,base_url,kind,feed_urls,tier,owner_group,parser_profile,poll_interval_seconds
+ge (Globo Esporte),ge.globo.com,https://ge.globo.com,rss,https://ge.globo.com/rss/ge/,A,globo,default,300
+CNN Brasil,cnnbrasil.com.br,https://www.cnnbrasil.com.br,rss,https://www.cnnbrasil.com.br/feed/,B,cnn_br,default,600

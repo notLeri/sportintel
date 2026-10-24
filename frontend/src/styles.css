@@ -1,0 +1,480 @@
+@import "tailwindcss";
+@import "@fontsource-variable/onest";
+
+/* Тёмная тема — класс .dark на <html>, палитра — data-palette на <html> (ставит public/theme-init.js до отрисовки, см. shared/lib/theme). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Нейтрали считаются из оттенка палитры (--nh) и насыщенности (--nc, 0 = чистый серый):
+ * у каждой палитры свой тон фона, но контраст одинаков — текст ≥ 4.5:1, границы управления ≥ 3:1.
+ * Акцент (--brand) и «AI» (--ai) задаются палитрой отдельно для светлой и тёмной темы.
+ * По умолчанию — «Поле»: тёмно-синий и зелёный из логотипа.
+ */
+:root {
+  --nh: 265;
+  --nc: 1;
+
+  --brand: #16a34a;
+  --brand-foreground: #0b1220;
+  --brand-text: #15803d;
+  /* Акцент на тёмной полосе навигации и в знаке логотипа. */
+  --brand-bright: #4ade80;
+  --ai: #2563eb;
+  --ai-foreground: #ffffff;
+  --ai-text: #1d4ed8;
+
+  --radius: 6px;
+  --background: oklch(0.985 calc(0.004 * var(--nc)) var(--nh));
+  --foreground: oklch(0.21 calc(0.035 * var(--nc)) var(--nh));
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #ffffff;
+  --popover-foreground: var(--foreground);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: oklch(0.955 calc(0.01 * var(--nc)) var(--nh));
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.96 calc(0.008 * var(--nc)) var(--nh));
+  --muted-foreground: oklch(0.5 calc(0.03 * var(--nc)) var(--nh));
+  --accent: color-mix(in oklab, var(--brand) 8%, var(--card));
+  --accent-foreground: var(--foreground);
+  --destructive: #dc2626;
+  --border: oklch(0.915 calc(0.012 * var(--nc)) var(--nh));
+  --input: oklch(0.62 calc(0.025 * var(--nc)) var(--nh));
+  --ring: var(--brand-text);
+
+  /* Внимание (новые события, высокая важность): жёлтый с тёмным текстом в обеих темах. */
+  --attention: #facc15;
+  --attention-foreground: #0b1220;
+  --warn: #b45309;
+  --warn-bg: #fff7ed;
+  /* «Работает / готово» в статусах — зелёный в любой палитре (графитовый акцент не годится для «ок»). */
+  --success: #15803d;
+  /* Отклонённое и архивное — серым. */
+  --retired: #9ca3af;
+
+  /* Полоса навигации всегда тёмная — фон логотипа. */
+  --rail: oklch(0.2 calc(0.035 * var(--nc)) var(--nh));
+  --rail-foreground: oklch(0.8 calc(0.02 * var(--nc)) var(--nh));
+
+  --shadow-float:
+    0 1px 2px oklch(0.2 0.02 var(--nh) / 0.06), 0 8px 24px -6px oklch(0.2 0.02 var(--nh) / 0.16);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.dark {
+  --brand: #22c55e;
+  --brand-text: #4ade80;
+  --ai: #2563eb;
+  --ai-text: #93c5fd;
+
+  --background: oklch(0.17 calc(0.03 * var(--nc)) var(--nh));
+  --foreground: oklch(0.955 calc(0.008 * var(--nc)) var(--nh));
+  --card: oklch(0.205 calc(0.032 * var(--nc)) var(--nh));
+  --popover: oklch(0.225 calc(0.034 * var(--nc)) var(--nh));
+  --secondary: oklch(0.26 calc(0.03 * var(--nc)) var(--nh));
+  --muted: oklch(0.24 calc(0.03 * var(--nc)) var(--nh));
+  --muted-foreground: oklch(0.74 calc(0.03 * var(--nc)) var(--nh));
+  --accent: color-mix(in oklab, var(--brand) 12%, var(--card));
+  --destructive: #f87171;
+  --border: oklch(0.3 calc(0.03 * var(--nc)) var(--nh));
+  --input: oklch(0.52 calc(0.03 * var(--nc)) var(--nh));
+
+  --warn: #fdba74;
+  --warn-bg: #2a1a0c;
+  --success: #4ade80;
+  --retired: #6b7280;
+
+  --rail: oklch(0.14 calc(0.03 * var(--nc)) var(--nh));
+  --shadow-float: 0 1px 2px oklch(0 0 0 / 0.3), 0 12px 32px -8px oklch(0 0 0 / 0.55);
+
+  color-scheme: dark;
+}
+
+/* Палитры. Светлая: :root[data-palette], тёмная: :root.dark[data-palette] (специфичность выше .dark). */
+:root[data-palette="ocean"] {
+  --brand: #2563eb;
+  --brand-foreground: #ffffff;
+  --brand-text: #1d4ed8;
+  --brand-bright: #60a5fa;
+  --ai: #7c3aed;
+  --ai-text: #6d28d9;
+}
+:root.dark[data-palette="ocean"] {
+  --brand: #60a5fa;
+  --brand-foreground: #0b1220;
+  --brand-text: #93c5fd;
+  --ai: #7c3aed;
+  --ai-text: #c4b5fd;
+}
+:root[data-palette="violet"] {
+  --nh: 285;
+  --brand: #7c3aed;
+  --brand-foreground: #ffffff;
+  --brand-text: #6d28d9;
+  --brand-bright: #a78bfa;
+}
+:root.dark[data-palette="violet"] {
+  --brand: #a78bfa;
+  --brand-foreground: #0b1220;
+  --brand-text: #c4b5fd;
+}
+:root[data-palette="graphite"] {
+  --nc: 0;
+  --brand: #27272a;
+  --brand-foreground: #ffffff;
+  --brand-text: #27272a;
+  --brand-bright: #e4e4e7;
+}
+:root.dark[data-palette="graphite"] {
+  --brand: #e4e4e7;
+  --brand-foreground: #18181b;
+  --brand-text: #e4e4e7;
+}
+
+@theme inline {
+  --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --shadow-float: var(--shadow-float);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
+  --color-brand-bright: var(--brand-bright);
+  --color-attention: var(--attention);
+  --color-attention-foreground: var(--attention-foreground);
+  --color-ai: var(--ai);
+  --color-ai-foreground: var(--ai-foreground);
+  --color-ai-text: var(--ai-text);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-success: var(--success);
+  --color-retired: var(--retired);
+  --color-rail: var(--rail);
+  --color-rail-foreground: var(--rail-foreground);
+
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "calt";
+    caret-color: var(--brand-text);
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--brand) 30%, transparent);
+  }
+  /* Числа в данных выровнены по колонкам. */
+  time,
+  table,
+  [data-tabular] {
+    font-variant-numeric: tabular-nums;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 3px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--foreground) 28%, transparent) transparent;
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  /* Заголовки страниц и событий: плотный гротеск, как надпись в логотипе. */
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Нажатие кнопки — короткая обратная связь (Emil: 100–160ms, ease-out, не scale(0)). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-slot="button"] {
+    transition-property: color, background-color, border-color, transform;
+    transition-duration: 140ms;
+    transition-timing-function: var(--ease-out);
+  }
+  [data-slot="button"]:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+/*
+ * Таблицы данных (shared/ui/table.tsx): шапка на приглушённом фоне без переносов, ячейки 10×12px,
+ * разделители-волоски, подсветка строки при наведении. .num — числа вправо, .shrink — колонка по содержимому.
+ */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+.data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+.data-table th,
+.data-table td {
+  padding: 0.625rem 0.75rem;
+}
+.data-table td {
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.data-table :is(th, td):first-child {
+  padding-left: 1rem;
+}
+.data-table :is(th, td):last-child {
+  padding-right: 1rem;
+}
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.data-table :is(th, td).num {
+  text-align: right;
+}
+.data-table :is(th, td).shrink {
+  width: 1px;
+  white-space: nowrap;
+}
+.data-table tbody tr {
+  transition: background-color 120ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .data-table tbody tr:hover {
+    background-color: color-mix(in oklab, var(--muted) 60%, transparent);
+  }
+}
+
+/* Выбранная строка списка: лёгкая заливка акцентом и полоса слева — читается в любой палитре. */
+.row-selected {
+  background-color: color-mix(in oklab, var(--brand) 13%, var(--background));
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+/* Появление (новые события, плашки): только при монтировании, 200ms ease-out, без scale(0). */
+.enter-drop {
+  transition:
+    opacity 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter-drop {
+    transition: opacity 200ms ease;
+    @starting-style {
+      transform: none;
+    }
+  }
+}
+
+/* Блоки композиции источников собираются один за другим (30ms шаг, 180ms, ease-out). */
+.compose-in {
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .compose-in {
+    transition: opacity 180ms ease;
+    transition-delay: 0ms !important;
+    @starting-style {
+      transform: none;
+    }
+  }
+}
+
+/* Образцы палитр в меню аккаунта (цвет акцента на тёмной полосе). */
+[data-palette-swatch="pitch"] {
+  background: #22c55e;
+}
+[data-palette-swatch="ocean"] {
+  background: #3b82f6;
+}
+[data-palette-swatch="violet"] {
+  background: #8b5cf6;
+}
+[data-palette-swatch="graphite"] {
+  background: #52525b;
+}
+
+/* Смена палитры/темы: цвета перетекают за 200ms, а не щёлкают (только на время переключения). */
+html.palette-switching,
+html.palette-switching * {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    fill 200ms ease !important;
+}
+
+/*
+ * Новая новость (после «N новых событий»): строка выезжает сверху и проявляется,
+ * затем мягкая подсветка акцентом гаснет — видно, что именно добавилось.
+ * Сдвиг 240ms strong ease-out после паузы 80ms (старые строки успевают уйти), шаг 45ms (--i), подсветка — 1.8s.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .row-fresh {
+    animation:
+      row-in 240ms var(--ease-out) both,
+      row-glow 1800ms ease-out both;
+    animation-delay: calc(80ms + var(--i, 0) * 45ms), calc(200ms + var(--i, 0) * 45ms);
+  }
+  /* Старые строки съезжают вниз, освобождая место: ease-out — сразу уходят с дороги новой строки. */
+  .row-slot {
+    transition: transform 240ms var(--ease-out);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row-fresh {
+    animation: row-glow 1800ms ease-out both;
+  }
+}
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+@keyframes row-glow {
+  from {
+    background-color: color-mix(in oklab, var(--brand) 22%, var(--background));
+  }
+}
+
+/* Знак логотипа собирается один раз: «S» выезжает слева, «i» поднимается, точка падает последней. */
+@media (prefers-reduced-motion: no-preference) {
+  .logo-in .logo-s,
+  .logo-in .logo-i,
+  .logo-in .logo-dot {
+    transform-box: fill-box;
+    animation: logo-part-in 520ms var(--ease-out) both;
+  }
+  .logo-in .logo-s {
+    --from: translateX(-14%);
+  }
+  .logo-in .logo-i {
+    --from: translateY(18%);
+    animation-delay: 90ms;
+  }
+  .logo-in .logo-dot {
+    --from: translateY(-60%);
+    animation-delay: 220ms;
+  }
+}
+@keyframes logo-part-in {
+  from {
+    opacity: 0;
+    transform: var(--from);
+  }
+}
+
+/*
+ * Telegram: обои чата (градиент по умолчанию из Telegram + лёгкий узор), цитаты и код в постах.
+ * Используется превью постов (entities/draft) и лентой канала во вкладке «Автопостинг».
+ */
+.tg-wallpaper {
+  background-color: #b7c79a;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23000' stroke-opacity='.07' stroke-width='1.5'%3E%3Ccircle cx='14' cy='16' r='6'/%3E%3Cpath d='M48 10l8 8m0-8l-8 8'/%3E%3Cpath d='M62 52a7 7 0 1 1-10 0'/%3E%3Crect x='14' y='50' width='12' height='12' rx='3'/%3E%3Cpath d='M34 34l4-6 4 6z'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(at 15% 15%, #dbddbb 0, transparent 55%),
+    radial-gradient(at 85% 20%, #88b884 0, transparent 55%),
+    radial-gradient(at 15% 85%, #6ba587 0, transparent 55%),
+    radial-gradient(at 85% 85%, #d5d88d 0, transparent 55%);
+}
+.dark .tg-wallpaper {
+  background-color: #0e1621;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.035' stroke-width='1.5'%3E%3Ccircle cx='14' cy='16' r='6'/%3E%3Cpath d='M48 10l8 8m0-8l-8 8'/%3E%3Cpath d='M62 52a7 7 0 1 1-10 0'/%3E%3Crect x='14' y='50' width='12' height='12' rx='3'/%3E%3Cpath d='M34 34l4-6 4 6z'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(at 20% 20%, #17293a 0, transparent 60%),
+    radial-gradient(at 80% 85%, #10202e 0, transparent 60%);
+}
+.tg-body blockquote {
+  margin: 4px 0;
+  padding: 2px 8px 2px 10px;
+  border-left: 3px solid #3390ec;
+  border-radius: 4px;
+  background: rgb(51 144 236 / 0.1);
+}
+.tg-body pre {
+  margin: 4px 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 0.06);
+  white-space: pre-wrap;
+  font-size: 0.875em;
+}
+.tg-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  color: #c03d33;
+}
+.dark .tg-body code {
+  color: #f08c84;
+}
+.dark .tg-body pre {
+  background: rgb(255 255 255 / 0.07);
+}

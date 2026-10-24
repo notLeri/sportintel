@@ -1,0 +1,226 @@
+[project]
+name = "sportintel"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "alembic>=1.13",
+    "authlib>=1.3",
+    "croniter>=6.2",
+    "defusedxml>=0.7.1",
+    "fastapi>=0.115",
+    "feedparser>=6,<7",
+    "httpx>=0.27",
+    "nh3>=0.2.18",
+    "pgvector>=0.3",
+    "procrastinate==3.10.0",
+    "psycopg[binary,pool]>=3.2",
+    "pydantic-settings>=2.7",
+    "pydantic[email]>=2.13.5",
+    "sentry-sdk[fastapi]>=2,<3",
+    "sqlalchemy[asyncio]>=2.0,<2.1",
+    "structlog>=24",
+    "trafilatura>=2,<3",
+    "uvicorn[standard]>=0.32",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.27",
+    "hypothesis>=6.168.5",
+    "import-linter>=2.1",
+    "mypy>=1.13",
+    "pip-audit>=2.10.1",
+    "pre-commit>=4.0",
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=7.1.0",
+    "pytest-httpserver>=1.2.0",
+    "respx>=0.23.1",
+    "ruff>=0.8",
+    "testcontainers[postgres]>=4.8",
+    "types-defusedxml>=0.7.0.20260504",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sportintel"]
+
+# --- ruff (CONV §7.5) ---
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "PT", "SIM", "RUF", "TID"]
+# комментарии и docstring на русском — проверка «похожих» символов не нужна
+ignore = ["RUF001", "RUF002", "RUF003", "E501"]  # E501: длину кода держит ruff format; SQL-литералы не дробим
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"os.environ".msg = "Env читается только в sportintel/platform/config.py (CONV §2)"
+"os.getenv".msg = "Env читается только в sportintel/platform/config.py (CONV §2)"
+"datetime.datetime.now".msg = "Используйте platform.clock.Clock (CONV §13)"
+"datetime.datetime.utcnow".msg = "Используйте platform.clock.Clock (CONV §13)"
+"datetime.date.today".msg = "Используйте platform.clock.Clock; бизнес-сутки в America/Sao_Paulo (CONV §15)"
+
+[tool.ruff.lint.per-file-ignores]
+"src/sportintel/platform/config.py" = ["TID251"]
+"src/sportintel/platform/clock.py" = ["TID251"]
+"tests/**" = ["S101", "S105", "S106", "S608", "E501"]  # SQL и фикстуры в тестах длинные
+"tests/db_fixtures.py" = ["S101", "TID251"]  # TEST_DATABASE_URL в CI
+"scripts/**" = ["TID251"]
+"migrations/**" = ["E501"]  # SQL в миграциях
+"src/sportintel/modules/*/infrastructure/*.py" = ["E501"]  # SQL-строки
+
+# --- mypy: strict для domain/application, check_untyped_defs для остального ---
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+packages = ["sportintel"]
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+module = ["sportintel.modules.*.domain.*", "sportintel.modules.*.application.*"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_any_generics = true
+disallow_untyped_decorators = true
+disallow_subclassing_any = true
+no_implicit_reexport = true
+strict_equality = true
+warn_return_any = true
+
+[[tool.mypy.overrides]]
+module = ["authlib.*", "feedparser.*", "croniter.*"]
+ignore_missing_imports = true
+
+# --- pytest (CONV §13) ---
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "--strict-markers --import-mode=importlib"
+# authlib 1.8 предупреждает о будущей смене httpx-интеграции — не наша ошибка
+filterwarnings = ["ignore::DeprecationWarning:authlib.*"]
+markers = [
+    "integration: требует PostgreSQL (testcontainers или TEST_DATABASE_URL)",
+    "integration_commit: тесты с реальным коммитом в отдельной схеме",
+    "evals: прогоны golden set (rules — без сети; llm — фаза L), только make evals",
+]
+
+[project.scripts]
+sportintel-web = "sportintel.main:run"
+sportintel-worker = "sportintel.worker:run"
+sportintel-migrate = "sportintel.platform.db:migrate_cli"
+sportintel-admin = "sportintel.composition.admin_cli:main"
+sportintel-e2e-reset = "sportintel.composition.e2e_cli:reset_cli"
+sportintel-e2e-poll = "sportintel.composition.e2e_cli:poll_cli"
+
+# --- import-linter (BE-T0.6, CONV §7.1–7.2); сгенерировано по таблице §7.2 ---
+[tool.importlinter]
+root_packages = ["sportintel"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Слои внутри модуля: api|jobs → infrastructure → application → domain"
+type = "layers"
+layers = ["api | jobs", "infrastructure", "application", "domain"]
+containers = ["sportintel.modules.identity", "sportintel.modules.audit", "sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics"]
+
+[[tool.importlinter.contracts]]
+name = "platform не импортирует modules"
+type = "forbidden"
+source_modules = ["sportintel.platform"]
+forbidden_modules = ["sportintel.modules"]
+
+[[tool.importlinter.contracts]]
+name = "domain без фреймворков и сети"
+type = "forbidden"
+source_modules = ["sportintel.modules.identity.domain", "sportintel.modules.audit.domain", "sportintel.modules.sources.domain", "sportintel.modules.ingestion.domain", "sportintel.modules.taxonomy.domain", "sportintel.modules.intelligence.domain", "sportintel.modules.events.domain", "sportintel.modules.editorial.domain", "sportintel.modules.analytics.domain"]
+forbidden_modules = ["sqlalchemy", "pydantic", "httpx", "fastapi", "procrastinate"]
+
+[[tool.importlinter.contracts]]
+name = "modules не ходят в сеть и очередь напрямую"
+type = "forbidden"
+source_modules = ["sportintel.modules"]
+forbidden_modules = ["procrastinate", "httpx"]
+# через platform.jobs / platform.safe_fetch — можно; запрещён только прямой импорт
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "identity: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.identity"]
+forbidden_modules = ["sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "audit: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.audit"]
+forbidden_modules = ["sportintel.modules.identity", "sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "sources: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.sources"]
+forbidden_modules = ["sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "ingestion: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.ingestion"]
+forbidden_modules = ["sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.sources.domain", "sportintel.modules.sources.application", "sportintel.modules.sources.infrastructure", "sportintel.modules.sources.api", "sportintel.modules.sources.jobs", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "taxonomy: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.taxonomy"]
+forbidden_modules = ["sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "intelligence: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.intelligence"]
+forbidden_modules = ["sportintel.modules.audit", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.ingestion.domain", "sportintel.modules.ingestion.application", "sportintel.modules.ingestion.infrastructure", "sportintel.modules.ingestion.api", "sportintel.modules.ingestion.jobs", "sportintel.modules.taxonomy.domain", "sportintel.modules.taxonomy.application", "sportintel.modules.taxonomy.infrastructure", "sportintel.modules.taxonomy.api", "sportintel.modules.taxonomy.jobs", "sportintel.modules.sources.domain", "sportintel.modules.sources.application", "sportintel.modules.sources.infrastructure", "sportintel.modules.sources.api", "sportintel.modules.sources.jobs", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "events: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.events"]
+forbidden_modules = ["sportintel.modules.editorial", "sportintel.modules.analytics", "sportintel.modules.ingestion.domain", "sportintel.modules.ingestion.application", "sportintel.modules.ingestion.infrastructure", "sportintel.modules.ingestion.api", "sportintel.modules.ingestion.jobs", "sportintel.modules.intelligence.domain", "sportintel.modules.intelligence.application", "sportintel.modules.intelligence.infrastructure", "sportintel.modules.intelligence.api", "sportintel.modules.intelligence.jobs", "sportintel.modules.sources.domain", "sportintel.modules.sources.application", "sportintel.modules.sources.infrastructure", "sportintel.modules.sources.api", "sportintel.modules.sources.jobs", "sportintel.modules.taxonomy.domain", "sportintel.modules.taxonomy.application", "sportintel.modules.taxonomy.infrastructure", "sportintel.modules.taxonomy.api", "sportintel.modules.taxonomy.jobs", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "editorial: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.editorial"]
+forbidden_modules = ["sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.analytics", "sportintel.modules.events.domain", "sportintel.modules.events.application", "sportintel.modules.events.infrastructure", "sportintel.modules.events.api", "sportintel.modules.events.jobs", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.modules.audit.domain", "sportintel.modules.audit.application", "sportintel.modules.audit.infrastructure", "sportintel.modules.audit.api", "sportintel.modules.audit.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "analytics: зависимости по CONV §7.2 и только через public.py"
+type = "forbidden"
+source_modules = ["sportintel.modules.analytics"]
+forbidden_modules = ["sportintel.modules.audit", "sportintel.modules.sources", "sportintel.modules.ingestion", "sportintel.modules.taxonomy", "sportintel.modules.intelligence", "sportintel.modules.events", "sportintel.modules.editorial", "sportintel.modules.identity.domain", "sportintel.modules.identity.application", "sportintel.modules.identity.infrastructure", "sportintel.modules.identity.api", "sportintel.modules.identity.jobs", "sportintel.worker", "sportintel.main"]
+# Фасад другого модуля вправе тянуть свои внутренности — запрещён только прямой импорт.
+allow_indirect_imports = true

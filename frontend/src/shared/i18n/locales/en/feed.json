@@ -1,0 +1,42 @@
+{
+  "tabs": "Tabs",
+  "tab": {
+    "suggested": "Suggestions",
+    "channel": "Channel"
+  },
+  "reject": "Reject",
+  "open": "Open event",
+  "publish": "Mark as published",
+  "publish_confirm": "Published on the channel?",
+  "cancel": "Cancel",
+  "more": "Load more",
+  "origin": {
+    "template": "Template",
+    "llm": "AI",
+    "human": "Edited by editor"
+  },
+  "load_failed": "Could not load the feed",
+  "empty": "No fresh events above the importance threshold",
+  "empty_channel": "No ready or published posts yet",
+  "empty_hint": "Events from the last 3 days above the importance threshold appear here once they have a post in the channel language. A post in another language waits until the AI rewrites it. Check the filters and the active sources.",
+  "changed": "The event changed. Refresh and try again.",
+  "channel_name": "Channel preview",
+  "prepare": "Prepare post",
+  "rewrite": "Rewrite post",
+  "preparing": "Writing the post… up to a minute",
+  "prepare_failed": "Could not prepare the post",
+  "schedule": "Schedule",
+  "schedule_at": "When to send ({tz})",
+  "schedule_confirm": "Approve and schedule for {time}",
+  "schedule_note": "The post becomes “Ready” and goes into the channel calendar on the Autopost tab. You can cancel it there.",
+  "schedule_failed": "Could not schedule",
+  "scheduled": "Scheduled: {time}, “{channel}”",
+  "channel": "Channel",
+  "channel_off": "Autoposting for this channel is off: the post goes out only once it is turned on.",
+  "edit": "Edit",
+  "post_for": "Channel post · {lang}",
+  "wrong_lang": "The post is in “{lang}”, but channels publish in another language: {channels}. Rewrite the post — the AI writes it in the channel language.",
+  "approve": "Approve",
+  "approved": "Post approved: it goes to the channel on schedule",
+  "approve_failed": "Could not approve the post"
+}

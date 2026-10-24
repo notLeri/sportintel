@@ -1,0 +1,42 @@
+{
+  "tabs": "Abas",
+  "tab": {
+    "suggested": "Sugestões",
+    "channel": "Canal"
+  },
+  "reject": "Rejeitar",
+  "open": "Abrir evento",
+  "publish": "Marcar como publicado",
+  "publish_confirm": "Publicado no canal?",
+  "cancel": "Cancelar",
+  "more": "Carregar mais",
+  "origin": {
+    "template": "Modelo",
+    "llm": "LM",
+    "human": "Editado"
+  },
+  "load_failed": "Não foi possível carregar o feed",
+  "empty": "Nenhum evento recente acima do limiar de importância",
+  "empty_channel": "Nenhum post pronto ou publicado ainda",
+  "empty_hint": "Aparecem aqui eventos dos últimos 3 dias acima do limiar de importância que já têm post no idioma do canal. Um post em outro idioma espera a IA reescrevê-lo. Verifique os filtros e as fontes ativas.",
+  "changed": "O evento mudou. Atualize e tente de novo.",
+  "channel_name": "Prévia do canal",
+  "prepare": "Preparar post",
+  "rewrite": "Reescrever post",
+  "preparing": "Escrevendo o post… até um minuto",
+  "prepare_failed": "Não foi possível preparar o post",
+  "schedule": "Agendar",
+  "schedule_at": "Quando enviar ({tz})",
+  "schedule_confirm": "Aprovar e agendar para {time}",
+  "schedule_note": "O post fica “Pronto” e entra no calendário do canal na aba Autopost. Dá para cancelar lá.",
+  "schedule_failed": "Não foi possível agendar",
+  "scheduled": "Agendado: {time}, “{channel}”",
+  "channel": "Canal",
+  "channel_off": "O autopost deste canal está desligado: o post só sai quando for ligado.",
+  "edit": "Editar",
+  "post_for": "Post do canal · {lang}",
+  "wrong_lang": "O post está em “{lang}”, mas os canais publicam em outro idioma: {channels}. Reescreva o post — a IA escreve no idioma do canal.",
+  "approve": "Aprovar",
+  "approved": "Post aprovado: sai no canal conforme o agendamento",
+  "approve_failed": "Não foi possível aprovar o post"
+}

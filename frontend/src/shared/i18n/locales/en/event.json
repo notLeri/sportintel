@@ -1,0 +1,319 @@
+{
+  "not_found": "Event not found",
+  "load_failed": "Could not load the event",
+  "close": "Close",
+  "summary": "Summary",
+  "no_summary": "Summary not generated yet",
+  "source_removed": "Source removed from the event",
+  "cite": "Source {n}: {source}",
+  "why_relevant": "Why is it relevant?",
+  "adjusted": "Adjusted manually: {reason}",
+  "reliability_title": "Source trust",
+  "factors": "Factors",
+  "sources_title": "{count, plural, one {# source} other {# sources}}",
+  "related": "Related events",
+  "occurred_at": "Date",
+  "updated": "Last update",
+  "teams": "Teams",
+  "players": "Players",
+  "source_down": "Source unavailable at last check",
+  "tag": {
+    "duplicate": "duplicate",
+    "manual": "manual",
+    "rumor": "rumor",
+    "clickbait": "clickbait"
+  },
+  "select_hint": "Select an event in the list",
+  "workflow": {
+    "actions": "Actions",
+    "return": "Return",
+    "back_to_edit": "Back to editing",
+    "restore": "Restore",
+    "to": {
+      "REVIEWING": "Take",
+      "SELECTED": "Select",
+      "READY": "Approve",
+      "PUBLISHED": "Mark as published",
+      "REJECTED": "Reject",
+      "DRAFT": "Draft",
+      "NEW": "New"
+    },
+    "approve_needs_draft": "Generate and save the draft first",
+    "reject_title": "Reject event",
+    "reason": "Reason",
+    "comment": "Comment",
+    "cancel": "Cancel",
+    "conflict": "Someone else changed the event. Reloaded."
+  },
+  "draft": {
+    "editor": "Draft editor",
+    "toolbar": "Formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "link": "Link",
+    "apply": "Apply",
+    "code": "Code",
+    "quote": "Quote",
+    "spoiler": "Spoiler",
+    "undo": "Undo",
+    "redo": "Redo",
+    "template_badge": "Template — finish the text",
+    "editor_note": "For the editor · not in the post"
+  },
+  "draft_panel": {
+    "title": "Telegram draft",
+    "template": "Generate draft (template)",
+    "write": "Write manually",
+    "select_first": "Select the event first: “Take” → “Select”. Drafts can be edited only for selected events",
+    "loading": "Loading draft…",
+    "generating": "Generating… (up to 30 s)",
+    "retry": "Try again",
+    "save": "Save",
+    "regenerate": "Regenerate",
+    "history": "History",
+    "image": "Image (URL)",
+    "too_long": "text too long",
+    "saved": "Draft saved",
+    "back_to_draft": "The event went back to editing and needs approval again",
+    "save_failed": "Could not save",
+    "offline": "Offline — changes are kept only in this browser",
+    "restore_banner": "There are unsaved changes from {time}.",
+    "restore": "Restore",
+    "discard": "Discard",
+    "save_before_copy": "Save before copying: the saved version is copied.",
+    "preview": "Channel preview",
+    "restore_version": "Restore this version",
+    "unverified": "Not verified in sources",
+    "conflict_title": "Someone else changed the draft",
+    "server_version": "Server version",
+    "your_version": "Your version",
+    "use_server": "Use the server version",
+    "overwrite": "Overwrite",
+    "failure": {
+      "generation_failed": "Could not generate: the event has no sources.",
+      "budget_exhausted": "AI budget exhausted."
+    },
+    "post_lang": "Post language",
+    "from_brief": "Post from AI brief",
+    "brief_missing": "Generate the AI brief in this language first (the “AI brief” block above)",
+    "ai": "Write post (AI)",
+    "translate_to": "Translate:",
+    "translating": "Translating…",
+    "ai_off": "AI model is not connected — translation unavailable",
+    "save_before_translate": "Save your edits first — the saved version is translated",
+    "already_in": "The draft is already in this language",
+    "translate_failed": "Translation failed. Try again",
+    "channel_target": "After “Ready” this exact version goes to {channels}.",
+    "channel_off": "(the channel's autoposting is off right now)",
+    "channel_blocked": {
+      "language": "Channel {channel} posts in “{channel_lang}”, but this post is in “{post_lang}”, so it will not go there. Translate it with the button above and approve again.",
+      "filters": "Channel {channel} will not take this event: it does not pass the channel filters (minimum importance, regions, sports or sources). Change the channel filters in “Autopost” or post it manually.",
+      "too_old": "Channel {channel} only takes fresh events (latest article within 3 days), and this one is older, so autoposting will not send it. Copy the post and publish it manually."
+    },
+    "approve": "Approve post",
+    "approved": "Post approved: status “Ready”",
+    "approve_failed": "Could not approve the post",
+    "save_before_approve": "Save your edits first — the saved version is approved",
+    "approve_blocked": "No channel will take this version — see the reasons below"
+  },
+  "edit": {
+    "title": "Edit event",
+    "edit": "Edit",
+    "save": "Save",
+    "saved": "Event saved",
+    "conflict_title": "Someone else changed the event",
+    "field": "Field",
+    "theirs": "Current version",
+    "mine": "Your version",
+    "reload": "Reload",
+    "overwrite": "Overwrite",
+    "updates_since_edit": "New sources arrived after your edit.",
+    "regenerate_summary": "Regenerate summary",
+    "fields": {
+      "title": "Title",
+      "summary": "Summary",
+      "sport_id": "Sport",
+      "competition_id": "Competition",
+      "team_ids": "Teams",
+      "player_ids": "Players"
+    }
+  },
+  "create": {
+    "button": "New event",
+    "title": "New event",
+    "submit": "Create",
+    "created": "Event created",
+    "links": "Source links",
+    "links_hint": "One link per line, up to 10.",
+    "too_many": "At most {max} links.",
+    "bad_line": "Invalid link on line {n}.",
+    "skipped": "These links already belong to other events:"
+  },
+  "related_groups": {
+    "related": "Related",
+    "possible_duplicate": "Possible duplicates",
+    "old_news": "Similar old news"
+  },
+  "override": {
+    "adjust": "Adjust",
+    "relevance": "Relevance",
+    "reliability": "Source trust",
+    "reason": "Reason (3–500 characters)",
+    "auto": "Back to automatic"
+  },
+  "history": {
+    "title": "History",
+    "system": "System",
+    "more": "Load more",
+    "auto": "automatic",
+    "actions": {
+      "auth": {
+        "login": "{who} signed in",
+        "logout": "{who} signed out",
+        "login_denied": "Access denied ({reason})"
+      },
+      "source": {
+        "created": "{who} created a source",
+        "updated": "{who} changed a source"
+      },
+      "article": {
+        "manual_added": "{who} added a link manually"
+      },
+      "event": {
+        "created_manual": "{who} created the event manually",
+        "edited": "{who} edited: {fields}",
+        "transitioned": "{who} changed status from {from} to {to}",
+        "rejected": "{who} rejected: {reason}{comment}",
+        "summary_regenerate_requested": "{who} asked to regenerate the summary",
+        "relevance_overridden": "{who} adjusted relevance: {level}",
+        "reliability_overridden": "{who} adjusted source trust: {level}",
+        "merged": "{who} merged events ({count} sources)",
+        "article_moved": "{who} moved a source",
+        "conflict_resolved": "{who} resolved a conflict"
+      },
+      "draft": {
+        "generation_requested": "{who} generated the draft",
+        "saved": "{who} saved draft version {n}",
+        "copied": "{who} copied version {n}",
+        "disclaimer_removed": "{who} removed the post notice"
+      },
+      "settings": {
+        "updated": "{who} changed settings"
+      },
+      "user": {
+        "created": "{who} invited a user",
+        "updated": "{who} changed a user"
+      },
+      "taxonomy": {
+        "sport_created": "{who} created a sport",
+        "sport_updated": "{who} changed a sport",
+        "entity_created": "{who} added a dictionary entry",
+        "entity_updated": "{who} changed a dictionary entry",
+        "alias_added": "{who} added a spelling variant",
+        "alias_removed": "{who} removed a spelling variant",
+        "unlinked_resolved": "{who} resolved a mention"
+      },
+      "pipeline": {
+        "retried": "{who} retried failures"
+      },
+      "channel": {
+        "created": "{who} created a channel",
+        "updated": "{who} changed a channel"
+      }
+    }
+  },
+  "merge": {
+    "button": "Merge with…",
+    "title": "Merge event",
+    "search": "Search event…",
+    "results": "Found events",
+    "locked": "Ready or published events cannot be merged",
+    "warning": "The selected event “{title}” will be rejected as a duplicate and its {count} sources moved here.",
+    "confirm": "Merge",
+    "done": "Events merged"
+  },
+  "move": {
+    "menu": "Actions for source {title}",
+    "split": "Split into a new event",
+    "to_other": "Move to another event…",
+    "done": "Source moved",
+    "reject_empty": "The event has no sources left. Reject it?"
+  },
+  "region": "Region",
+  "brief": {
+    "title": "AI brief",
+    "language": "Brief language",
+    "generate": "Generate",
+    "regenerate": "Rebuild",
+    "generating": "Preparing…",
+    "waiting": "The AI is preparing the brief — usually under a minute. No need to reload.",
+    "empty": "No brief in this language yet.",
+    "ai_unavailable": "No AI model connected (AI_PROVIDER). Briefs are unavailable — use the original and the template draft.",
+    "load_failed": "Could not load the brief",
+    "stale": "New articles arrived after generation — the brief may be outdated. Rebuild it.",
+    "affected": "Who is affected",
+    "impact": "Impact",
+    "actions": "What to do",
+    "sources": "Sources",
+    "meta": "Model {model}, {when}",
+    "lang": {
+      "ru": "Russian",
+      "en": "English",
+      "pt-BR": "Portuguese"
+    },
+    "status": {
+      "official": "Official",
+      "confirmed": "Confirmed",
+      "reported": "Reported by one outlet",
+      "rumor": "Rumor"
+    }
+  },
+  "block_independent": "independent",
+  "block_same_group": "same group",
+  "original": "Original",
+  "translated": "Translated by AI — hover to see the original",
+  "translating": "Translating…",
+  "original_language": "Original language: {language}",
+  "original_hint": "Original headline: {title}",
+  "written_in": "The source writes in {language}",
+  "same_language": "The source writes in the interface language, no translation needed",
+  "post_format": {
+    "title": "Post format (all posts)",
+    "include": "What to include",
+    "include_emoji": "Sport emoji in the headline",
+    "inline_links": "Source links inside the text",
+    "include_source_link": "Original source link at the end",
+    "template_also_reported": "“Also reported by” in template posts",
+    "hashtags": "Competition and team hashtags",
+    "example": "Example post",
+    "use_current": "Use the current post",
+    "instructions": "What to write (instructions for the AI)",
+    "instructions_placeholder": "E.g. 3–4 sentences, end with what it means for betting",
+    "applies": "Applies to all new posts. Existing posts stay as they are — press “Regenerate”.",
+    "save": "Save format",
+    "saved": "Post format saved",
+    "failed": "Could not save the format",
+    "auto_mode": "AI writes the first version of each post (in the background, in turn)"
+  },
+  "rationale": {
+    "not_sports": "Not about sport: no sport, clubs or competitions found.",
+    "no_signals": "No importance signal matched — low importance.",
+    "signals": "Matched signals",
+    "competition": "Competition: {name}",
+    "competition_plain": "Competition",
+    "top_club": "Top club: {name}",
+    "top_club_plain": "Top club",
+    "rumor": "Rumor markers",
+    "rumor_plain": "Rumor markers",
+    "clickbait": "Clickbait headline",
+    "clickbait_plain": "Clickbait headline",
+    "total": "Total points",
+    "mod": {
+      "priority_up": "Level raised: top competition or club.",
+      "priority_down": "Level lowered: low-priority competition.",
+      "stale": "Level lowered: looks like old news."
+    }
+  }
+}

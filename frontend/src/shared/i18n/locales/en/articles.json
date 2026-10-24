@@ -1,0 +1,22 @@
+{
+  "add_url": "Add link",
+  "add_url_hint": "Paste a news article address. The system downloads and processes it.",
+  "submit": "Add",
+  "url_invalid": "Enter a valid http(s) link.",
+  "added": "Link added. Processing…",
+  "already_exists": "This link already exists",
+  "offline": "No connection. Try again — the link will not be duplicated.",
+  "add_failed": "Could not add the link.",
+  "manual": "manual",
+  "empty": "No articles found. Try changing the filters.",
+  "load_failed": "Could not load articles.",
+  "load_more": "Load more",
+  "open_event": "Open",
+  "col": {
+    "title": "Title",
+    "source": "Source",
+    "published": "Published",
+    "state": "Status",
+    "event": "Event"
+  }
+}

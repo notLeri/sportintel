@@ -1,0 +1,35 @@
+# Хуки не ходят в сеть после первичной установки (pre-commit install --install-hooks).
+# Замороженные копии SQL сторонних библиотек не трогаем.
+exclude: ^(backend/migrations/sql/|fixtures/.*\.html$|frontend/src/shared/api/generated/|frontend/src/app/routeTree.gen.ts)
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format
+        files: ^backend/
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.22.1
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: frontend-lint-staged
+        name: frontend eslint/prettier (lint-staged)
+        entry: pnpm -C frontend lint-staged
+        language: system
+        files: ^frontend/
+        pass_filenames: false

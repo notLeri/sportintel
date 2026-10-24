@@ -1,0 +1,84 @@
+{
+  "forbidden": "Sem permissão.",
+  "last_days": "Últimos {n} dias",
+  "from": "De",
+  "to": "Até",
+  "group_by": "Agrupar por",
+  "by_user": "Pessoa",
+  "by_day": "Dia",
+  "too_long": "Período de no máximo {n} dias",
+  "no_activity": "Sem atividade registrada",
+  "tile": {
+    "useful": "Histórias úteis",
+    "hours": "Horas ativas",
+    "usph": "USpH (histórias úteis por hora)",
+    "cost": "Custo de IA por história útil"
+  },
+  "usph_formula": "Histórias úteis = eventos selecionados (ou além) no período, exceto rejeitados como duplicado ou incorreto; horas ativas = sessões de atividade com pausas de até 15 min.",
+  "funnel": "Funil de status",
+  "feed_funnel": "Funil do feed",
+  "feed_step": {
+    "suggested": "Sugeridos",
+    "taken": "Assumidos",
+    "published": "Publicados"
+  },
+  "reject_reasons": "Motivos de rejeição",
+  "tts": "Tempo até seleção (mediana)",
+  "precision_high": "Precisão de HIGH",
+  "by_origin": "origem: {origin}",
+  "edit_ratio": "Edição dos rascunhos (mediana)",
+  "origin": {
+    "template": "modelo",
+    "ai": "LM",
+    "rule": "regras",
+    "llm": "IA"
+  },
+  "usph_table": "USpH",
+  "leaders": "Fontes que noticiaram primeiro",
+  "minutes": "{n} min",
+  "ai_load": {
+    "title": "Carga da IA",
+    "verdict": {
+      "ok": "A IA está dando conta",
+      "tight": "A IA está no limite: a fila pode crescer nos horários de pico",
+      "overloaded": "A IA não está dando conta: chegam mais eventos do que o modelo processa",
+      "failing": "A IA não está respondendo: as chamadas recentes falharam. Verifique se o servidor do modelo está rodando e os modelos foram baixados",
+      "off": "IA não conectada: posts pelo modelo fixo, sem traduções"
+    },
+    "share": "A IA precisa de {share} do dia com as configurações atuais",
+    "share_label": "Parte do dia de que a IA precisa",
+    "busy": "trabalhou de fato {share} do tempo",
+    "flow": "Fluxo: {important} eventos importantes por dia (alta — {high}, média — {medium}) de {sources} fontes.",
+    "backlog": "Na fila agora: {posts} posts, {translations} traduções. Esvazia em ≈ {eta}.",
+    "headroom": "Folga: mais ≈ {events} eventos importantes por dia — cerca de {sources} fontes do mesmo volume.",
+    "kinds": "Trabalho da IA por tipo",
+    "kind": "Trabalho",
+    "calls": "Chamadas",
+    "failed": "Falhas",
+    "typical": "Em geral",
+    "model_time": "Tempo do modelo",
+    "kind_name": {
+      "post": "Post do feed (em segundo plano)",
+      "rewrite": "Post sob pedido",
+      "translate": "Tradução de eventos",
+      "translate_post": "Tradução de post",
+      "brief": "Análise de IA"
+    },
+    "advice_title": "O que ajustar para a IA dar conta",
+    "advice": {
+      "posts_high": "A IA escreve posts só para eventos de alta importância; os médios ficam com o modelo fixo, IA em «Reescrever».",
+      "translate_high": "Traduzir em segundo plano só eventos de alta importância; os demais são traduzidos ao abrir.",
+      "briefs_off": "Desligar as análises automáticas de IA — deixar só sob pedido.",
+      "posts_by_button": "Primeira versão do post pelo modelo fixo; IA só em «Reescrever».",
+      "smaller_model": "O modelo {model} leva ≈ {post_s} s por post. Um modelo menor (ex.: qwen3:8b) é cerca de duas vezes mais rápido — troque em ai_routing nas configurações.",
+      "noisy_source": "A fonte “{name}” gerou {events} eventos importantes e nenhum foi aproveitado. Desative-a ou reduza o nível dela."
+    },
+    "share_after": "depois disso, carga ≈ {share} do dia",
+    "apply": "Aplicar",
+    "applied": "Configuração alterada",
+    "apply_failed": "Não foi possível alterar a configuração",
+    "need_settings": "Só um administrador pode alterar configurações",
+    "open_source": "Abrir fonte",
+    "open_settings": "Abrir configurações"
+  }
+}

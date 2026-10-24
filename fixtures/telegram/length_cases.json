@@ -1,0 +1,13 @@
+[
+  {"html": "", "length": 0},
+  {"html": "Olá", "length": 3},
+  {"html": "<b>Olá</b> mundo", "length": 9},
+  {"html": "A &amp; B", "length": 5},
+  {"html": "Texto [1].", "length": 6},
+  {"html": "Um [1] dois [12]", "length": 7},
+  {"html": "<a href=\"https://ge.globo.com\">ge</a>", "length": 2},
+  {"html": "⚽ Gol!", "length": 6},
+  {"html": "<tg-spoiler>segredo</tg-spoiler>", "length": 7},
+  {"html": "linha 1\n\nlinha 2", "length": 16},
+  {"html": "&lt;script&gt;", "length": 8}
+]

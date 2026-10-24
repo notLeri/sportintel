@@ -1,0 +1,132 @@
+{
+  "Relevance": {
+    "HIGH": "Высокая",
+    "MEDIUM": "Средняя",
+    "LOW": "Низкая",
+    "IRRELEVANT": "Не по теме"
+  },
+  "Reliability": {
+    "HIGH": "Высокое",
+    "MEDIUM": "Среднее",
+    "LOW": "Низкое",
+    "UNKNOWN": "Неизвестно"
+  },
+  "EventStatus": {
+    "NEW": "Новое",
+    "REVIEWING": "На рассмотрении",
+    "SELECTED": "Отобрано",
+    "DRAFT": "Черновик",
+    "READY": "Готово",
+    "PUBLISHED": "Опубликовано",
+    "REJECTED": "Отклонено"
+  },
+  "Role": {
+    "researcher": "Исследователь",
+    "editor": "Редактор",
+    "admin": "Администратор"
+  },
+  "ArticleState": {
+    "discovered": "Найдена",
+    "extracted": "Текст получен",
+    "enriched": "Проанализирована",
+    "clustered": "Добавлена в событие",
+    "failed": "Ошибка"
+  },
+  "FailureCode": {
+    "ssrf_blocked": "Адрес заблокирован политикой безопасности",
+    "blocked_by_robots": "Запрещено robots.txt",
+    "fetch_http_4xx": "Страница недоступна",
+    "fetch_http_5xx": "Ошибка сайта",
+    "fetch_timeout": "Превышено время ожидания",
+    "fetch_too_large": "Страница слишком большая",
+    "fetch_bad_content_type": "Это не веб-страница",
+    "fetch_network": "Ошибка сети",
+    "extract_empty": "Нет текста"
+  },
+  "ReliabilityFactor": {
+    "official_confirmed": "Подтверждено официальным источником",
+    "independent_tier_a_2plus": "2+ независимых источника уровня A",
+    "single_tier_a": "Один источник уровня A",
+    "independent_tier_b_2plus": "2+ независимых источника уровня B",
+    "tier_c_only": "Только источники уровня C",
+    "rumor_markers": "Признаки слухов",
+    "clickbait": "Кликбейт",
+    "open_conflict_cap": "Понижено: источники противоречат друг другу",
+    "single_source": "Единственный источник",
+    "unknown_tier": "Уровень доверия к источникам не задан",
+    "no_articles": "Нет статей",
+    "human_override": "Изменено вручную",
+    "untrusted_only": "Только недоверенные источники"
+  },
+  "RejectionReason": {
+    "DUPLICATE": "Дубль",
+    "IRRELEVANT": "Не по теме",
+    "LOW_QUALITY": "Низкое качество",
+    "INCORRECT": "Ошибка в новости",
+    "OLD_NEWS": "Старая новость",
+    "NOT_TELEGRAM_WORTHY": "Не подходит для канала",
+    "OTHER": "Другое"
+  },
+  "AttachMethod": {
+    "new": "Первая статья события",
+    "auto": "Добавлена автоматически",
+    "adjudicated": "Спорный случай — решено автоматически",
+    "syndication": "Перепечатка",
+    "manual": "Вручную"
+  },
+  "RelationKind": {
+    "related": "Связано",
+    "follow_up": "Продолжение",
+    "possible_duplicate": "Возможный дубль",
+    "old_news": "Старая новость"
+  },
+  "TextOrigin": {
+    "ai": "ИИ",
+    "human": "Редактор",
+    "source": "Источник",
+    "template": "Шаблон"
+  },
+  "SourceTier": {
+    "OFFICIAL": "Официальный",
+    "A": "A — крупные СМИ",
+    "B": "B — надёжные",
+    "C": "C — слабые",
+    "UNTRUSTED": "Не доверяем"
+  },
+  "SourceKind": {
+    "rss": "RSS-лента",
+    "sitemap": "Карта сайта (sitemap)",
+    "html": "Telegram-канал или страница",
+    "manual": "Только вручную",
+    "calendar": "Календарь праздников"
+  },
+  "ContentPolicy": {
+    "transient_text": "Полный текст на несколько дней",
+    "snippet_only": "Только заголовок и первый абзац"
+  },
+  "SettingOption": {
+    "rules": "Правила (бесплатно, мгновенно)",
+    "llm": "ИИ-модель",
+    "template": "Шаблон",
+    "ru": "Русский",
+    "en": "Английский",
+    "pt-BR": "Португальский",
+    "HIGH": "Высокая",
+    "MEDIUM": "Средняя",
+    "LOW": "Низкая",
+    "on": "Включено",
+    "off": "Выключено"
+  },
+  "RelevanceBadge": {
+    "HIGH": "Высокая важность",
+    "MEDIUM": "Средняя важность",
+    "LOW": "Низкая важность",
+    "IRRELEVANT": "Не по теме"
+  },
+  "ReliabilityBadge": {
+    "HIGH": "Высокое доверие",
+    "MEDIUM": "Среднее доверие",
+    "LOW": "Низкое доверие",
+    "UNKNOWN": "Доверие не оценено"
+  }
+}

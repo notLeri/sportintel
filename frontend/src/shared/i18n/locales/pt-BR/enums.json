@@ -1,0 +1,132 @@
+{
+  "Relevance": {
+    "HIGH": "Alta",
+    "MEDIUM": "Média",
+    "LOW": "Baixa",
+    "IRRELEVANT": "Irrelevante"
+  },
+  "Reliability": {
+    "HIGH": "Alta",
+    "MEDIUM": "Média",
+    "LOW": "Baixa",
+    "UNKNOWN": "Desconhecida"
+  },
+  "EventStatus": {
+    "NEW": "Novo",
+    "REVIEWING": "Em análise",
+    "SELECTED": "Selecionado",
+    "DRAFT": "Rascunho",
+    "READY": "Pronto",
+    "PUBLISHED": "Publicado",
+    "REJECTED": "Rejeitado"
+  },
+  "Role": {
+    "researcher": "Pesquisador",
+    "editor": "Editor",
+    "admin": "Admin"
+  },
+  "ArticleState": {
+    "discovered": "Descoberto",
+    "extracted": "Extraído",
+    "enriched": "Enriquecido",
+    "clustered": "Agrupado",
+    "failed": "Falhou"
+  },
+  "FailureCode": {
+    "ssrf_blocked": "Endereço bloqueado por segurança",
+    "blocked_by_robots": "Bloqueado pelo robots.txt",
+    "fetch_http_4xx": "Página indisponível",
+    "fetch_http_5xx": "Erro no site",
+    "fetch_timeout": "Tempo esgotado",
+    "fetch_too_large": "Página grande demais",
+    "fetch_bad_content_type": "Não é uma página",
+    "fetch_network": "Erro de rede",
+    "extract_empty": "Sem texto"
+  },
+  "ReliabilityFactor": {
+    "official_confirmed": "Confirmado por fonte oficial",
+    "independent_tier_a_2plus": "2+ fontes independentes de nível A",
+    "single_tier_a": "Uma fonte de nível A",
+    "independent_tier_b_2plus": "2+ fontes independentes de nível B",
+    "tier_c_only": "Apenas fontes de nível C",
+    "rumor_markers": "Marcadores de boato",
+    "clickbait": "Clickbait",
+    "open_conflict_cap": "Limitado por conflito aberto",
+    "single_source": "Fonte única",
+    "unknown_tier": "Nível das fontes desconhecido",
+    "no_articles": "Sem artigos",
+    "human_override": "Ajuste manual",
+    "untrusted_only": "Apenas fontes não confiáveis"
+  },
+  "RejectionReason": {
+    "DUPLICATE": "Duplicado",
+    "IRRELEVANT": "Irrelevante",
+    "LOW_QUALITY": "Baixa qualidade",
+    "INCORRECT": "Incorreto",
+    "OLD_NEWS": "Notícia antiga",
+    "NOT_TELEGRAM_WORTHY": "Não vale para o Telegram",
+    "OTHER": "Outro"
+  },
+  "AttachMethod": {
+    "new": "Novo",
+    "auto": "Automático",
+    "adjudicated": "Decidido por IA",
+    "syndication": "Sindicação",
+    "manual": "Manual"
+  },
+  "RelationKind": {
+    "related": "Relacionado",
+    "follow_up": "Desdobramento",
+    "possible_duplicate": "Possível duplicado",
+    "old_news": "Notícia antiga"
+  },
+  "TextOrigin": {
+    "ai": "IA",
+    "human": "Humano",
+    "source": "Fonte",
+    "template": "Modelo"
+  },
+  "SourceTier": {
+    "OFFICIAL": "Oficial",
+    "A": "A — grandes veículos",
+    "B": "B — confiáveis",
+    "C": "C — fracos",
+    "UNTRUSTED": "Não confiável"
+  },
+  "SourceKind": {
+    "rss": "Feed RSS",
+    "sitemap": "Sitemap",
+    "html": "Canal do Telegram ou página",
+    "manual": "Somente manual",
+    "calendar": "Calendário de feriados"
+  },
+  "ContentPolicy": {
+    "transient_text": "Texto completo por alguns dias",
+    "snippet_only": "Só título e primeiro parágrafo"
+  },
+  "SettingOption": {
+    "rules": "Regras (grátis, instantâneo)",
+    "llm": "Modelo de IA",
+    "template": "Modelo de texto",
+    "ru": "Russo",
+    "en": "Inglês",
+    "pt-BR": "Português",
+    "HIGH": "Alta",
+    "MEDIUM": "Média",
+    "LOW": "Baixa",
+    "on": "Ligado",
+    "off": "Desligado"
+  },
+  "RelevanceBadge": {
+    "HIGH": "Relevância alta",
+    "MEDIUM": "Relevância média",
+    "LOW": "Relevância baixa",
+    "IRRELEVANT": "Fora do tema"
+  },
+  "ReliabilityBadge": {
+    "HIGH": "Confiança alta",
+    "MEDIUM": "Confiança média",
+    "LOW": "Confiança baixa",
+    "UNKNOWN": "Confiança não avaliada"
+  }
+}

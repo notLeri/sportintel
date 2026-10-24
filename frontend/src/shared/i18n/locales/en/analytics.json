@@ -1,0 +1,84 @@
+{
+  "forbidden": "No access.",
+  "last_days": "Last {n} days",
+  "from": "From",
+  "to": "To",
+  "group_by": "Group by",
+  "by_user": "Person",
+  "by_day": "Day",
+  "too_long": "At most {n} days",
+  "no_activity": "No recorded activity",
+  "tile": {
+    "useful": "Useful stories",
+    "hours": "Active hours",
+    "usph": "Useful stories per hour",
+    "cost": "AI cost per useful story"
+  },
+  "usph_formula": "Useful stories = events selected (or further) in the period, except those rejected as duplicate or incorrect; active hours = activity sessions with gaps up to 15 min.",
+  "funnel": "Status funnel",
+  "feed_funnel": "Feed funnel",
+  "feed_step": {
+    "suggested": "Suggested",
+    "taken": "Taken",
+    "published": "Published"
+  },
+  "reject_reasons": "Rejection reasons",
+  "tts": "Time to select (median)",
+  "precision_high": "“High relevance” — share taken into work",
+  "by_origin": "written by: {origin}",
+  "edit_ratio": "Draft edits (median)",
+  "origin": {
+    "template": "template",
+    "ai": "AI",
+    "rule": "rules",
+    "llm": "AI"
+  },
+  "usph_table": "Useful stories per hour",
+  "leaders": "Sources first to report",
+  "minutes": "{n} min",
+  "ai_load": {
+    "title": "AI load",
+    "verdict": {
+      "ok": "The AI keeps up",
+      "tight": "The AI is at its limit: the queue may grow at peak hours",
+      "overloaded": "The AI can't keep up: more events arrive than the model can handle",
+      "failing": "The AI isn't responding: most recent calls failed. Check that the model server is running and the models are downloaded",
+      "off": "No AI connected: posts use the template, no translations"
+    },
+    "share": "AI needs {share} of the day with current settings",
+    "share_label": "Share of the day the AI needs",
+    "busy": "actually worked {share} of the time",
+    "flow": "Flow: {important} important events a day (high — {high}, medium — {medium}) from {sources} sources.",
+    "backlog": "Queued now: {posts} posts, {translations} translations. Clears in ≈ {eta}.",
+    "headroom": "Headroom: ≈ {events} more important events a day — about {sources} more sources of the same volume.",
+    "kinds": "AI work by type",
+    "kind": "Work",
+    "calls": "Calls",
+    "failed": "Failed",
+    "typical": "Usually",
+    "model_time": "Model time",
+    "kind_name": {
+      "post": "Feed post (background)",
+      "rewrite": "Post on request",
+      "translate": "Event translation",
+      "translate_post": "Post translation",
+      "brief": "AI brief"
+    },
+    "advice_title": "What to change so the AI keeps up",
+    "advice": {
+      "posts_high": "Let the AI write posts only for high-importance events; medium ones get the template, AI on Rewrite.",
+      "translate_high": "Translate only high-importance events in the background; others get translated when opened.",
+      "briefs_off": "Turn off automatic AI briefs — keep them on request.",
+      "posts_by_button": "First version of the post from the template; AI only on Rewrite.",
+      "smaller_model": "Model {model} takes ≈ {post_s} s per post. A smaller model (e.g. qwen3:8b) is about twice as fast — change it in the ai_routing settings.",
+      "noisy_source": "Source “{name}” produced {events} important events and none was taken. Turn it off or lower its tier."
+    },
+    "share_after": "load after this ≈ {share} of the day",
+    "apply": "Apply",
+    "applied": "Setting changed",
+    "apply_failed": "Could not change the setting",
+    "need_settings": "Only an administrator can change settings",
+    "open_source": "Open source",
+    "open_settings": "Open settings"
+  }
+}

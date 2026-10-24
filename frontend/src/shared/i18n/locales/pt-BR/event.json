@@ -1,0 +1,319 @@
+{
+  "not_found": "Evento não encontrado",
+  "load_failed": "Não foi possível carregar o evento",
+  "close": "Fechar",
+  "summary": "Resumo",
+  "no_summary": "Resumo ainda não gerado",
+  "source_removed": "Fonte removida do evento",
+  "cite": "Fonte {n}: {source}",
+  "why_relevant": "Por que é relevante?",
+  "adjusted": "Ajustado manualmente: {reason}",
+  "reliability_title": "Confiança nas fontes",
+  "factors": "Fatores",
+  "sources_title": "{count, plural, one {# fonte} other {# fontes}}",
+  "related": "Eventos relacionados",
+  "occurred_at": "Data",
+  "updated": "Última atualização",
+  "teams": "Times",
+  "players": "Jogadores",
+  "source_down": "Fonte indisponível na última verificação",
+  "tag": {
+    "duplicate": "duplicado",
+    "manual": "manual",
+    "rumor": "boato",
+    "clickbait": "clickbait"
+  },
+  "select_hint": "Selecione um evento na lista",
+  "workflow": {
+    "actions": "Ações",
+    "return": "Devolver",
+    "back_to_edit": "Voltar para edição",
+    "restore": "Restaurar",
+    "to": {
+      "REVIEWING": "Assumir",
+      "SELECTED": "Selecionar",
+      "READY": "Aprovar",
+      "PUBLISHED": "Marcar como publicado",
+      "REJECTED": "Rejeitar",
+      "DRAFT": "Rascunho",
+      "NEW": "Novo"
+    },
+    "approve_needs_draft": "Gere e salve o rascunho primeiro",
+    "reject_title": "Rejeitar evento",
+    "reason": "Motivo",
+    "comment": "Comentário",
+    "cancel": "Cancelar",
+    "conflict": "O evento foi alterado por outra pessoa. Recarregado."
+  },
+  "draft": {
+    "editor": "Editor do rascunho",
+    "toolbar": "Formatação",
+    "bold": "Negrito",
+    "italic": "Itálico",
+    "underline": "Sublinhado",
+    "strike": "Tachado",
+    "link": "Link",
+    "apply": "Aplicar",
+    "code": "Código",
+    "quote": "Citação",
+    "spoiler": "Spoiler",
+    "undo": "Desfazer",
+    "redo": "Refazer",
+    "template_badge": "Modelo — complete o texto",
+    "editor_note": "Para o editor · fora do post"
+  },
+  "draft_panel": {
+    "title": "Rascunho do Telegram",
+    "template": "Gerar rascunho (modelo)",
+    "write": "Escrever manualmente",
+    "select_first": "Selecione o evento primeiro: “Assumir” → “Selecionar”. Rascunhos só para eventos selecionados",
+    "loading": "Carregando rascunho…",
+    "generating": "Gerando… (até 30 s)",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "regenerate": "Regenerar",
+    "history": "Histórico",
+    "image": "Imagem (URL)",
+    "too_long": "texto longo demais",
+    "saved": "Rascunho salvo",
+    "back_to_draft": "O evento voltou para edição e precisa de nova aprovação",
+    "save_failed": "Não foi possível salvar",
+    "offline": "Sem conexão — alterações salvas apenas neste navegador",
+    "restore_banner": "Há alterações não salvas de {time}.",
+    "restore": "Restaurar",
+    "discard": "Descartar",
+    "save_before_copy": "Salve antes de copiar: copia-se a versão salva.",
+    "preview": "Prévia do canal",
+    "restore_version": "Restaurar esta versão",
+    "unverified": "Não verificado nas fontes",
+    "conflict_title": "O rascunho foi alterado por outra pessoa",
+    "server_version": "Versão do servidor",
+    "your_version": "Sua versão",
+    "use_server": "Usar a versão do servidor",
+    "overwrite": "Sobrescrever",
+    "failure": {
+      "generation_failed": "Não foi possível gerar: o evento não tem fontes.",
+      "budget_exhausted": "Limite de IA esgotado."
+    },
+    "post_lang": "Idioma do post",
+    "from_brief": "Post do briefing de IA",
+    "brief_missing": "Gere primeiro o briefing de IA neste idioma (bloco acima)",
+    "ai": "Escrever post (IA)",
+    "translate_to": "Traduzir:",
+    "translating": "Traduzindo…",
+    "ai_off": "Modelo de IA não conectado — tradução indisponível",
+    "save_before_translate": "Salve as edições primeiro — a versão salva é traduzida",
+    "already_in": "O rascunho já está neste idioma",
+    "translate_failed": "Não foi possível traduzir. Tente de novo",
+    "channel_target": "Depois de “Pronto”, exatamente esta versão vai para {channels}.",
+    "channel_off": "(a autopostagem do canal está desligada agora)",
+    "channel_blocked": {
+      "language": "O canal {channel} publica em “{channel_lang}”, mas este post está em “{post_lang}”, então não irá para lá. Traduza com o botão acima e aprove de novo.",
+      "filters": "O canal {channel} não vai pegar este evento: ele não passa nos filtros do canal (importância mínima, regiões, esportes ou fontes). Altere os filtros em “Autopostagem” ou publique manualmente.",
+      "too_old": "O canal {channel} só pega eventos recentes (última matéria em até 3 dias), e este é mais antigo, então a autopostagem não o enviará. Copie o post e publique manualmente."
+    },
+    "approve": "Aprovar post",
+    "approved": "Post aprovado: status “Pronto”",
+    "approve_failed": "Não foi possível aprovar o post",
+    "save_before_approve": "Salve as edições primeiro — aprova-se a versão salva",
+    "approve_blocked": "Nenhum canal aceita esta versão — veja os motivos abaixo"
+  },
+  "edit": {
+    "title": "Editar evento",
+    "edit": "Editar",
+    "save": "Salvar",
+    "saved": "Evento salvo",
+    "conflict_title": "O evento foi alterado por outra pessoa",
+    "field": "Campo",
+    "theirs": "Versão atual",
+    "mine": "Sua versão",
+    "reload": "Recarregar",
+    "overwrite": "Sobrescrever",
+    "updates_since_edit": "Novas fontes chegaram depois da sua edição.",
+    "regenerate_summary": "Regenerar resumo",
+    "fields": {
+      "title": "Título",
+      "summary": "Resumo",
+      "sport_id": "Esporte",
+      "competition_id": "Competição",
+      "team_ids": "Times",
+      "player_ids": "Jogadores"
+    }
+  },
+  "create": {
+    "button": "Novo evento",
+    "title": "Novo evento",
+    "submit": "Criar",
+    "created": "Evento criado",
+    "links": "Links das fontes",
+    "links_hint": "Um link por linha, até 10.",
+    "too_many": "No máximo {max} links.",
+    "bad_line": "Link inválido na linha {n}.",
+    "skipped": "Estes links já pertencem a outros eventos:"
+  },
+  "related_groups": {
+    "related": "Relacionados",
+    "possible_duplicate": "Possíveis duplicados",
+    "old_news": "Notícia antiga semelhante"
+  },
+  "override": {
+    "adjust": "Ajustar",
+    "relevance": "Relevância",
+    "reliability": "Confiança nas fontes",
+    "reason": "Motivo (3–500 caracteres)",
+    "auto": "Voltar ao automático"
+  },
+  "history": {
+    "title": "Histórico",
+    "system": "Sistema",
+    "more": "Carregar mais",
+    "auto": "automático",
+    "actions": {
+      "auth": {
+        "login": "{who} entrou",
+        "logout": "{who} saiu",
+        "login_denied": "Acesso negado ({reason})"
+      },
+      "source": {
+        "created": "{who} criou uma fonte",
+        "updated": "{who} alterou uma fonte"
+      },
+      "article": {
+        "manual_added": "{who} adicionou um link manualmente"
+      },
+      "event": {
+        "created_manual": "{who} criou o evento manualmente",
+        "edited": "{who} editou: {fields}",
+        "transitioned": "{who} mudou o status de {from} para {to}",
+        "rejected": "{who} rejeitou: {reason}{comment}",
+        "summary_regenerate_requested": "{who} pediu para regenerar o resumo",
+        "relevance_overridden": "{who} ajustou a relevância: {level}",
+        "reliability_overridden": "{who} ajustou a confiança nas fontes: {level}",
+        "merged": "{who} mesclou eventos ({count} fontes)",
+        "article_moved": "{who} moveu uma fonte",
+        "conflict_resolved": "{who} resolveu um conflito"
+      },
+      "draft": {
+        "generation_requested": "{who} gerou o rascunho",
+        "saved": "{who} salvou a versão {n} do rascunho",
+        "copied": "{who} copiou a versão {n}",
+        "disclaimer_removed": "{who} removeu o aviso do post"
+      },
+      "settings": {
+        "updated": "{who} alterou configurações"
+      },
+      "user": {
+        "created": "{who} convidou um usuário",
+        "updated": "{who} alterou um usuário"
+      },
+      "taxonomy": {
+        "sport_created": "{who} criou um esporte",
+        "sport_updated": "{who} alterou um esporte",
+        "entity_created": "{who} criou uma entidade",
+        "entity_updated": "{who} alterou uma entidade",
+        "alias_added": "{who} adicionou um apelido",
+        "alias_removed": "{who} removeu um apelido",
+        "unlinked_resolved": "{who} resolveu uma menção"
+      },
+      "pipeline": {
+        "retried": "{who} reprocessou falhas"
+      },
+      "channel": {
+        "created": "{who} criou um canal",
+        "updated": "{who} alterou um canal"
+      }
+    }
+  },
+  "merge": {
+    "button": "Mesclar com…",
+    "title": "Mesclar evento",
+    "search": "Buscar evento…",
+    "results": "Eventos encontrados",
+    "locked": "Eventos prontos ou publicados não podem ser mesclados",
+    "warning": "O evento selecionado «{title}» será rejeitado como duplicado e suas {count} fontes serão movidas para este.",
+    "confirm": "Mesclar",
+    "done": "Eventos mesclados"
+  },
+  "move": {
+    "menu": "Ações da fonte {title}",
+    "split": "Separar em novo evento",
+    "to_other": "Mover para outro evento…",
+    "done": "Fonte movida",
+    "reject_empty": "O evento ficou sem fontes. Rejeitar?"
+  },
+  "region": "Região",
+  "brief": {
+    "title": "Briefing de IA",
+    "language": "Idioma do briefing",
+    "generate": "Gerar",
+    "regenerate": "Refazer",
+    "generating": "Preparando…",
+    "waiting": "A IA está preparando o briefing — geralmente menos de um minuto.",
+    "empty": "Ainda não há briefing neste idioma.",
+    "ai_unavailable": "Nenhum modelo de IA conectado (AI_PROVIDER). Use o original e o rascunho de modelo.",
+    "load_failed": "Não foi possível carregar o briefing",
+    "stale": "Novos artigos chegaram — o briefing pode estar desatualizado. Refaça.",
+    "affected": "Quem é afetado",
+    "impact": "Impacto",
+    "actions": "O que fazer",
+    "sources": "Fontes",
+    "meta": "Modelo {model}, {when}",
+    "lang": {
+      "ru": "Russo",
+      "en": "Inglês",
+      "pt-BR": "Português"
+    },
+    "status": {
+      "official": "Oficial",
+      "confirmed": "Confirmado",
+      "reported": "Noticiado por um veículo",
+      "rumor": "Boato"
+    }
+  },
+  "block_independent": "independente",
+  "block_same_group": "mesmo grupo",
+  "original": "Original",
+  "translated": "Traduzido por IA — passe o mouse para ver o original",
+  "translating": "Traduzindo…",
+  "original_language": "Idioma original: {language}",
+  "original_hint": "Título original: {title}",
+  "written_in": "A fonte escreve em {language}",
+  "same_language": "A fonte escreve no idioma da interface, sem tradução",
+  "post_format": {
+    "title": "Formato dos posts (todos)",
+    "include": "O que incluir",
+    "include_emoji": "Emoji do esporte no título",
+    "inline_links": "Links das fontes no texto",
+    "include_source_link": "Link da fonte original no fim",
+    "template_also_reported": "“Também noticiado por” no modelo",
+    "hashtags": "Hashtags do torneio e dos times",
+    "example": "Post de exemplo",
+    "use_current": "Usar o post atual",
+    "instructions": "O que escrever (instruções para a IA)",
+    "instructions_placeholder": "Ex.: 3–4 frases, no fim o que isso significa para apostas",
+    "applies": "Vale para todos os novos posts. Os já escritos não mudam — clique em “Regenerar”.",
+    "save": "Salvar formato",
+    "saved": "Formato salvo",
+    "failed": "Não foi possível salvar o formato",
+    "auto_mode": "A IA escreve a primeira versão do post (em segundo plano, em fila)"
+  },
+  "rationale": {
+    "not_sports": "Não é sobre esporte: nenhum esporte, clube ou torneio encontrado.",
+    "no_signals": "Nenhum sinal de importância — importância baixa.",
+    "signals": "Sinais encontrados",
+    "competition": "Torneio: {name}",
+    "competition_plain": "Torneio",
+    "top_club": "Clube de ponta: {name}",
+    "top_club_plain": "Clube de ponta",
+    "rumor": "Marcadores de rumor",
+    "rumor_plain": "Marcadores de rumor",
+    "clickbait": "Título clickbait",
+    "clickbait_plain": "Título clickbait",
+    "total": "Total de pontos",
+    "mod": {
+      "priority_up": "Nível elevado: torneio ou clube de ponta.",
+      "priority_down": "Nível reduzido: torneio de baixa prioridade.",
+      "stale": "Nível reduzido: parece notícia antiga."
+    }
+  }
+}

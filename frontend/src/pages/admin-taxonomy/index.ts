@@ -1,0 +1,1 @@
+export { TaxonomyPage } from "./TaxonomyPage";

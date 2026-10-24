@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "SportIntel"
+  },
+  "nav": {
+    "feed": "Feed",
+    "events": "Events",
+    "articles": "Articles",
+    "analytics": "Analytics",
+    "admin": "Admin",
+    "main": "Main navigation",
+    "autopost": "Autopost"
+  },
+  "placeholder": {
+    "title": "Under construction",
+    "body": "This screen is coming soon."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to start"
+  },
+  "sources": "{count, plural, one {# source} other {# sources}}",
+  "retry": "Try again",
+  "filters": {
+    "clear": "Clear",
+    "period": "Period",
+    "search": "Search",
+    "periods": {
+      "1h": "1 hour",
+      "6h": "6 hours",
+      "24h": "24 hours",
+      "7d": "7 days"
+    }
+  },
+  "ai": {
+    "reviewed": "AI-written · reviewed by a human",
+    "unreviewed": "AI-written · not reviewed",
+    "title": "AI at work",
+    "elapsed": "{elapsed} of ~{typical}",
+    "longer": "{elapsed} — longer than usual (~{typical})",
+    "eta": "≈ {eta} left",
+    "done_of": "done in 24 h: {done} of {total}",
+    "next": "Next: {titles}",
+    "queue": {
+      "post": "Feed posts in the channel language — {count} queued",
+      "translate": "Event translation to the interface language — {count} queued",
+      "brief": "AI briefs — {count} queued"
+    },
+    "writing": {
+      "post": "Writing a post: “{title}”",
+      "rewrite": "Rewriting a post: “{title}”",
+      "translate": "Translating: “{title}”",
+      "translate_post": "Translating a post: “{title}”",
+      "brief": "Writing a brief: “{title}”"
+    },
+    "now": {
+      "post": "AI is writing the post for this event",
+      "rewrite": "AI is rewriting this event's post",
+      "translate": "AI is translating this event and its articles",
+      "translate_post": "AI is translating the post",
+      "brief": "AI is writing a brief"
+    },
+    "wait": {
+      "post": "AI is writing the post",
+      "rewrite": "AI is writing the post",
+      "translate": "AI is translating",
+      "translate_post": "AI is translating the post",
+      "brief": "AI is writing a brief"
+    }
+  },
+  "telegram": {
+    "preview_label": "Telegram post preview",
+    "empty": "No content",
+    "channel": "Channel preview",
+    "copy": "Copy",
+    "copied": "Post copied",
+    "copy_manual": "Copy manually (Ctrl+C)"
+  },
+  "status": {
+    "llm_offline": "AI unavailable — running on rules for now",
+    "sources_down": "{count, plural, one {# source unavailable} other {# sources unavailable}}",
+    "pipeline_delayed": "Fresh news may arrive with a delay",
+    "open_sources": "View sources",
+    "dismiss": "Dismiss"
+  },
+  "language": "Language",
+  "close": "Close",
+  "remove": "Remove",
+  "help": "Help",
+  "account": "Account menu",
+  "locale_name": {
+    "en": "English",
+    "ru": "Russian",
+    "pt-BR": "Portuguese"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "As in system",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "palette": {
+    "label": "Palette",
+    "pitch": "Pitch (green)",
+    "ocean": "Ocean (blue)",
+    "violet": "Violet",
+    "graphite": "Graphite (neutral)"
+  },
+  "datepicker": {
+    "pick": "Pick date and time",
+    "prev_month": "Previous month",
+    "next_month": "Next month",
+    "time": "Time",
+    "zone": "Time — {zone}"
+  },
+  "tz": {
+    "mismatch": "Times in the app follow your profile: {profile}, but this device's clock is {device}. Posts are scheduled in profile time.",
+    "use_device": "Switch to {zone}",
+    "keep": "Keep {zone}",
+    "changed": "Time zone: {zone}",
+    "change_failed": "Could not change the time zone",
+    "label": "Zone",
+    "device_option": "Same as device — {zone}"
+  }
+}

@@ -1,0 +1,761 @@
+[
+  {
+    "key": "clustering",
+    "value": {
+      "window_hours": 72,
+      "top_k": 20,
+      "w_cos": 0.6,
+      "w_entities": 0.3,
+      "w_competition": 0.1,
+      "w_lex": 0.5,
+      "lex_min": 0.2,
+      "claim_conflict_penalty": 0.15,
+      "t_high": 0.58,
+      "t_low": 0.38,
+      "adjudication_enabled": true,
+      "stale_window_days": 30,
+      "stale_similarity": 0.88
+    },
+    "default": {
+      "window_hours": 72,
+      "top_k": 20,
+      "w_cos": 0.6,
+      "w_entities": 0.3,
+      "w_competition": 0.1,
+      "w_lex": 0.5,
+      "lex_min": 0.2,
+      "claim_conflict_penalty": 0.15,
+      "t_high": 0.58,
+      "t_low": 0.38,
+      "adjudication_enabled": true,
+      "stale_window_days": 30,
+      "stale_similarity": 0.88
+    },
+    "schema": {
+      "properties": {
+        "window_hours": { "default": 72, "title": "Window Hours", "type": "integer" },
+        "top_k": { "default": 20, "title": "Top K", "type": "integer" },
+        "w_cos": { "default": 0.6, "title": "W Cos", "type": "number" },
+        "w_entities": { "default": 0.3, "title": "W Entities", "type": "number" },
+        "w_competition": { "default": 0.1, "title": "W Competition", "type": "number" },
+        "w_lex": { "default": 0.5, "title": "W Lex", "type": "number" },
+        "lex_min": { "default": 0.2, "title": "Lex Min", "type": "number" },
+        "claim_conflict_penalty": {
+          "default": 0.15,
+          "title": "Claim Conflict Penalty",
+          "type": "number"
+        },
+        "t_high": { "default": 0.58, "title": "T High", "type": "number" },
+        "t_low": { "default": 0.38, "title": "T Low", "type": "number" },
+        "adjudication_enabled": {
+          "default": true,
+          "title": "Adjudication Enabled",
+          "type": "boolean"
+        },
+        "stale_window_days": { "default": 30, "title": "Stale Window Days", "type": "integer" },
+        "stale_similarity": { "default": 0.88, "title": "Stale Similarity", "type": "number" }
+      },
+      "title": "Clustering",
+      "type": "object"
+    },
+    "updated_by": null,
+    "updated_at": null
+  },
+  {
+    "key": "drafts",
+    "value": {
+      "channel_examples": [],
+      "include_source_link": true,
+      "max_hashtags": 4,
+      "auto_min_relevance": "MEDIUM",
+      "auto_mode": "template",
+      "sport_emoji": {
+        "football": "⚽",
+        "basketball": "🏀",
+        "tennis": "🎾",
+        "mma": "🥊",
+        "formula1": "🏎️",
+        "volleyball": "🏐"
+      },
+      "template_also_reported": true
+    },
+    "default": {
+      "channel_examples": [],
+      "include_source_link": true,
+      "max_hashtags": 4,
+      "auto_min_relevance": "MEDIUM",
+      "auto_mode": "template",
+      "sport_emoji": {
+        "football": "⚽",
+        "basketball": "🏀",
+        "tennis": "🎾",
+        "mma": "🥊",
+        "formula1": "🏎️",
+        "volleyball": "🏐"
+      },
+      "template_also_reported": true
+    },
+    "schema": {
+      "properties": {
+        "channel_examples": {
+          "items": { "type": "string" },
+          "maxItems": 5,
+          "title": "Channel Examples",
+          "type": "array"
+        },
+        "include_source_link": {
+          "default": true,
+          "title": "Include Source Link",
+          "type": "boolean"
+        },
+        "max_hashtags": { "default": 4, "title": "Max Hashtags", "type": "integer" },
+        "auto_min_relevance": {
+          "default": "MEDIUM",
+          "enum": ["HIGH", "MEDIUM", "LOW"],
+          "title": "Auto Min Relevance",
+          "type": "string"
+        },
+        "auto_mode": {
+          "default": "template",
+          "enum": ["template", "llm"],
+          "title": "Auto Mode",
+          "type": "string"
+        },
+        "sport_emoji": {
+          "additionalProperties": { "type": "string" },
+          "title": "Sport Emoji",
+          "type": "object"
+        },
+        "template_also_reported": {
+          "default": true,
+          "title": "Template Also Reported",
+          "type": "boolean"
+        }
+      },
+      "title": "Drafts",
+      "type": "object"
+    },
+    "updated_by": null,
+    "updated_at": null
+  },
+  {
+    "key": "ai_routing",
+    "value": {
+      "enrich_article": "rules",
+      "cluster_adjudicate": "rules",
+      "event_summary": "rules",
+      "telegram_draft": "template",
+      "conflict_check": "off",
+      "embeddings": "off",
+      "llm_model": "qwen2.5:7b-instruct",
+      "embedding_model": "bge-m3",
+      "escalation_model": null
+    },
+    "default": {
+      "enrich_article": "rules",
+      "cluster_adjudicate": "rules",
+      "event_summary": "rules",
+      "telegram_draft": "template",
+      "conflict_check": "off",
+      "embeddings": "off",
+      "llm_model": "qwen2.5:7b-instruct",
+      "embedding_model": "bge-m3",
+      "escalation_model": null
+    },
+    "schema": {
+      "properties": {
+        "enrich_article": {
+          "default": "rules",
+          "enum": ["rules", "llm"],
+          "title": "Enrich Article",
+          "type": "string"
+        },
+        "cluster_adjudicate": {
+          "default": "rules",
+          "enum": ["rules", "llm"],
+          "title": "Cluster Adjudicate",
+          "type": "string"
+        },
+        "event_summary": {
+          "default": "rules",
+          "enum": ["rules", "llm"],
+          "title": "Event Summary",
+          "type": "string"
+        },
+        "telegram_draft": {
+          "default": "template",
+          "enum": ["template", "llm"],
+          "title": "Telegram Draft",
+          "type": "string"
+        },
+        "conflict_check": {
+          "default": "off",
+          "enum": ["off", "llm"],
+          "title": "Conflict Check",
+          "type": "string"
+        },
+        "embeddings": {
+          "default": "off",
+          "enum": ["off", "on"],
+          "title": "Embeddings",
+          "type": "string"
+        },
+        "llm_model": { "default": "qwen2.5:7b-instruct", "title": "Llm Model", "type": "string" },
+        "embedding_model": { "default": "bge-m3", "title": "Embedding Model", "type": "string" },
+        "escalation_model": {
+          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "default": null,
+          "title": "Escalation Model"
+        }
+      },
+      "title": "AiRouting",
+      "type": "object"
+    },
+    "updated_by": null,
+    "updated_at": null
+  },
+  {
+    "key": "enrich_rules",
+    "value": {
+      "sport_url_patterns": {
+        "football": [
+          "/futebol/",
+          "/futebol-",
+          "/brasileirao",
+          "/libertadores",
+          "/copa-do-brasil",
+          "/selecao-brasileira"
+        ],
+        "basketball": ["/basquete/", "/nba/", "/nbb/"],
+        "tennis": ["/tenis/"],
+        "mma": ["/mma/", "/ufc/", "/combate/"],
+        "formula1": ["/formula-1/", "/f1/", "/automobilismo/"],
+        "volleyball": ["/volei/"]
+      },
+      "sport_keywords": {
+        "football": [
+          "futebol",
+          "gol",
+          "zagueiro",
+          "atacante",
+          "goleiro",
+          "volante",
+          "meia",
+          "escalação",
+          "pênalti",
+          "escanteio"
+        ],
+        "basketball": ["basquete", "cesta", "armador", "pivô", "rebote", "NBA", "NBB"],
+        "tennis": ["tênis", "tenista", "raquete", "ATP", "WTA", "Grand Slam"],
+        "mma": ["MMA", "UFC", "octógono", "nocaute", "finalização", "cinturão"],
+        "formula1": [
+          "Fórmula 1",
+          "F1",
+          "pole position",
+          "pit stop",
+          "grid de largada",
+          "escuderia"
+        ],
+        "volleyball": ["vôlei", "Superliga", "levantador", "levantadora", "ponteiro", "líbero"]
+      },
+      "rss_category_map": {
+        "futebol": "football",
+        "basquete": "basketball",
+        "tenis": "tennis",
+        "volei": "volleyball",
+        "mma": "mma",
+        "formula 1": "formula1"
+      },
+      "relevance_rules": [
+        {
+          "name": "lesão",
+          "keywords": [
+            "lesão",
+            "lesões",
+            "lesionado",
+            "contusão",
+            "desfalque",
+            "desfalca",
+            "departamento médico",
+            "cirurgia",
+            "vetado",
+            "dúvida para"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "suspensão",
+          "keywords": [
+            "suspenso",
+            "suspende",
+            "suspensão",
+            "cartão vermelho",
+            "expulso",
+            "STJD",
+            "julgamento",
+            "punição",
+            "punido",
+            "pendurado",
+            "perde posições"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "escalação",
+          "keywords": [
+            "escalação",
+            "escalado",
+            "titular",
+            "titulares",
+            "poupado",
+            "relacionados",
+            "provável time",
+            "time titular"
+          ],
+          "weight": 2
+        },
+        {
+          "name": "técnico",
+          "keywords": [
+            "demite",
+            "demitiu",
+            "demitido",
+            "demissão",
+            "novo técnico",
+            "novo treinador",
+            "interino",
+            "deixa o cargo",
+            "anuncia técnico",
+            "saída de técnico",
+            "saída do técnico",
+            "balança no cargo"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "partida",
+          "keywords": [
+            "adiado",
+            "adiamento",
+            "mudança de local",
+            "jogará com portões fechados",
+            "sem torcida",
+            "sem público",
+            "condições do gramado",
+            "chuva forte"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "decisão",
+          "keywords": [
+            "final da",
+            "na final",
+            "a final",
+            "semifinal",
+            "campeão",
+            "conquista o",
+            "conquista a",
+            "elimina",
+            "eliminado",
+            "eliminação",
+            "rebaixamento",
+            "rebaixado"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "convocação",
+          "keywords": ["convoca", "convocação", "convocado", "convocada", "convocados"],
+          "weight": 3
+        },
+        { "name": "doping", "keywords": ["doping", "antidoping"], "weight": 3 },
+        {
+          "name": "transferência",
+          "keywords": [
+            "contratação",
+            "contratado",
+            "reforço",
+            "negociação",
+            "proposta",
+            "transferência",
+            "empréstimo",
+            "acerta com",
+            "assina com",
+            "interesse em",
+            "sondagem",
+            "sondado",
+            "na mira"
+          ],
+          "weight": 2
+        },
+        {
+          "name": "resultado",
+          "keywords": [
+            "vence",
+            "venceu",
+            "derrota",
+            "empata",
+            "empate",
+            "goleada",
+            "classificação",
+            "rodada",
+            "placar",
+            "pódio",
+            "pole position",
+            "marca pontos"
+          ],
+          "weight": 1
+        },
+        { "name": "jogo próximo", "keywords": ["hoje", "amanhã", "clássico"], "weight": 1 },
+        {
+          "name": "evento principal",
+          "keywords": ["card principal", "luta principal", "cinturão", "disputa de título"],
+          "weight": 1
+        },
+        {
+          "name": "fora de campo",
+          "keywords": [
+            "patrocínio",
+            "patrocinador",
+            "balanço financeiro",
+            "eleição",
+            "sócio-torcedor",
+            "homenagem",
+            "camisa nova",
+            "uniforme"
+          ],
+          "weight": -1
+        }
+      ],
+      "competition_weight": {},
+      "level_thresholds": { "HIGH": 6, "MEDIUM": 3, "LOW": 1 },
+      "rumor_markers": [
+        "segundo apuração",
+        "especula-se",
+        "especulado",
+        "interesse",
+        "negocia",
+        "sondagem",
+        "nos bastidores",
+        "de acordo com fontes",
+        "estaria",
+        "teria",
+        "rumor",
+        "boato"
+      ],
+      "clickbait_patterns": [
+        "(?i)você não vai acreditar",
+        "(?i)\\bveja (o que|como|quem)\\b",
+        "(?i)\\bsaiba (o que|quem|qual)\\b",
+        "!{2,}",
+        "(?i)\\bchocante\\b"
+      ],
+      "version": 2
+    },
+    "default": {
+      "sport_url_patterns": {
+        "football": [
+          "/futebol/",
+          "/futebol-",
+          "/brasileirao",
+          "/libertadores",
+          "/copa-do-brasil",
+          "/selecao-brasileira"
+        ],
+        "basketball": ["/basquete/", "/nba/", "/nbb/"],
+        "tennis": ["/tenis/"],
+        "mma": ["/mma/", "/ufc/", "/combate/"],
+        "formula1": ["/formula-1/", "/f1/", "/automobilismo/"],
+        "volleyball": ["/volei/"]
+      },
+      "sport_keywords": {
+        "football": [
+          "futebol",
+          "gol",
+          "zagueiro",
+          "atacante",
+          "goleiro",
+          "volante",
+          "meia",
+          "escalação",
+          "pênalti",
+          "escanteio"
+        ],
+        "basketball": ["basquete", "cesta", "armador", "pivô", "rebote", "NBA", "NBB"],
+        "tennis": ["tênis", "tenista", "raquete", "ATP", "WTA", "Grand Slam"],
+        "mma": ["MMA", "UFC", "octógono", "nocaute", "finalização", "cinturão"],
+        "formula1": [
+          "Fórmula 1",
+          "F1",
+          "pole position",
+          "pit stop",
+          "grid de largada",
+          "escuderia"
+        ],
+        "volleyball": ["vôlei", "Superliga", "levantador", "levantadora", "ponteiro", "líbero"]
+      },
+      "rss_category_map": {
+        "futebol": "football",
+        "basquete": "basketball",
+        "tenis": "tennis",
+        "volei": "volleyball",
+        "mma": "mma",
+        "formula 1": "formula1"
+      },
+      "relevance_rules": [
+        {
+          "name": "lesão",
+          "keywords": [
+            "lesão",
+            "lesões",
+            "lesionado",
+            "contusão",
+            "desfalque",
+            "desfalca",
+            "departamento médico",
+            "cirurgia",
+            "vetado",
+            "dúvida para"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "suspensão",
+          "keywords": [
+            "suspenso",
+            "suspende",
+            "suspensão",
+            "cartão vermelho",
+            "expulso",
+            "STJD",
+            "julgamento",
+            "punição",
+            "punido",
+            "pendurado",
+            "perde posições"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "escalação",
+          "keywords": [
+            "escalação",
+            "escalado",
+            "titular",
+            "titulares",
+            "poupado",
+            "relacionados",
+            "provável time",
+            "time titular"
+          ],
+          "weight": 2
+        },
+        {
+          "name": "técnico",
+          "keywords": [
+            "demite",
+            "demitiu",
+            "demitido",
+            "demissão",
+            "novo técnico",
+            "novo treinador",
+            "interino",
+            "deixa o cargo",
+            "anuncia técnico",
+            "saída de técnico",
+            "saída do técnico",
+            "balança no cargo"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "partida",
+          "keywords": [
+            "adiado",
+            "adiamento",
+            "mudança de local",
+            "jogará com portões fechados",
+            "sem torcida",
+            "sem público",
+            "condições do gramado",
+            "chuva forte"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "decisão",
+          "keywords": [
+            "final da",
+            "na final",
+            "a final",
+            "semifinal",
+            "campeão",
+            "conquista o",
+            "conquista a",
+            "elimina",
+            "eliminado",
+            "eliminação",
+            "rebaixamento",
+            "rebaixado"
+          ],
+          "weight": 3
+        },
+        {
+          "name": "convocação",
+          "keywords": ["convoca", "convocação", "convocado", "convocada", "convocados"],
+          "weight": 3
+        },
+        { "name": "doping", "keywords": ["doping", "antidoping"], "weight": 3 },
+        {
+          "name": "transferência",
+          "keywords": [
+            "contratação",
+            "contratado",
+            "reforço",
+            "negociação",
+            "proposta",
+            "transferência",
+            "empréstimo",
+            "acerta com",
+            "assina com",
+            "interesse em",
+            "sondagem",
+            "sondado",
+            "na mira"
+          ],
+          "weight": 2
+        },
+        {
+          "name": "resultado",
+          "keywords": [
+            "vence",
+            "venceu",
+            "derrota",
+            "empata",
+            "empate",
+            "goleada",
+            "classificação",
+            "rodada",
+            "placar",
+            "pódio",
+            "pole position",
+            "marca pontos"
+          ],
+          "weight": 1
+        },
+        { "name": "jogo próximo", "keywords": ["hoje", "amanhã", "clássico"], "weight": 1 },
+        {
+          "name": "evento principal",
+          "keywords": ["card principal", "luta principal", "cinturão", "disputa de título"],
+          "weight": 1
+        },
+        {
+          "name": "fora de campo",
+          "keywords": [
+            "patrocínio",
+            "patrocinador",
+            "balanço financeiro",
+            "eleição",
+            "sócio-torcedor",
+            "homenagem",
+            "camisa nova",
+            "uniforme"
+          ],
+          "weight": -1
+        }
+      ],
+      "competition_weight": {},
+      "level_thresholds": { "HIGH": 6, "MEDIUM": 3, "LOW": 1 },
+      "rumor_markers": [
+        "segundo apuração",
+        "especula-se",
+        "especulado",
+        "interesse",
+        "negocia",
+        "sondagem",
+        "nos bastidores",
+        "de acordo com fontes",
+        "estaria",
+        "teria",
+        "rumor",
+        "boato"
+      ],
+      "clickbait_patterns": [
+        "(?i)você não vai acreditar",
+        "(?i)\\bveja (o que|como|quem)\\b",
+        "(?i)\\bsaiba (o que|quem|qual)\\b",
+        "!{2,}",
+        "(?i)\\bchocante\\b"
+      ],
+      "version": 2
+    },
+    "schema": {
+      "$defs": {
+        "LevelThresholds": {
+          "properties": {
+            "HIGH": { "default": 6, "title": "High", "type": "integer" },
+            "MEDIUM": { "default": 3, "title": "Medium", "type": "integer" },
+            "LOW": { "default": 1, "title": "Low", "type": "integer" }
+          },
+          "title": "LevelThresholds",
+          "type": "object"
+        },
+        "RelevanceRule": {
+          "properties": {
+            "name": { "title": "Name", "type": "string" },
+            "keywords": { "items": { "type": "string" }, "title": "Keywords", "type": "array" },
+            "weight": { "title": "Weight", "type": "integer" }
+          },
+          "required": ["name", "keywords", "weight"],
+          "title": "RelevanceRule",
+          "type": "object"
+        }
+      },
+      "description": "Правила обогащения без LM (ADR-004, BE-T2.7). Seed-значения — в intelligence.",
+      "properties": {
+        "sport_url_patterns": {
+          "additionalProperties": { "items": { "type": "string" }, "type": "array" },
+          "title": "Sport Url Patterns",
+          "type": "object"
+        },
+        "sport_keywords": {
+          "additionalProperties": { "items": { "type": "string" }, "type": "array" },
+          "title": "Sport Keywords",
+          "type": "object"
+        },
+        "rss_category_map": {
+          "additionalProperties": { "type": "string" },
+          "title": "Rss Category Map",
+          "type": "object"
+        },
+        "relevance_rules": {
+          "items": { "$ref": "#/$defs/RelevanceRule" },
+          "title": "Relevance Rules",
+          "type": "array"
+        },
+        "competition_weight": {
+          "additionalProperties": { "type": "integer" },
+          "title": "Competition Weight",
+          "type": "object"
+        },
+        "level_thresholds": { "$ref": "#/$defs/LevelThresholds" },
+        "rumor_markers": {
+          "items": { "type": "string" },
+          "title": "Rumor Markers",
+          "type": "array"
+        },
+        "clickbait_patterns": {
+          "items": { "type": "string" },
+          "title": "Clickbait Patterns",
+          "type": "array"
+        },
+        "version": { "default": 1, "title": "Version", "type": "integer" }
+      },
+      "title": "EnrichRules",
+      "type": "object"
+    },
+    "updated_by": null,
+    "updated_at": null
+  }
+]

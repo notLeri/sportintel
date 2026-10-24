@@ -1,0 +1,32 @@
+{
+  "page": {
+    "title": "Algo deu errado",
+    "body": "Não foi possível exibir esta página.",
+    "reload": "Recarregar",
+    "requestId": "ID da requisição: {id}",
+    "chunk": "Uma nova versão foi publicada. Recarregue a página.",
+    "retry": "Tentar novamente"
+  },
+  "common": {
+    "internal": "Erro interno. Tente novamente.",
+    "not_found": "Não encontrado.",
+    "forbidden": "Sem permissão.",
+    "unauthenticated": "Sessão expirada. Entre novamente.",
+    "rate_limited": "Muitas tentativas. Aguarde alguns minutos e tente de novo."
+  },
+  "auth": {
+    "not_allowed": "Seu e-mail não tem acesso. Peça ao administrador.",
+    "email_not_verified": "Seu e-mail não está verificado no provedor de login.",
+    "user_inactive": "Sua conta está desativada. Fale com o administrador.",
+    "state_mismatch": "A sessão de login expirou. Tente entrar de novo.",
+    "oidc_failed": "Não foi possível entrar agora. Tente novamente.",
+    "bad_credentials": "E-mail ou senha incorretos.",
+    "oidc_disabled": "O login com Google está desativado neste servidor. Use e-mail e senha."
+  },
+  "event": {
+    "invalid_transition": "Transição não permitida no status atual.",
+    "transition_forbidden": "Seu papel não permite esta transição.",
+    "reason_required": "Informe o motivo.",
+    "comment_required": "Escreva um comentário."
+  }
+}

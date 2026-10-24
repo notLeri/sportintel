@@ -1,0 +1,1 @@
+export { BriefPanel } from "./BriefPanel";

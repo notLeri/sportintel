@@ -1,0 +1,22 @@
+{
+  "add_url": "Adicionar link",
+  "add_url_hint": "Cole o endereço de uma notícia. O sistema baixa e processa o texto.",
+  "submit": "Adicionar",
+  "url_invalid": "Informe um link http(s) válido.",
+  "added": "Link adicionado. Processando…",
+  "already_exists": "Este link já existe",
+  "offline": "Sem conexão. Tente de novo — o link não será duplicado.",
+  "add_failed": "Não foi possível adicionar o link.",
+  "manual": "manual",
+  "empty": "Nenhuma notícia encontrada. Tente mudar os filtros.",
+  "load_failed": "Não foi possível carregar as notícias.",
+  "load_more": "Carregar mais",
+  "open_event": "Abrir",
+  "col": {
+    "title": "Título",
+    "source": "Fonte",
+    "published": "Publicado",
+    "state": "Status",
+    "event": "Evento"
+  }
+}

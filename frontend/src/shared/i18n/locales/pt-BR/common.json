@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "SportIntel"
+  },
+  "nav": {
+    "feed": "Feed",
+    "events": "Eventos",
+    "articles": "Artigos",
+    "analytics": "Análises",
+    "admin": "Admin",
+    "main": "Navegação principal",
+    "autopost": "Autopostagem"
+  },
+  "placeholder": {
+    "title": "Em construção",
+    "body": "Esta tela será implementada em breve."
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "back": "Voltar ao início"
+  },
+  "sources": "{count, plural, one {# fonte} other {# fontes}}",
+  "retry": "Tentar novamente",
+  "filters": {
+    "clear": "Limpar",
+    "period": "Período",
+    "search": "Buscar",
+    "periods": {
+      "1h": "1 hora",
+      "6h": "6 horas",
+      "24h": "24 horas",
+      "7d": "7 dias"
+    }
+  },
+  "ai": {
+    "reviewed": "IA · revisado",
+    "unreviewed": "Gerado por IA · não revisado",
+    "title": "IA trabalhando",
+    "elapsed": "{elapsed} de ~{typical}",
+    "longer": "{elapsed} — mais que o normal (~{typical})",
+    "eta": "faltam ≈ {eta}",
+    "done_of": "prontos em 24 h: {done} de {total}",
+    "next": "Próximos: {titles}",
+    "queue": {
+      "post": "Posts do feed no idioma do canal — {count} na fila",
+      "translate": "Tradução de eventos para o idioma da interface — {count} na fila",
+      "brief": "Análises de IA — {count} na fila"
+    },
+    "writing": {
+      "post": "Escrevendo post: “{title}”",
+      "rewrite": "Reescrevendo post: “{title}”",
+      "translate": "Traduzindo: “{title}”",
+      "translate_post": "Traduzindo post: “{title}”",
+      "brief": "Escrevendo análise: “{title}”"
+    },
+    "now": {
+      "post": "A IA está escrevendo o post deste evento",
+      "rewrite": "A IA está reescrevendo o post deste evento",
+      "translate": "A IA está traduzindo este evento e suas matérias",
+      "translate_post": "A IA está traduzindo o post",
+      "brief": "A IA está escrevendo uma análise"
+    },
+    "wait": {
+      "post": "A IA está escrevendo o post",
+      "rewrite": "A IA está escrevendo o post",
+      "translate": "A IA está traduzindo",
+      "translate_post": "A IA está traduzindo o post",
+      "brief": "A IA está escrevendo uma análise"
+    }
+  },
+  "telegram": {
+    "preview_label": "Prévia do post no Telegram",
+    "empty": "Sem conteúdo",
+    "channel": "Prévia do canal",
+    "copy": "Copiar",
+    "copied": "Post copiado",
+    "copy_manual": "Copie manualmente (Ctrl+C)"
+  },
+  "status": {
+    "llm_offline": "LM indisponível — usando regras",
+    "sources_down": "{count, plural, one {# fonte indisponível} other {# fontes indisponíveis}}",
+    "pipeline_delayed": "Novas notícias podem chegar com atraso",
+    "open_sources": "Ver fontes",
+    "dismiss": "Fechar aviso"
+  },
+  "language": "Idioma",
+  "close": "Fechar",
+  "remove": "Remover",
+  "help": "Ajuda",
+  "account": "Menu da conta",
+  "locale_name": {
+    "en": "Inglês",
+    "ru": "Russo",
+    "pt-BR": "Português"
+  },
+  "theme": {
+    "label": "Tema",
+    "system": "Como no sistema",
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "palette": {
+    "label": "Paleta",
+    "pitch": "Campo (verde)",
+    "ocean": "Oceano (azul)",
+    "violet": "Violeta",
+    "graphite": "Grafite (neutra)"
+  },
+  "datepicker": {
+    "pick": "Escolher data e hora",
+    "prev_month": "Mês anterior",
+    "next_month": "Próximo mês",
+    "time": "Hora",
+    "zone": "Horário — {zone}"
+  },
+  "tz": {
+    "mismatch": "Os horários seguem o perfil: {profile}, mas o relógio deste aparelho é {device}. Os posts são agendados no horário do perfil.",
+    "use_device": "Mudar para {zone}",
+    "keep": "Manter {zone}",
+    "changed": "Fuso horário: {zone}",
+    "change_failed": "Não foi possível mudar o fuso horário",
+    "label": "Fuso",
+    "device_option": "Igual ao aparelho — {zone}"
+  }
+}

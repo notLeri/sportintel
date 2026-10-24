@@ -1,0 +1,23 @@
+{
+  "pages/ge_article.html": {
+    "url": "https://ge.globo.com/futebol/times/fluminense/noticia/2026/10/07/cano-avanca-na-recuperacao-e-trabalha-com-bola-no-treino-do-fluminense.ghtml",
+    "title": "Cano avança em recuperação e volta aos treinos no Fluminense | Ge",
+    "published_at": "2026-10-07T00:00:00-03:00",
+    "lead_prefix": "Cano iniciou a transição para o campo no Fluminens",
+    "image_url": "https://s2-ge.glbimg.com/Xg1MLKK7fe8_fAycMqFvVDbMQQ4=/1280x0/filters:format(jpeg)/https://s03.video.glbimg.com/x720/14977314.jpg"
+  },
+  "pages/ge_article_2.html": {
+    "url": "https://ge.globo.com/sc/surfe/noticia/2026/10/07/inscricoes-para-a-segunda-etapa-do-circuito-catarinense-de-surf-seguem-abertas.ghtml",
+    "title": "Inscrições para a segunda etapa do Circuito Catarinense de Surf seguem abertas | Ge",
+    "published_at": "2026-10-07T00:00:00-03:00",
+    "lead_prefix": "Etapa será disputada em Governador Celso Ramos, na",
+    "image_url": "https://s2-ge.glbimg.com/nxTrLAGFP5IZdU9n11qGb1GG2-w=/2500x0/filters:format(jpeg)/https://i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/p/8/bzANAlQXGJiaMSP6O4xw/471431-1223495-caetano-vargas-saochicosurffestival-dia2-marciodavidphoto0038.jpg"
+  },
+  "pages/cnn_article.html": {
+    "url": "https://www.cnnbrasil.com.br/esportes/automobilismo/carro-williams-ralf-schumacher-batalha-judicial-sumico-misterioso/",
+    "title": "Carro dirigido por Schumacher vira batalha judicial após sumiço misterioso | CNN Brasil",
+    "published_at": "2026-10-07T00:00:00-03:00",
+    "lead_prefix": "Carro da Williams que fez história com Ralf Schuma",
+    "image_url": "https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2026/10/williams-f1-2001-e1791393398145.jpg?w=1200&h=630&crop=1"
+  }
+}

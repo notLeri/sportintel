@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://www.lance.com.br/fluminense/fluminense-vence.html</loc>
+    <news:news>
+      <news:publication><news:name>Lance!</news:name><news:language>pt</news:language></news:publication>
+      <news:publication_date>2026-10-07T09:00:00-03:00</news:publication_date>
+      <news:title>Fluminense vence e se aproxima do G-4</news:title>
+    </news:news>
+    <image:image><image:loc>https://www.lance.com.br/img/flu.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://www.lance.com.br/santos/santos-empata.html</loc>
+    <news:news>
+      <news:publication><news:name>Lance!</news:name><news:language>pt</news:language></news:publication>
+      <news:publication_date>2026-10-07</news:publication_date>
+      <news:title>Santos empata em casa</news:title>
+    </news:news>
+  </url>
+  <url><loc>https://www.lance.com.br/sem-news.html</loc></url>
+</urlset>

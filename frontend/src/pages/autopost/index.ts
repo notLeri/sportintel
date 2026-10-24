@@ -1,0 +1,1 @@
+export { AutopostPage } from "./AutopostPage";

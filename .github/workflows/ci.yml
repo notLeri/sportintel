@@ -1,0 +1,199 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  UV_VERSION: "0.11.15"
+  NODE_VERSION: "22"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      contract: ${{ steps.filter.outputs.contract }}
+      image: ${{ steps.filter.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend: ['backend/**', 'fixtures/**', 'openapi.json']
+            frontend: ['frontend/**', 'openapi.json']
+            contract: ['backend/**', 'frontend/src/shared/api/**', 'openapi.json']
+            image: ['backend/**', 'frontend/**', 'deploy/**']
+
+  # Пропущенный по `if` job отдаёт статус Success — обязательные проверки зелёные
+  # и для PR только с документацией (INFRA-T0.11 §12).
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres -d test"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    env:
+      ENV: ci
+      APP_BASE_URL: http://localhost:8000
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/test
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/test
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy
+      - run: uv run lint-imports
+      - name: migrations from scratch, single head
+        run: |
+          uv run alembic upgrade head
+          test "$(uv run alembic heads | wc -l)" -eq 1
+      - run: uv run pytest -m "not evals" --cov=sportintel --cov-report=term-missing:skip-covered
+
+  frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm check:api
+      - run: pnpm check:i18n
+
+  contract:
+    needs: changes
+    if: needs.changes.outputs.contract == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: openapi.json matches the backend
+        working-directory: backend
+        run: uv sync --frozen && uv run python scripts/export_openapi.py --check
+      - name: TS types match openapi.json
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile && pnpm check:api
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        run: >-
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.22.1
+          detect --source /repo --redact --no-banner
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+      - name: pip-audit
+        working-directory: backend
+        run: uv sync --frozen && uv run pip-audit --skip-editable
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: pnpm audit
+        working-directory: frontend
+        run: pnpm audit --prod --audit-level=high
+
+  image:
+    needs: changes
+    if: needs.changes.outputs.image == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres -d app"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: sportintel:ci
+          build-args: VERSION=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: smoke (migrate → web → /healthz, /readyz)
+        run: |
+          printf '%s\n' ENV=ci APP_BASE_URL=http://localhost:8000 \
+            DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/app > smoke.env
+          docker run --rm --network host --env-file smoke.env sportintel:ci migrate
+          docker run -d --name web --network host --env-file smoke.env sportintel:ci web
+          for _ in $(seq 1 30); do curl -fs localhost:8000/healthz && break; sleep 1; done
+          curl -fs localhost:8000/healthz
+          curl -fs localhost:8000/readyz
+          curl -fs localhost:8000/ | grep -q 'id="root"'
+      - if: failure()
+        run: docker logs web || true

@@ -1,0 +1,15 @@
+{
+  "bank_holidays.json": {
+    "count": 134,
+    "contains": [
+      [
+        "2019-01-02",
+        "2nd January (GB-SCT)"
+      ],
+      [
+        "2019-04-19",
+        "Good Friday"
+      ]
+    ]
+  }
+}
