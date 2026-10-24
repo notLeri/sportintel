@@ -1,8 +1,8 @@
-# Evals обогащения: enrich_v1, режим rules
+# Enrichment evals: enrich_v1, rules mode
 
-Дата: 2026-10-08
+Date: 2026-10-08
 
-| Метрика | Значение | Цель |
+| Metric | Value | Target |
 |---|---|---|
 | n | 60 |  |
 | accuracy_sport | 1.000 | ≥ 0.9 |
@@ -13,9 +13,9 @@
 | entities_recall | 0.987 |  |
 | accuracy_rumor | 0.967 |  |
 
-**Итог:** цели достигнуты
+**Result:** targets met
 
-## Ошибки
+## Errors
 
 - São Paulo acerta renovação do goleiro até o fim de 2027 — gold football/MEDIUM, got football/LOW (rules: clube da Série A(+1))
 - Franca vence o Flamengo e abre vantagem na final do NBB — gold basketball/MEDIUM, got basketball/HIGH (rules: decisão(+6), resultado(+2), NBB(+1))

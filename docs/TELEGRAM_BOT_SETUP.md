@@ -1,69 +1,69 @@
-# Telegram: бот и тестовый канал для публикации
+# Telegram: a bot and a test channel for publishing
 
-Займёт около 10 минут. Понадобится Telegram (телефон или desktop) и терминал.
+Takes about 10 minutes. You need Telegram (phone or desktop) and a terminal.
 
-## 1. Создать бота
+## 1. Create the bot
 
-1. В Telegram откройте [@BotFather](https://t.me/BotFather) (официальный, с синей галочкой).
-2. Отправьте `/newbot`.
-3. Введите **имя** бота — его видят люди, например `SportIntel Publisher`.
-4. Введите **username**: латиница, должен заканчиваться на `bot`, например `sportintel_publisher_bot`.
-5. BotFather пришлёт **токен** вида `1234567890:AAH...`. Это пароль бота:
-   - не отправляйте его в чаты и не коммитьте в git;
-   - если токен утёк — в @BotFather: `/revoke` → выбрать бота → получить новый.
+1. In Telegram open [@BotFather](https://t.me/BotFather) (the official one, with the blue check mark).
+2. Send `/newbot`.
+3. Enter the bot's **name**, which people see, e.g. `SportIntel Publisher`.
+4. Enter a **username**: Latin letters, must end with `bot`, e.g. `sportintel_publisher_bot`.
+5. BotFather sends a **token** like `1234567890:AAH...`. This is the bot's password:
+   - do not post it in chats or commit it to git;
+   - if the token leaks, go to @BotFather: `/revoke` → pick the bot → get a new one.
 
-## 2. Создать тестовый канал
+## 2. Create a test channel
 
-1. Telegram → «Новый канал» → название, например `SportIntel Test`.
-2. Тип — **Частный** (для тестов).
-3. Подписчиков можно не добавлять.
+1. Telegram → "New Channel" → a name, e.g. `SportIntel Test`.
+2. Type: **Private** (for tests).
+3. You do not need to add subscribers.
 
-## 3. Сделать бота администратором канала
+## 3. Make the bot a channel administrator
 
-1. Откройте канал → «Управление каналом» (иконка карандаша) → «Администраторы» → «Добавить администратора».
-2. В поиске введите username бота (`@sportintel_publisher_bot`) и выберите его.
-3. Оставьте включённым только право **«Публикация сообщений»** — остальное не нужно.
-4. Сохраните.
+1. Open the channel → "Manage Channel" (pencil icon) → "Administrators" → "Add Admin".
+2. Search for the bot's username (`@sportintel_publisher_bot`) and select it.
+3. Leave only the **"Post Messages"** permission on; nothing else is needed.
+4. Save.
 
-## 4. Узнать chat_id канала
+## 4. Find the channel's chat_id
 
-1. Опубликуйте в канале любое сообщение, например `test`.
-2. В терминале (подставьте свой токен):
+1. Post any message in the channel, e.g. `test`.
+2. In a terminal (use your token):
 
    ```bash
-   curl -s "https://api.telegram.org/bot<ТОКЕН>/getUpdates" | python3 -m json.tool | grep -A3 '"chat"'
+   curl -s "https://api.telegram.org/bot<TOKEN>/getUpdates" | python3 -m json.tool | grep -A3 '"chat"'
    ```
 
-3. Найдите `"id": -100xxxxxxxxxx` рядом с `"type": "channel"` — это **chat_id** (с минусом, начинается на `-100`).
-   Если ответ пустой (`"result": []`), опубликуйте в канале ещё одно сообщение и повторите запрос.
+3. Find `"id": -100xxxxxxxxxx` next to `"type": "channel"`. That is the **chat_id** (negative, starts with `-100`).
+   If the response is empty (`"result": []`), post one more message in the channel and repeat the request.
 
-## 5. Проверить, что бот может писать в канал
+## 5. Check that the bot can post to the channel
 
 ```bash
-curl -s "https://api.telegram.org/bot<ТОКЕН>/sendMessage" \
-  -d chat_id=<CHAT_ID> -d parse_mode=HTML -d text="<b>SportIntel</b>: тест публикации"
+curl -s "https://api.telegram.org/bot<TOKEN>/sendMessage" \
+  -d chat_id=<CHAT_ID> -d parse_mode=HTML -d text="<b>SportIntel</b>: publishing test"
 ```
 
-Ответ `"ok":true` и сообщение в канале — всё готово. Ошибки:
+`"ok":true` and a message in the channel mean you are done. Errors:
 
-| Ответ | Что делать |
+| Response | What to do |
 |---|---|
-| `chat not found` | неверный chat_id или бот не добавлен в канал |
-| `not enough rights to send text messages` | у бота нет права «Публикация сообщений» |
-| `Unauthorized` | неверный токен |
+| `chat not found` | wrong chat_id, or the bot is not in the channel |
+| `not enough rights to send text messages` | the bot lacks the "Post Messages" permission |
+| `Unauthorized` | wrong token |
 
-## 6. Подключить к SportIntel
+## 6. Connect it to SportIntel
 
-1. В `.env` (файл не попадает в git):
+1. In `.env` (the file is never committed):
 
    ```
    TELEGRAM_BOT_TOKEN=1234567890:AAH...
    FLAG_TELEGRAM_PUBLISH=true
    ```
 
-   Пока `FLAG_TELEGRAM_PUBLISH` не включён, система ничего не отправляет, даже если каналы настроены.
-2. Перезапустите web и worker (`make api`, `make worker`).
-3. Админка → «Каналы» → «Новый канал»: название, **chat_id** из шага 4, язык постов, режим и расписание.
-4. Нажмите «Отправить тест» — в канале должно появиться тестовое сообщение.
+   Until `FLAG_TELEGRAM_PUBLISH` is on, the system sends nothing, even if channels are configured.
+2. Restart web and worker (`make api`, `make worker`, or `docker compose up -d` in production).
+3. Admin → "Channels" → "New channel": name, the **chat_id** from step 4, post language, mode and schedule.
+4. Click "Send test": a test message should appear in the channel.
 
-Токен хранится только в `.env` (в проде — в секретах окружения), в базе — только chat_id.
+The token is stored only in `.env` (in production, in the environment's secrets); the database stores only the chat_id.

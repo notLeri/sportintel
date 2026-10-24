@@ -1,8 +1,8 @@
-# Evals кластеризации: clustering_v1, лексический режим
+# Clustering evals: clustering_v1, lexical mode
 
-Дата: 2026-10-08
+Date: 2026-10-08
 
-| Метрика | Значение | Цель |
+| Metric | Value | Target |
 |---|---|---|
 | current_bcubed_p | 0.897 |  |
 | current_bcubed_r | 1.000 |  |
@@ -23,4 +23,4 @@
 | best_clusters | 20 |  |
 | best_gold_clusters | 23 |  |
 
-**Итог:** цели достигнуты
+**Result:** targets met

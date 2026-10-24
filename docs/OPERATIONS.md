@@ -1,114 +1,114 @@
-# Эксплуатация и масштабирование
+# Operations and scaling
 
-Для того, кто поддерживает работающую установку. Установка, ежедневные команды, бэкапы и частые проблемы описаны в [deploy/README.md](../deploy/README.md). Здесь — что наблюдать, как реагировать и когда и как расти. Решение о текущей схеме — [ADR-005](adr/005-single-host-compose-password-login.md).
+For whoever looks after a running installation. Installation, everyday commands, backups and common problems are in [deploy/README.md](../deploy/README.md). This document covers what to watch, how to react, and when and how to grow. The decision behind the current setup: [ADR-005](adr/005-single-host-compose-password-login.md).
 
-## 1. Текущая схема и её пределы
+## 1. Current setup and its limits
 
-Одна машина, `compose.yaml`: caddy → web → db, worker, backup, опционально ollama.
+One machine, `compose.yaml`: caddy → web → db, worker, backup, optionally ollama.
 
-| Параметр | Значение сейчас | Откуда |
+| Parameter | Current value | Source |
 |---|---|---|
-| RPO (сколько данных можно потерять) | ≤ `BACKUP_INTERVAL_H` (24 ч) | сервис `backup` |
-| RTO (сколько чинить при потере сервера) | ~30–60 мин: новый сервер + установка + восстановление дампа | deploy/README.md §5 |
-| Простой при обновлении | секунды: Caddy держит запросы до 30 с, пока web перезапускается | `lb_try_duration` |
-| Процессы | web ×1, worker ×1 (внутри: основной, `fetch`, `ai_interactive`) | `make worker`, CONV §10 |
-| Пользователи | рассчитано на ~20 одновременных | ARCHITECTURE §0 |
+| RPO (how much data can be lost) | ≤ `BACKUP_INTERVAL_H` (24 h) | `backup` service |
+| RTO (how long a lost server takes to fix) | ~30–60 min: new server + install + restore the dump | deploy/README.md §5 |
+| Downtime during an update | seconds: Caddy holds requests for up to 30 s while web restarts | `lb_try_duration` |
+| Processes | web ×1, worker ×1 (inside: main, `fetch`, `ai_interactive`) | `make worker` |
+| Users | sized for ~20 concurrent | ARCHITECTURE §0 |
 
-Отличия от целевой архитектуры (ARCHITECTURE §29): нет managed PostgreSQL с PITR (вместо него ежедневный дамп), нет второй реплики web, нет managed-наблюдаемости (вместо неё логи Docker, отчёт `capacity.sql` и Telegram-алерты).
+Differences from the target architecture (ARCHITECTURE §29): no managed PostgreSQL with PITR (a daily dump instead), no second web replica, no managed observability (Docker logs, the `capacity.sql` report and Telegram alerts instead).
 
-## 2. Что смотреть
+## 2. What to watch
 
-### Ежедневно (1 минута)
+### Daily (1 minute)
 
 ```bash
-docker compose ps            # все healthy; backup unhealthy = нет свежего дампа
+docker compose ps            # everything healthy; backup unhealthy = no fresh dump
 ```
 
-- **Админка → Конвейер:** очереди, упавшие задачи, здоровье источников.
-- Telegram-чат алертов (`ALERT_TELEGRAM_*`): молчащие источники и рост очереди.
+- **Admin → Pipeline:** queues, failed jobs, source health.
+- The alert Telegram chat (`ALERT_TELEGRAM_*`): quiet sources and growing queues.
 
-### Еженедельно — отчёт о нагрузке
+### Weekly: the load report
 
 ```bash
 docker compose exec db psql -U sportintel -f /capacity.sql
 ```
 
-Отчёт только читает данные. В нём 9 разделов:
+The report is read-only. It has 9 sections:
 
-1. Размер базы, топ таблиц.
-2. Статьи и события по дням.
-3. Задержка «опубликовано → у нас» (p50/p95).
-4. Очередь: ожидающие и упавшие задачи, возраст старейшей.
-5. Опросы источников и ошибки за 24 ч.
-6. ИИ: вызовы, ошибки, p50/p95 длительности.
-7. Пользователи и сессии.
-8. Публикации в Telegram.
-9. Подключения к БД.
+1. Database size, top tables.
+2. Articles and events per day.
+3. "Published → ingested" latency (p50/p95).
+4. Queue: waiting and failed jobs, age of the oldest.
+5. Source polls and errors over 24 h.
+6. AI: calls, errors, p50/p95 duration.
+7. Users and sessions.
+8. Telegram publications.
+9. Database connections.
 
-**Сохраняйте вывод раз в неделю** (`… > reports/capacity-$(date +%F).txt`). Тренд за 4–8 недель — это и есть информация для решений о масштабировании (§4).
+**Save the output once a week** (`… > reports/capacity-$(date +%F).txt`). The trend over 4–8 weeks is what scaling decisions are based on (§4).
 
-Ресурсы машины:
+Machine resources:
 
 ```bash
-docker stats --no-stream     # CPU и память по контейнерам
-df -h                        # диск: база, ./backups, образы
-docker system df             # сколько занимают образы и volumes
+docker stats --no-stream     # CPU and memory per container
+df -h                        # disk: database, ./backups, images
+docker system df             # how much images and volumes take
 ```
 
-### Логи
+### Logs
 
-`docker compose logs -f --tail=200 web worker` — JSON-строки (structlog, поля — ARCHITECTURE §26). Полезные фильтры:
-- `| grep '"severity": "ERROR"'` — ошибки;
-- `| grep identity.password_login_denied` — неудачные входы;
-- `| grep platform.stalled_jobs_retried` — worker умирал посреди задачи.
+`docker compose logs -f --tail=200 web worker` prints JSON lines (structlog, fields in ARCHITECTURE §26). Useful filters:
+- `| grep '"severity": "ERROR"'`: errors;
+- `| grep identity.password_login_denied`: failed sign-ins;
+- `| grep platform.stalled_jobs_retried`: a worker died in the middle of a job.
 
-Логи Docker ротируются: 5 × 10 МБ на контейнер. Для хранения дольше подключите Sentry (`SENTRY_DSN`) или сборщик логов.
+Docker logs rotate at 5 × 10 MB per container. For longer retention, connect Sentry (`SENTRY_DSN`) or a log collector.
 
-## 3. Реагирование
+## 3. Responding
 
-| Сигнал | Первое действие |
+| Signal | First action |
 |---|---|
-| `/readyz` не 200 / сайт не открывается | `docker compose ps` → у кого не healthy → `docker compose logs <сервис>` |
-| `migrate` exited (1) после обновления | `docker compose logs migrate`. Откат: `git checkout <прошлый тег>` → `docker compose up -d --build` (миграции совместимы с N−1, ARCHITECTURE §29.2) |
-| backup unhealthy | `docker compose logs backup`. Чаще всего кончилось место на диске (`df -h`) |
-| Растёт «oldest_waiting» в очереди `fetch` | источники медленные или их стало больше → `WORKER_FETCH_CONCURRENCY` (§4) |
-| Растёт очередь `ai`/`translate` | ИИ не успевает: локальная модель медленная → §4, строка «ИИ» |
-| Упавшие задачи копятся | **Админка → Конвейер** → причина → «Повторить». Через 30 дней упавшие удаляются сами (`platform.purge_old_jobs`) |
-| Диск > 80 % | крупнейшие таблицы — раздел 1 отчёта. Старые `./backups` вынести с сервера, `docker image prune` |
-| Подозрение на перебор паролей | логи `identity.password_login_denied`. Лимит 5/15 мин на пару e-mail + IP уже действует; при атаке с разных IP — Fail2ban/файрвол на уровне хоста |
-| Забыт пароль единственного admin | `docker compose run --rm web admin set-password admin@… --role admin` |
+| `/readyz` is not 200 / the site does not open | `docker compose ps` → find what is not healthy → `docker compose logs <service>` |
+| `migrate` exited (1) after an update | `docker compose logs migrate`. Rollback: `git checkout <previous tag>` → `docker compose up -d --build` (migrations are compatible with N−1, ARCHITECTURE §29.2) |
+| backup unhealthy | `docker compose logs backup`. Usually the disk is full (`df -h`) |
+| "oldest_waiting" grows in the `fetch` queue | sources are slow or there are more of them → `WORKER_FETCH_CONCURRENCY` (§4) |
+| The `ai`/`translate` queue grows | AI cannot keep up: the local model is slow → §4, the "AI" row |
+| Failed jobs pile up | **Admin → Pipeline** → cause → "Retry". Failed jobs are deleted automatically after 30 days (`platform.purge_old_jobs`) |
+| Disk > 80 % | largest tables are in section 1 of the report. Move old `./backups` off the server, `docker image prune` |
+| Suspected password brute force | `identity.password_login_denied` in the logs. The 5 per 15 min limit per e-mail + IP pair is already active; for an attack from many IPs use Fail2ban or a host firewall |
+| The only admin forgot the password | `docker compose run --rm web admin set-password admin@… --role admin` |
 
-## 4. Когда масштабироваться: сигналы
+## 4. When to scale: signals
 
-Решения принимаются по трендам из отчёта `capacity.sql` и `docker stats`, а не «на всякий случай». Пороги ниже — стартовые ориентиры, их стоит уточнить по своим данным.
+Decide on trends from the `capacity.sql` report and `docker stats`, not "just in case". The thresholds below are starting points; tune them to your own data.
 
-| Сигнал | Порог | Что упирается | Шаг (§5) |
+| Signal | Threshold | Bottleneck | Step (§5) |
 |---|---|---|---|
-| CPU машины, среднее за день | > 70 % | всё | 1 — вертикально |
-| RAM | > 80 % или OOM в `dmesg` | обычно Ollama | 1 или 3 |
-| p95 задержки «опубликовано → у нас» (разд. 3) | > 15 мин стабильно | worker `fetch` | 2 |
-| oldest_waiting в `fetch` / `ai` / `cluster` (разд. 4) | > 15 мин | worker | 2 |
-| ИИ p95 длительности (разд. 6) | бриф > 60 с, и редакторы ждут | LM | 3 |
-| Размер БД (разд. 1) | > 50 % диска или рост > 1 ГБ/мес | диск | 1, затем 4 |
-| Подключения к БД (разд. 9) | > 70 % `max_connections` | БД | 4 |
-| Одновременные пользователи (разд. 7) | > 20 активных за день или жалобы на медленный интерфейс | web | 5 |
-| Требование к простою | бизнес не принимает RTO ~1 ч или потерю суток данных | одна машина | 4 + 6 |
+| Machine CPU, daily average | > 70 % | everything | 1, vertical |
+| RAM | > 80 % or OOM in `dmesg` | usually Ollama | 1 or 3 |
+| p95 "published → ingested" latency (sec. 3) | > 15 min consistently | `fetch` worker | 2 |
+| oldest_waiting in `fetch` / `ai` / `cluster` (sec. 4) | > 15 min | worker | 2 |
+| AI p95 duration (sec. 6) | brief > 60 s and editors are waiting | LLM | 3 |
+| Database size (sec. 1) | > 50 % of disk or growth > 1 GB/month | disk | 1, then 4 |
+| Database connections (sec. 9) | > 70 % of `max_connections` | database | 4 |
+| Concurrent users (sec. 7) | > 20 active per day or complaints about a slow UI | web | 5 |
+| Downtime requirement | the business cannot accept an RTO of ~1 h or losing a day of data | single machine | 4 + 6 |
 
-## 5. Как масштабироваться: лестница
+## 5. How to scale: the ladder
 
-Шаги идут по возрастанию стоимости. Код ни на одном шаге не меняется (кроме отмеченного), потому что образ один на все роли (ARCHITECTURE §29.1).
+Steps are ordered by cost. No step changes the code (except where noted), because one image serves every role (ARCHITECTURE §29.1).
 
-1. **Вертикально.** Больше vCPU, RAM и диска у той же машины. Время — минуты, данные в volumes сохраняются.
-2. **Параллелизм worker.** В `.env`: `WORKER_FETCH_CONCURRENCY`, `WORKER_CONCURRENCY`, `WORKER_INTERACTIVE_CONCURRENCY` (CONV §2), затем `docker compose up -d`. Следить за подключениями к БД (разд. 9): каждый поток держит соединение.
-3. **ИИ вынести с машины.**
-   - Ollama на отдельный компьютер или GPU-сервер в частной сети (`OLLAMA_URL`, deploy/README §6) — или `AI_PROVIDER=anthropic`.
-   - `OLLAMA_CONCURRENCY` поднимать только при достаточной памяти/GPU у LM.
-   - Самый частый первый шаг, если включён локальный ИИ.
-4. **База отдельно.** Managed PostgreSQL 16 с pgvector и `unaccent` (проверить у провайдера) даёт PITR (RPO в минуты) и снапшоты.
-   - Сервис `db` удаляется, `DATABASE_URL`/`DATABASE_URL_MIGRATOR` указывают на managed БД. Для этого нужен override compose (`compose.override.yaml`) или правка двух строк.
-   - Перенос: `backup once` → `pg_restore` в новую БД.
-   - Бэкап-сервис после этого не нужен.
-5. **Несколько реплик web.** `docker compose up -d --scale web=2`. В `deploy/Caddyfile` заменить статический апстрим на динамический, чтобы Caddy видел все реплики:
+1. **Vertical.** More vCPU, RAM and disk on the same machine. Takes minutes; data in volumes is kept.
+2. **Worker parallelism.** Set `WORKER_FETCH_CONCURRENCY`, `WORKER_CONCURRENCY`, `WORKER_INTERACTIVE_CONCURRENCY` in `.env`, then `docker compose up -d`. Watch database connections (sec. 9): each thread holds a connection.
+3. **Move AI off the machine.**
+   - Ollama on a separate computer or GPU server in a private network (`OLLAMA_URL`, deploy/README §6), or `AI_PROVIDER=anthropic`.
+   - Raise `OLLAMA_CONCURRENCY` only if the LLM host has enough memory/GPU.
+   - The most common first step when local AI is on.
+4. **Separate database.** Managed PostgreSQL 16 with pgvector and `unaccent` (check with your provider) gives PITR (RPO in minutes) and snapshots.
+   - Remove the `db` service and point `DATABASE_URL`/`DATABASE_URL_MIGRATOR` at the managed database. This needs a compose override (`compose.override.yaml`) or a two-line edit.
+   - Migration: `backup once` → `pg_restore` into the new database.
+   - The backup service is no longer needed afterwards.
+5. **Several web replicas.** `docker compose up -d --scale web=2`. In `deploy/Caddyfile` replace the static upstream with a dynamic one so Caddy sees every replica:
 
    ```
    reverse_proxy {
@@ -117,39 +117,39 @@ docker system df             # сколько занимают образы и v
    	lb_try_duration 30s
    }
    ```
-   - **Требует правки кода:** счётчик неудачных входов перенести из памяти процесса в БД (`identity/api/router.py`, `_Attempts`, помечен `ponytail:`).
-   - Сессии уже в БД, первый admin создаётся под advisory lock, так что остальное готово.
-6. **Вторая машина / managed-платформа.** ARCHITECTURE §29 как целевая схема:
-   - контейнерная платформа (rolling deploy web ×2+);
-   - managed БД;
-   - Secret Manager;
+   - **Needs a code change:** move the failed sign-in counter from process memory to the database (`identity/api/router.py`, `_Attempts`, marked `ponytail:`).
+   - Sessions are already in the database and the first admin is created under an advisory lock, so everything else is ready.
+6. **A second machine / a managed platform.** ARCHITECTURE §29 as the target setup:
+   - a container platform (rolling deploy, web ×2+);
+   - a managed database;
+   - a secret manager;
    - observability (OTel → Grafana Cloud, ARCHITECTURE §27).
 
-   Образ и env те же. Переезд — это перенос `.env` в секреты платформы и восстановление дампа.
+   Same image and env. Moving means putting `.env` into the platform's secrets and restoring the dump.
 
-Отдельный worker по очередям (например, `fetch` на отдельной машине ближе к источникам) возможен на шагах 4–6: запустить `worker` с теми же env на второй машине. Procrastinate распределяет задачи через ту же БД.
+A dedicated worker per queue (for example `fetch` on a separate machine closer to the sources) is possible from steps 4–6 on: run `worker` with the same env on the second machine. Procrastinate distributes jobs through the same database.
 
-## 6. Регламентные работы
+## 6. Routine maintenance
 
-| Когда | Что |
+| When | What |
 |---|---|
-| Еженедельно | отчёт `capacity.sql` → сохранить; взгляд на «Конвейер» |
-| Еженедельно | копия `./backups` за пределы сервера (если не автоматизирована) |
-| Ежемесячно | обновления ОС и Docker на хосте; `git pull` + `up -d --build` (с бэкапом перед этим) |
-| Ежеквартально | **проверка восстановления** из дампа на отдельной машине (deploy/README §5) |
-| Ежеквартально | ротация паролей admin; ревизия пользователей в «Админка → Пользователи» |
-| При смене команды | отключить ушедших (галочка «Активен» — сессии закрываются сразу) |
+| Weekly | `capacity.sql` report → save it; a look at "Pipeline" |
+| Weekly | copy `./backups` off the server (unless automated) |
+| Monthly | OS and Docker updates on the host; `git pull` + `up -d --build` (with a backup first) |
+| Quarterly | **restore test** from a dump on a separate machine (deploy/README §5) |
+| Quarterly | rotate admin passwords; review users in "Admin → Users" |
+| When the team changes | deactivate people who left (the "Active" checkbox closes their sessions immediately) |
 
-## 7. Что хранится и сколько
+## 7. What is stored and for how long
 
-| Данные | Срок | Механизм |
+| Data | Retention | Mechanism |
 |---|---|---|
-| Текст статей | ограниченно (ToS источников) | `ingestion.purge_content` |
-| Журнал опросов источников | ограниченно | `ingestion.purge_fetch_runs` |
-| Сессии | 12 ч простоя / 7 дней максимум | `identity.purge_sessions` |
-| Задачи очереди | успешные 7 дней, упавшие 30 дней | `platform.purge_old_jobs` |
-| Аудит, события, публикации | бессрочно | — |
-| Дампы | `BACKUP_KEEP` последних (14) | сервис `backup` |
-| Логи контейнеров | 50 МБ на контейнер | ротация Docker |
+| Article text | limited (source ToS) | `ingestion.purge_content` |
+| Source poll log | limited | `ingestion.purge_fetch_runs` |
+| Sessions | 12 h idle / 7 days maximum | `identity.purge_sessions` |
+| Queue jobs | succeeded 7 days, failed 30 days | `platform.purge_old_jobs` |
+| Audit, events, publications | forever | — |
+| Dumps | last `BACKUP_KEEP` (14) | `backup` service |
+| Container logs | 50 MB per container | Docker rotation |
 
-Точные сроки и расписания — CONV §10 (каталог фоновых задач).
+Exact retention periods and schedules are in the periodic jobs in `backend/src/sportintel/modules/*/jobs.py`.

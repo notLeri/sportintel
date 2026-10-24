@@ -36,8 +36,8 @@ jobs:
             contract: ['backend/**', 'frontend/src/shared/api/**', 'openapi.json']
             image: ['backend/**', 'frontend/**', 'deploy/**']
 
-  # Пропущенный по `if` job отдаёт статус Success — обязательные проверки зелёные
-  # и для PR только с документацией (INFRA-T0.11 §12).
+  # A job skipped by `if` reports Success, so required checks stay green
+  # for documentation-only PRs too.
   backend:
     needs: changes
     if: needs.changes.outputs.backend == 'true'

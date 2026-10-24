@@ -1,5 +1,5 @@
-# Хуки не ходят в сеть после первичной установки (pre-commit install --install-hooks).
-# Замороженные копии SQL сторонних библиотек не трогаем.
+# Hooks do not use the network after the initial install (pre-commit install --install-hooks).
+# Frozen copies of third-party SQL are left untouched.
 exclude: ^(backend/migrations/sql/|fixtures/.*\.html$|frontend/src/shared/api/generated/|frontend/src/app/routeTree.gen.ts)
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

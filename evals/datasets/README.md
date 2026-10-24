@@ -1,16 +1,16 @@
-# Датасеты evals
+# Eval datasets
 
-## enrich_v1.jsonl — **временный, синтетический**
+## enrich_v1.jsonl: **temporary, synthetic**
 
-60 заголовков в стиле ge / CNN Brasil, написанных и размеченных ассистентом по редакционной рубрике
-(HIGH — подтверждённые ключевые новости: травмы и дисквалификации основных игроков, смена тренера,
-решающие матчи, вылет, вызов в сборную; MEDIUM — составы, рядовые результаты, трансферы; LOW — слухи,
-быт, реклама; IRRELEVANT — не спорт). Тексты статей не включены (`text: null`).
+60 headlines in the style of ge / CNN Brasil, written and labelled by an assistant following an editorial rubric
+(HIGH: confirmed key news such as injuries and suspensions of key players, coach changes, decisive matches,
+relegation, national-team call-ups; MEDIUM: line-ups, ordinary results, transfers; LOW: rumours,
+lifestyle, advertising; IRRELEVANT: not sport). Article texts are not included (`text: null`).
 
-Правила `enrich_rules` v2 калибровались **на этом же наборе**, так что метрики завышены (переобучение).
-До пилота набор нужно заменить реальными статьями, размеченными продуктом:
+The `enrich_rules` v2 rules were calibrated **on this same set**, so the metrics are inflated (overfitting).
+Before a pilot, replace the set with real articles labelled by the product owner:
 
-1. `scripts/export_eval_candidates.py --since … --limit 150 --out ../evals/candidates.csv` (staging/prod БД);
-2. разметить колонки `gold_*` в Google Sheets, выгрузить CSV;
+1. `scripts/export_eval_candidates.py --since … --limit 150 --out ../evals/candidates.csv` (staging/prod database);
+2. fill in the `gold_*` columns in a spreadsheet and export a CSV;
 3. `uv run python -m tests.evals.run from-csv candidates.csv ../evals/datasets/enrich_v1.jsonl`;
-4. `make evals`, отчёт в `evals/reports/`.
+4. `make evals`, report in `evals/reports/`.

@@ -1,205 +1,210 @@
 # SportIntel
 
-Сбор и кластеризация спортивных и iGaming-новостей и праздников разных стран в события, AI-брифы на ru/en и публикация в Telegram-каналы — с одобрением редактора или автоматически.
+An editorial desk for sports, iGaming and public-holiday news. SportIntel collects news from RSS feeds, websites and public Telegram channels, clusters articles into events, writes AI briefs in English or Russian and publishes posts to Telegram channels, either after an editor approves them or automatically.
 
-**Развернуть на сервере или любой машине с Docker:** `cp .env.deploy.example .env` → заполнить → `docker compose up -d --build` — [deploy/README.md](deploy/README.md). Эксплуатация и масштабирование — [docs/OPERATIONS.md](docs/OPERATIONS.md).
+- **Collect:** RSS, HTML sites and public Telegram channels (`t.me/s/<channel>`, no API keys), plus public-holiday calendars by country (OpenHolidays, GOV.UK, BrasilAPI, Wikipedia).
+- **Cluster:** articles about the same story are merged into one event. Each event shows how many independent outlets confirm it, how much the sources are trusted and how important it is. The rules are editable without a redeploy.
+- **Brief:** an AI brief answers "what happened, status, gist, who is affected, what to do". Source links are inserted by code, not by the model. Runs on a local Ollama model (free) or the Anthropic API. Without AI everything except briefs works on rules and templates.
+- **Publish:** post drafts, an approval feed, channels with schedules and filters, autoposting, a send calendar and a subscriber's view of each channel.
+- **Interface** in English or Russian, light and dark themes, hotkeys, a hint on every control. Roles: researcher → editor → admin. Sign-in with e-mail and password; Google (OIDC) is optional.
 
-**Железо (минимум):**
+**Deploy on a server or any machine with Docker:** `cp .env.deploy.example .env` → fill it in → `docker compose up -d --build`. See [deploy/README.md](deploy/README.md). Operations and scaling: [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
-| Вариант | CPU | RAM | Диск |
+**Minimum hardware:**
+
+| Setup | CPU | RAM | Disk |
 |---|---|---|---|
-| Без ИИ или с Anthropic API | 2 vCPU | 4 ГБ | 20 ГБ |
-| С локальной Ollama (`qwen3:14b` + `gemma3:12b` для переводов) | 4+ vCPU (лучше GPU или Apple Silicon) | 16 ГБ+ | 40 ГБ (модели ~18 ГБ) |
+| No AI, or the Anthropic API | 2 vCPU | 4 GB | 20 GB |
+| Local Ollama (`qwen3:14b` + `gemma3:12b` for translations) | 4+ vCPU (a GPU or Apple Silicon is better) | 16 GB+ | 40 GB (models take ~18 GB) |
 
-ОС любая с Docker; наружу нужны порты 80 и 443. Ollama можно вынести на другую машину — тогда сервер остаётся в первой строке.
+Any OS with Docker; ports 80 and 443 must be reachable. Ollama can run on another machine, in which case the server only needs the first row.
 
-Документация: [архитектура](docs/ARCHITECTURE.md), [эксплуатация](docs/OPERATIONS.md), решения — [`docs/adr/`](docs/adr/).
+Documentation: [architecture](docs/ARCHITECTURE.md), [operations](docs/OPERATIONS.md), decisions in [`docs/adr/`](docs/adr/).
 
-## Как это работает
+## How it works
 
-Режим по умолчанию — без ИИ и без платных сервисов (ADR-004): правила, шаблоны, лексическая кластеризация.
+The default mode uses no AI and no paid services (ADR-004): rules, templates and lexical clustering.
 
 ```
-источники (RSS/HTML/Telegram-каналы) → статьи → обогащение правилами → события → [AI-бриф] → черновик → редактор → Telegram-канал
+sources (RSS/HTML/Telegram channels) → articles → rule enrichment → events → [AI brief] → draft → editor → Telegram channel
 ```
 
-1. **Сбор.** Worker по расписанию опрашивает источники (`sources.schedule_due` → `ingestion.fetch_source`), извлекает текст статьи и отбрасывает дубли.
-2. **Обогащение** (`intelligence.enrich_article`). Правила из `app_settings` определяют вид спорта, турнир, команды/игроков (по справочнику и алиасам), маркеры слухов и кликбейта, важность.
-3. **Кластеризация** (`events.cluster_article`). Статья присоединяется к похожему событию (заголовок, сущности, турнир — пороги в ADR-003) или открывает новое. Кандидаты — только из того же региона (`sources.region`). Событие пересчитывает доверие к источникам (число независимых изданий и их уровень; источники «не доверяем» не учитываются), важность, заголовок и сводку — из основной статьи.
-4. **AI-бриф** (`editorial.build_brief`, по кнопке в карточке события). LLM пишет бриф на языке интерфейса: что произошло, статус (официально / подтверждено / одно СМИ / слух), суть, кого касается, влияние, что делать. Ссылки на источники подставляет код по номерам, выбранным моделью; «подтверждено» требует ≥2 разных изданий. Статус проверки (и предупреждение «не подтверждено») видит только редактор — в Telegram-пост он не попадает. Автогенерация — `app_settings.briefs.auto_languages` (по умолчанию выключена).
-5. **Черновики** (`editorial.autodraft_due` или вручную, в т.ч. «Пост из AI-брифа»). У каждой версии свой язык поста; редактор правит, утверждает. Лента `/feed` — готовые черновики.
-6. **Публикация** (`editorial.publish_due`, раз в минуту). Каналы с расписанием (cron, UTC) и фильтрами (вид спорта, регион, важность, доверие). Режим «одобрение» — постит утверждённые черновики, «авто» — брифы (кроме слухов); можно дайджестом. Включается `FLAG_TELEGRAM_PUBLISH=true` + `TELEGRAM_BOT_TOKEN` — [настройка бота](docs/TELEGRAM_BOT_SETUP.md).
+1. **Collection.** The worker polls sources on a schedule (`sources.schedule_due` → `ingestion.fetch_source`), extracts the article text and drops duplicates.
+2. **Enrichment** (`intelligence.enrich_article`). Rules from `app_settings` detect the sport, competition, teams and players (from the reference data and aliases), rumour and clickbait markers, and importance.
+3. **Clustering** (`events.cluster_article`). An article joins a similar event (title, entities, competition; thresholds in ADR-003) or opens a new one. Candidates come only from the same region (`sources.region`). The event recomputes source reliability (the number of independent outlets and their tier; "untrusted" sources do not count), importance, title and summary from its main article.
+4. **AI brief** (`editorial.build_brief`, via a button on the event card). The LLM writes a brief in the interface language: what happened, status (official / confirmed / single outlet / rumour), gist, who is affected, impact, what to do. Code inserts the source links by the numbers the model picked; "confirmed" requires at least 2 different outlets. Only the editor sees the verification status (and the "not confirmed" warning); it never reaches the Telegram post. Automatic generation: `app_settings.briefs.auto_languages` (off by default).
+5. **Drafts** (`editorial.autodraft_due` or by hand, including "Post from AI brief"). Each version has its own post language; the editor edits and approves. The `/feed` page lists ready drafts.
+6. **Publishing** (`editorial.publish_due`, every minute). Channels have a schedule (cron, UTC) and filters (sport, region, importance, reliability). "Approval" mode posts approved drafts; "auto" mode posts briefs (except rumours), optionally as a digest. Enable with `FLAG_TELEGRAM_PUBLISH=true` + `TELEGRAM_BOT_TOKEN`; see [bot setup](docs/TELEGRAM_BOT_SETUP.md).
 
-Все действия пишутся в историю (audit). LLM: `AI_PROVIDER=ollama` (локально, бесплатно; модель — `app_settings.llm_model`, по умолчанию `qwen3:14b`) или `anthropic` (`ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`). С `AI_PROVIDER=none` всё, кроме брифов, работает на правилах.
+Every action is written to the history (audit log). LLM: `AI_PROVIDER=ollama` (local and free; model in `app_settings.llm_model`, `qwen3:14b` by default) or `anthropic` (`ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`). With `AI_PROVIDER=none` everything except briefs works on rules.
 
-## Как пользоваться
+## Getting started
 
-Нужны: [uv](https://docs.astral.sh/uv/), Node.js 22 + pnpm 12, Docker (версии — `.tool-versions`), для брифов — [Ollama](https://ollama.com).
+You need [uv](https://docs.astral.sh/uv/), Node.js 22 + pnpm 12, Docker (versions in `.tool-versions`), and [Ollama](https://ollama.com) for briefs.
 
 ```bash
-make setup && make db-start && make db-migrate   # один раз (db-migrate — и после обновления кода)
-make api      # API :8000
-make worker   # фоновые задачи (:8001 — только /healthz); без него нет новостей, брифов и публикаций
-make ui       # UI на http://localhost:5173 (/api проксируется на :8000)
+make setup && make db-start && make db-migrate   # once (db-migrate again after pulling new code)
+make api      # API on :8000
+make worker   # background jobs (:8001 serves only /healthz); without it there are no news, briefs or posts
+make ui       # UI on http://localhost:5173 (/api is proxied to :8000)
 ```
 
-Каждую команду — в своём терминале. Для брифов с `AI_PROVIDER=ollama` должен работать `ollama serve` с моделью (`make llm-start`, `make llm-pull`). Остановить: Ctrl+C в терминале команды, `make stop` (api, worker, ui) или `make stop-all` (ещё Ollama и база). `address already in use` — порт занят старым процессом: `make stop`.
+Run each command in its own terminal. For briefs with `AI_PROVIDER=ollama`, `ollama serve` must be running with a model (`make llm-start`, `make llm-pull`). To stop: Ctrl+C in the command's terminal, `make stop` (api, worker, ui) or `make stop-all` (also Ollama and the database). `address already in use` means an old process holds the port: run `make stop`.
 
-Вход локально — форма dev-login на `/login`: любой e-mail и роль (`admin` для первой настройки). Роли: researcher → editor → admin. Язык интерфейса — en (по умолчанию) или ru, переключается в меню пользователя; в нём же показываются заголовки событий и брифы. Непонятные элементы снабжены подсказками (наведение или «?»).
+Local sign-in is the dev-login form on `/login`: any e-mail and role (`admin` for the initial setup). Roles: researcher → editor → admin. The interface language is English (default) or Russian, switchable in the user menu; event titles and briefs follow it. Unclear controls have hints (hover or "?").
 
-1. **Админка → Источники**: добавить RSS/сайт или публичный Telegram-канал (тип `html`, профиль `telegram`, лента `https://t.me/s/<канал>` — без API и ключей), указать регион и уровень доверия (официальный … «не доверяем»), нажать «Проверить», включить.
-2. **Админка → Справочники**: команды, игроки, турниры и их алиасы (по ним правила узнают сущности; нераспознанные имена — в разделе «Несвязанные»).
-3. **Админка → Настройки**: правила важности, пороги кластеризации, автодрафт — меняются без деплоя.
-4. **Главная (события)**: фильтры (в т.ч. регион, доверие), поиск, карточка события: источники, AI-бриф, черновик поста; правка, слияние/перенос статей, ручное событие или статья по URL.
-5. **Лента (`/feed`)**: готовые черновики → «Взять в работу» → правка → «Утвердить» → публикация каналом или вручную («Копировать» → «Опубликовано»).
-6. **Автопостинг** (отдельная вкладка): переключатель автопостинга канала (новый канал создаётся выключенным), календарь на неделю — когда уйдёт следующий пост и что в очереди, справа — канал глазами подписчика (публичный `@username` читается с t.me, приватный — по журналу отправок) с запланированными постами внизу. Там же настройка канала (chat_id, язык постов — по умолчанию en, режим, расписание, фильтры), «Тест», «Запустить сейчас», журнал.
-7. **Админка → Конвейер**: очереди, упавшие задачи (повтор), здоровье источников. **Аналитика** — полезные истории по людям и дням.
+1. **Admin → Sources**: add an RSS feed/site or a public Telegram channel (type `html`, profile `telegram`, feed `https://t.me/s/<channel>`, no API or keys), set the region and trust tier (official … "untrusted"), click "Check", enable it.
+2. **Admin → Reference data**: teams, players, competitions and their aliases (the rules recognise entities by them; unrecognised names land in "Unlinked").
+3. **Admin → Settings**: importance rules, clustering thresholds, autodraft. Changes apply without a redeploy.
+4. **Home (events)**: filters (including region and reliability), search, the event card: sources, AI brief, post draft; editing, merging/moving articles, a manual event or an article by URL.
+5. **Feed (`/feed`)**: ready drafts → "Take" → edit → "Approve" → published by a channel or by hand ("Copy" → "Published").
+6. **Autoposting** (its own tab): a per-channel autoposting switch (new channels start switched off), a weekly calendar of when the next post goes out and what is queued, and on the right the channel as a subscriber sees it (a public `@username` is read from t.me, a private one from the send log) with scheduled posts at the bottom. Channel settings live here too (chat_id, post language (English by default), mode, schedule, filters), plus "Test", "Run now" and the log.
+7. **Admin → Pipeline**: queues, failed jobs (retry), source health. **Analytics**: useful stories by person and day.
 
-Алерты о тихих сбоях (источник молчит, очередь растёт) уходят в Telegram-чат, если заданы `ALERT_TELEGRAM_BOT_TOKEN` и `ALERT_TELEGRAM_CHAT_ID`, иначе — в лог.
+Alerts about silent failures (a source goes quiet, a queue grows) go to a Telegram chat if `ALERT_TELEGRAM_BOT_TOKEN` and `ALERT_TELEGRAM_CHAT_ID` are set, otherwise to the log.
 
-## Структура
+## Layout
 
-| Каталог | Что внутри |
+| Directory | Contents |
 |---|---|
-| `backend/` | Python 3.12, FastAPI, модульный монолит (`src/sportintel/`) |
+| `backend/` | Python 3.12, FastAPI, modular monolith (`src/sportintel/`) |
 | `frontend/` | React 19 + Vite SPA |
-| `deploy/` | Dockerfile, compose, манифесты платформы |
-| `fixtures/` | RSS/HTML-фикстуры источников (contract, integration, e2e) |
-| `evals/` | Размеченные датасеты для evals |
-| `docs/` | Архитектура, эксплуатация, ADR |
-| `.github/` | CI/CD |
+| `deploy/` | Dockerfile, compose files, Caddy, backup script |
+| `fixtures/` | RSS/HTML source fixtures (contract, integration, e2e tests) |
+| `evals/` | Labelled datasets and reports for evals |
+| `docs/` | Architecture, operations, ADRs |
+| `.github/` | CI |
 
-## Команды
+## Commands
 
-Все команды с описаниями — `make` (то же, что `make help`). Что сейчас запущено — `make status`. Старые имена (`make web`, `make fe`, `make up`, `make migrate`…) работают как синонимы.
+`make` (same as `make help`) lists every command with a description. `make status` shows what is running. Old names (`make web`, `make fe`, `make up`, `make migrate`…) still work as aliases.
 
-Интеграционные тесты поднимают PostgreSQL (`pgvector/pgvector:pg16`) через testcontainers — нужен запущенный Docker. Если задан `TEST_DATABASE_URL`, используется он (так работает CI). С **Colima** на macOS:
+Integration tests start PostgreSQL (`pgvector/pgvector:pg16`) through testcontainers, so Docker must be running. If `TEST_DATABASE_URL` is set, it is used instead (that is how CI works). With **Colima** on macOS:
 
 ```bash
 export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
 export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
 ```
 
-Pre-commit: ruff, end-of-file-fixer, trailing-whitespace, check-yaml, gitleaks, lint-staged для `frontend/`. Проверка всего дерева: `cd backend && uv run pre-commit run --all-files`.
+Pre-commit runs ruff, end-of-file-fixer, trailing-whitespace, check-yaml, gitleaks and lint-staged for `frontend/`. To check the whole tree: `cd backend && uv run pre-commit run --all-files`.
 
-## Frontend: запуск
+## Frontend
 
 ```bash
 cd frontend
-pnpm install      # pnpm 12 (packageManager в package.json), Node 22+
-pnpm dev          # http://localhost:5173; /api и /auth проксируются на http://localhost:8000
+pnpm install      # pnpm 12 (packageManager in package.json), Node 22+
+pnpm dev          # http://localhost:5173; /api and /auth are proxied to http://localhost:8000
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
 ```
 
-Слои FSD (`app → pages → features → entities → shared`) проверяет ESLint (`eslint-plugin-boundaries`): импорт только вниз, слайс — только через его `index.ts`. UI-примитивы shadcn/ui лежат в `src/shared/ui` (`components.json` настроен на этот путь). В `import.meta.env` допустимы только публичные `VITE_SENTRY_DSN` и `VITE_VERSION`.
+ESLint (`eslint-plugin-boundaries`) enforces the FSD layers (`app → pages → features → entities → shared`): imports only go down, and a slice is imported only through its `index.ts`. shadcn/ui primitives live in `src/shared/ui` (`components.json` points there). Only the public `VITE_SENTRY_DSN` and `VITE_VERSION` are allowed in `import.meta.env`.
 
 ## Docker
 
-Один образ на все роли (`deploy/Dockerfile`, multi-stage, non-root uid 10001): `web` (API + собранный SPA), `worker`, `migrate`, `admin`.
+One image for every role (`deploy/Dockerfile`, multi-stage, non-root uid 10001): `web` (API + built SPA), `worker`, `migrate`, `admin`.
 
-Боевая установка — корневой `compose.yaml` (HTTPS, бэкапы, автоперезапуск): [deploy/README.md](deploy/README.md). Ниже — то, что нужно для разработки.
-
-```bash
-make db-start       # только PostgreSQL для разработки
-make docker-all     # migrate → web (http://localhost:8000, с SPA) + worker в контейнерах
-make docker-image   # образ sportintel:<git sha>
-docker build -f deploy/Dockerfile --target fe-maps -o maps .   # source maps для Sentry
-```
-
-Все источники в статусе degraded с ошибкой `ssrf_blocked`? Скорее всего, включён VPN с fake-ip DNS (Clash, sing-box, Surge). Добавьте в `.env` строку `SAFE_FETCH_ALLOW_FAKE_IP=true` и перезапустите `make docker-all`. Второй вариант — переключить DNS в VPN-клиенте на redir-host / real-ip.
-
-### Локальная LM (опционально, ADR-004)
+Production setup is the root `compose.yaml` (HTTPS, backups, auto-restart): [deploy/README.md](deploy/README.md). Below is what you need for development.
 
 ```bash
-make llm-pull      # скачать qwen3:14b в Ollama на Mac (LLM_MODEL=gemma3:12b — другую)
-make llm-models    # что скачано и что загружено в память
-make llm-docker    # альтернатива: Ollama в Docker + qwen3:14b и bge-m3
-make eval-briefs   # сравнить модели на evals/datasets/briefs_v1.jsonl (MODELS="ollama:qwen3:14b ollama:gemma3:12b")
+make db-start       # PostgreSQL only, for development
+make docker-all     # migrate → web (http://localhost:8000, with the SPA) + worker in containers
+make docker-image   # image sportintel:<git sha>
+docker build -f deploy/Dockerfile --target fe-maps -o maps .   # source maps for Sentry
 ```
 
-На Mac Ollama нативно (Metal) быстрее, чем в Docker: `brew install ollama`, `ollama serve`. Нужно ~16 ГБ RAM; бриф — ~50 с на M4. Отчёты сравнения — `evals/reports/`. LM не обязана жить рядом с приложением: `OLLAMA_URL` может указывать на отдельную локальную VM/сервер или ноутбук с Ollama, доступный worker по сети (например, через Tailscale). Порт Ollama не публикуется в интернет — доступ только из сети worker. Включение по шагам — `app_settings.ai_routing` (CONV §3).
+Every source is degraded with `ssrf_blocked`? Most likely a VPN with fake-ip DNS is on (Clash, sing-box, Surge). Add `SAFE_FETCH_ALLOW_FAKE_IP=true` to `.env` and restart `make docker-all`. Alternatively switch the VPN client's DNS to redir-host / real-ip.
+
+### Local LLM (optional, ADR-004)
+
+```bash
+make llm-pull      # pull qwen3:14b into Ollama on a Mac (LLM_MODEL=gemma3:12b for another one)
+make llm-models    # what is downloaded and what is loaded in memory
+make llm-docker    # alternative: Ollama in Docker + qwen3:14b and bge-m3
+make eval-briefs   # compare models on evals/datasets/briefs_v1.jsonl (MODELS="ollama:qwen3:14b ollama:gemma3:12b")
+```
+
+On a Mac, native Ollama (Metal) is faster than Docker: `brew install ollama`, `ollama serve`. It needs ~16 GB of RAM; a brief takes ~50 s on an M4. Comparison reports are in `evals/reports/`. The LLM does not have to live next to the app: `OLLAMA_URL` can point to a separate local VM/server or a laptop with Ollama reachable by the worker over the network (for example via Tailscale). Do not expose the Ollama port to the internet; only the worker's network should reach it. Step-by-step rollout: `app_settings.ai_routing`.
 
 ## CI
 
-`.github/workflows/ci.yml`: jobs `backend` (ruff, mypy, import-linter, миграции с нуля и одна голова, pytest с покрытием на service-PostgreSQL), `frontend` (lint, typecheck, test, build, check:api), `contract` (`openapi.json` ↔ backend ↔ TS-типы), `security` (gitleaks, pip-audit, pnpm audit), `image` (buildx `linux/amd64`, smoke migrate → web → `/healthz`, `/readyz`, SPA). Path filters пропускают нетронутые части; пропущенный job отдаёт Success.
+`.github/workflows/ci.yml` jobs: `backend` (ruff, mypy, import-linter, migrations from scratch with a single head, pytest with coverage on a service PostgreSQL), `frontend` (lint, typecheck, test, build, check:api), `contract` (`openapi.json` ↔ backend ↔ TS types), `security` (gitleaks, pip-audit, pnpm audit), `image` (buildx `linux/amd64`, smoke test migrate → web → `/healthz`, `/readyz`, SPA). Path filters skip untouched parts; a skipped job reports success.
 
-**Защита `main`** (включить в настройках GitHub после публикации репозитория): обязательные проверки `backend`, `frontend`, `contract`, `security`, `image`; линейная история; squash merge. Локально `main` собирается merge-коммитами с тегами `done/*` (раздел ниже) — при переходе на GitHub это заменяется PR со squash.
+**Protecting `main`** (GitHub settings): required checks `backend`, `frontend`, `contract`, `security`, `image`; linear history; squash merge.
 
-## Вход
+## Sign-in
 
-**По e-mail и паролю** — всегда (ADR-005). Первый admin — `BOOTSTRAP_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD` при старте web. Остальным пароли задаёт admin в «Пользователях». Аварийный сброс: `docker compose run --rm web admin set-password <email>`.
+**E-mail and password** always work (ADR-005). The first admin is created from `BOOTSTRAP_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD` when web starts. An admin sets passwords for everyone else in "Users". Emergency reset: `docker compose run --rm web admin set-password <email>`.
 
-**Через Google (OIDC)** — если заданы все три `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`; иначе кнопки Google нет. В `local`, `ci`, `e2e` используется `FakeOidcProvider` (без сети). Допуск: существующий активный пользователь, домен email из `OIDC_ALLOWED_DOMAINS` (роль researcher) или `BOOTSTRAP_ADMIN_EMAIL` (admin, пока нет ни одного admin).
+**Google (OIDC)** is available when all three of `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` are set; otherwise there is no Google button. `local`, `ci` and `e2e` use `FakeOidcProvider` (no network). Access is granted to an existing active user, to an e-mail domain from `OIDC_ALLOWED_DOMAINS` (role researcher) or to `BOOTSTRAP_ADMIN_EMAIL` (admin, while there is no admin yet).
 
-**Настройка OAuth client в Google Cloud Console:**
-1. APIs & Services → OAuth consent screen: тип **Internal** (только пользователи Workspace) или External + тестовые пользователи.
+**Setting up the OAuth client in Google Cloud Console:**
+1. APIs & Services → OAuth consent screen: type **Internal** (Workspace users only) or External + test users.
 2. Credentials → Create credentials → OAuth client ID → **Web application**.
-3. Authorized redirect URIs — строго `APP_BASE_URL + /auth/callback` для каждого окружения, например `https://staging.example.com/auth/callback` и `https://app.example.com/auth/callback`.
-4. Client ID и secret — в Secret Manager / env (`OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`), `OIDC_ISSUER=https://accounts.google.com`.
+3. Authorized redirect URIs: exactly `APP_BASE_URL + /auth/callback` for each environment, e.g. `https://staging.example.com/auth/callback` and `https://app.example.com/auth/callback`.
+4. Put the client ID and secret into your secret store / env (`OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`), with `OIDC_ISSUER=https://accounts.google.com`.
 
-## Очередь задач
+## Job queue
 
-Фоновые задачи — Procrastinate в схеме `procrastinate` той же БД; задачи объявлены в `modules/*/jobs.py`. `make worker` запускает в одном процессе три worker: основной (служебные, `ai`, `cluster`), `fetch` (`WORKER_FETCH_CONCURRENCY` — чтобы паузы вежливости к сайтам не держали остальное) и `ai_interactive` (`WORKER_INTERACTIVE_CONCURRENCY`).
+Background jobs run on Procrastinate in the `procrastinate` schema of the same database; jobs are declared in `modules/*/jobs.py`. `make worker` starts three workers in one process: the main one (housekeeping, `ai`, `cluster`), `fetch` (`WORKER_FETCH_CONCURRENCY`, so politeness delays towards sites do not block the rest) and `ai_interactive` (`WORKER_INTERACTIVE_CONCURRENCY`).
 
 ```sql
--- что в очереди и что сломалось
+-- what is queued and what broke
 SELECT queue_name, task_name, status, count(*)
 FROM procrastinate.procrastinate_jobs GROUP BY 1, 2, 3 ORDER BY 1, 2, 3;
 
--- последние упавшие задачи
+-- latest failed jobs
 SELECT id, task_name, args, attempts, scheduled_at
 FROM procrastinate.procrastinate_jobs WHERE status = 'failed' ORDER BY id DESC LIMIT 20;
 ```
 
-Задачи ставятся после коммита (`uow.enqueue_after_commit`); если процесс упал между коммитом и постановкой, задачу вернёт периодическая сверка `platform.reconcile` (каждые 5 мин, заодно перезапускает задачи «зависших» worker).
+Jobs are enqueued after commit (`uow.enqueue_after_commit`). If a process dies between the commit and the enqueue, the periodic `platform.reconcile` check (every 5 minutes) re-enqueues the job and also restarts jobs of stuck workers.
 
+## Configuration
 
-## Конфигурация
+Environment variables are read only in `backend/src/sportintel/platform/config.py` (locally from `.env`, template `.env.example`; `uv run --env-file` loads the file, `Settings` itself does not read `.env`). A configuration error logs `config.invalid` with the list of fields and exits with code 1. Business settings that change at runtime live in the `platform.app_settings` table. Secrets are never committed.
 
-Переменные окружения читаются только в `backend/src/sportintel/platform/config.py` (локально — из `.env`, шаблон `.env.example`; файл подхватывает `uv run --env-file`, сам `Settings` `.env` не читает). Ошибка конфигурации → лог `config.invalid` со списком полей и `exit 1`. Runtime-настройки бизнеса — таблица `platform.app_settings`. Секреты в репозиторий не коммитятся.
+`platform/config.py` is the source of truth; update this table when you change it.
 
-Источник истины — `platform/config.py`; при изменении править и эту таблицу.
-
-| Переменная | Тип | Обязательна | По умолчанию | Описание |
+| Variable | Type | Required | Default | Description |
 |---|---|---|---|---|
-| `ENV` | `local\|ci\|e2e\|staging\|production` | да | — | Окружение |
-| `VERSION` | str | нет | `dev` | git sha, вшивается при сборке образа |
-| `DATABASE_URL` | str (`postgresql+psycopg://…`) | да | — | Роль `app` |
-| `DATABASE_URL_MIGRATOR` | str | нет | = `DATABASE_URL` | Роль `migrator`, используется только `alembic` |
-| `DB_POOL_SIZE` | int | нет | 10 | Пул SQLAlchemy на процесс |
-| `APP_BASE_URL` | URL | да | — | Публичный URL (для OIDC redirect) |
-| `OIDC_ISSUER` | URL | да вне `local/ci/e2e` | — | |
-| `OIDC_CLIENT_ID` | str | да вне `local/ci/e2e` | — | |
-| `OIDC_CLIENT_SECRET` | secret | да вне `local/ci/e2e` | — | |
-| `OIDC_ALLOWED_DOMAINS` | csv | нет | пусто | Домены e-mail, допускаемые без allowlist |
-| `BOOTSTRAP_ADMIN_EMAIL` | email | нет | — | Получает роль admin при первом входе |
-| `DEV_LOGIN_ENABLED` | bool | нет | false | Разрешено **только** при `ENV ∈ {local, e2e}`, иначе старт падает |
-| `AI_PROVIDER` | `none\|ollama\|fake\|anthropic` | нет | `none` | ADR-004: где выполняются шаги `llm`; `none` — правила и шаблоны |
-| `OLLAMA_URL` | URL | если `ollama` | `http://localhost:11434` | Машина с Ollama (та же VM, отдельная VM, ноутбук через туннель) |
-| `OLLAMA_TIMEOUT_S` | int | нет | 180 | Таймаут вызова LM |
-| `OLLAMA_CONCURRENCY` | int | нет | 1 | Параллельные вызовы LM на worker |
-| `ANTHROPIC_API_KEY` | secret | если `AI_PROVIDER=anthropic` | — | |
-| `ANTHROPIC_MODEL` | str | нет | `claude-haiku-5-5` | Модель для брифов при `AI_PROVIDER=anthropic` |
-| `EMBEDDINGS_PROVIDER` | `none\|ollama\|fake\|voyage` | нет | `none` | `none` — кластеризация лексическая |
-| `VOYAGE_API_KEY` | secret | если `voyage` | — | |
-| `AI_RECORD` | bool | нет | false | Только `local`: запись фикстур fake-AI |
-| `SENTRY_DSN` | secret | нет | — | Пусто → Sentry выключен |
-| `ALERT_TELEGRAM_BOT_TOKEN` | secret | нет | — | Пусто → алерты только в лог |
-| `ALERT_TELEGRAM_CHAT_ID` | str | нет | — | |
-| `TELEGRAM_BOT_TOKEN` | secret | для публикации | — | Бот публикации в каналы; нужен ещё `FLAG_TELEGRAM_PUBLISH=true` |
-| `FETCH_USER_AGENT` | str | нет | `SportIntelBot/1.0 (+<APP_BASE_URL>/bot)` | |
-| `WORKER_CONCURRENCY` | int | нет | 4 | Параллелизм worker |
-| `WORKER_INTERACTIVE_CONCURRENCY` | int | нет | 2 | Отдельный лимит для очереди `ai_interactive` |
-| `WORKER_FETCH_CONCURRENCY` | int | нет | 4 | Отдельный лимит для очереди `fetch` |
-| `LOG_LEVEL` | str | нет | `INFO` | |
-| `LOG_FORMAT` | `json\|console` | нет | `console` в local, иначе `json` | |
-| `SAFE_FETCH_ALLOW_HOSTS` | csv | нет | пусто | **Только `ENV=e2e`**: хосты, для которых SSRF-проверка приватных IP отключена (INFRA-T5.1). В других окружениях непустое значение → ошибка конфигурации |
-| `SAFE_FETCH_ALLOW_FAKE_IP` | bool | нет | `false` | **Только `ENV=local`**: пропускать адреса fake-ip DNS у VPN-клиентов (`198.18.0.0/15`, `240.0.0.0/4`), иначе все источники падают с `ssrf_blocked`. Остальные SSRF-проверки, порты и редиректы проверяются как обычно. В других окружениях `true` → ошибка конфигурации |
-| `STATIC_DIR` | path | нет | `/app/static` | Каталог собранного SPA (INFRA-T0.10) |
-| `PORT` | int | нет | 8000 | Порт HTTP (web; worker отвечает на нём `/healthz` для Cloud Run, `make worker` ставит 8001) |
-| `CSP_MODE` | `report-only\|enforce` | нет | `report-only` | Режим CSP (BE-T5.5) |
-| `FLAG_<NAME>` | bool | нет | false | Feature flags (CONV §9) |
+| `ENV` | `local\|ci\|e2e\|staging\|production` | yes | — | Environment |
+| `VERSION` | str | no | `dev` | git sha, baked in at image build |
+| `DATABASE_URL` | str (`postgresql+psycopg://…`) | yes | — | `app` role |
+| `DATABASE_URL_MIGRATOR` | str | no | = `DATABASE_URL` | `migrator` role, used only by `alembic` |
+| `DB_POOL_SIZE` | int | no | 10 | SQLAlchemy pool per process |
+| `APP_BASE_URL` | URL | yes | — | Public URL (for the OIDC redirect) |
+| `OIDC_ISSUER` | URL | yes outside `local/ci/e2e` | — | |
+| `OIDC_CLIENT_ID` | str | yes outside `local/ci/e2e` | — | |
+| `OIDC_CLIENT_SECRET` | secret | yes outside `local/ci/e2e` | — | |
+| `OIDC_ALLOWED_DOMAINS` | csv | no | empty | E-mail domains admitted without an allowlist |
+| `BOOTSTRAP_ADMIN_EMAIL` | email | no | — | Gets the admin role on first sign-in |
+| `DEV_LOGIN_ENABLED` | bool | no | false | Allowed **only** with `ENV ∈ {local, e2e}`, otherwise startup fails |
+| `AI_PROVIDER` | `none\|ollama\|fake\|anthropic` | no | `none` | ADR-004: where `llm` steps run; `none` means rules and templates |
+| `OLLAMA_URL` | URL | if `ollama` | `http://localhost:11434` | Machine with Ollama (same VM, a separate VM, a laptop over a tunnel) |
+| `OLLAMA_TIMEOUT_S` | int | no | 180 | LLM call timeout |
+| `OLLAMA_CONCURRENCY` | int | no | 1 | Parallel LLM calls per worker |
+| `ANTHROPIC_API_KEY` | secret | if `AI_PROVIDER=anthropic` | — | |
+| `ANTHROPIC_MODEL` | str | no | `claude-haiku-5-5` | Model for briefs with `AI_PROVIDER=anthropic` |
+| `EMBEDDINGS_PROVIDER` | `none\|ollama\|fake\|voyage` | no | `none` | `none` means lexical clustering |
+| `VOYAGE_API_KEY` | secret | if `voyage` | — | |
+| `AI_RECORD` | bool | no | false | `local` only: record fake-AI fixtures |
+| `SENTRY_DSN` | secret | no | — | Empty → Sentry off |
+| `ALERT_TELEGRAM_BOT_TOKEN` | secret | no | — | Empty → alerts go only to the log |
+| `ALERT_TELEGRAM_CHAT_ID` | str | no | — | |
+| `TELEGRAM_BOT_TOKEN` | secret | for publishing | — | Bot that posts to channels; also needs `FLAG_TELEGRAM_PUBLISH=true` |
+| `FETCH_USER_AGENT` | str | no | `SportIntelBot/1.0 (+<APP_BASE_URL>/bot)` | |
+| `WORKER_CONCURRENCY` | int | no | 4 | Worker parallelism |
+| `WORKER_INTERACTIVE_CONCURRENCY` | int | no | 2 | Separate limit for the `ai_interactive` queue |
+| `WORKER_FETCH_CONCURRENCY` | int | no | 4 | Separate limit for the `fetch` queue |
+| `LOG_LEVEL` | str | no | `INFO` | |
+| `LOG_FORMAT` | `json\|console` | no | `console` in local, `json` otherwise | |
+| `SAFE_FETCH_ALLOW_HOSTS` | csv | no | empty | **`ENV=e2e` only**: hosts for which the SSRF private-IP check is off. A non-empty value in any other environment is a configuration error |
+| `SAFE_FETCH_ALLOW_FAKE_IP` | bool | no | `false` | **`ENV=local` only**: allow fake-ip DNS addresses of VPN clients (`198.18.0.0/15`, `240.0.0.0/4`), otherwise every source fails with `ssrf_blocked`. All other SSRF checks, ports and redirects still apply. `true` in any other environment is a configuration error |
+| `STATIC_DIR` | path | no | `/app/static` | Directory of the built SPA |
+| `PORT` | int | no | 8000 | HTTP port (web; the worker serves `/healthz` on it, `make worker` sets 8001) |
+| `CSP_MODE` | `report-only\|enforce` | no | `report-only` | CSP mode |
+| `FLAG_<NAME>` | bool | no | false | Feature flags |
 
-## Лицензия
+## License
 
 [MIT](LICENSE)

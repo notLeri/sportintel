@@ -1,22 +1,20 @@
-## Что сделано
+## What changed
 
-<!-- Задача: BE-T… / FE-T… / INFRA-T…; ссылка на спецификацию. -->
+<!-- What and why; link the issue if there is one. -->
 
-## Чек-лист (CONV §14)
+## Checklist
 
-- [ ] Код соответствует спецификации задачи; отклонения согласованы и отражены правкой спецификации или ADR
-- [ ] ruff, mypy, import-linter, eslint, tsc зелёные; CI зелёный
-- [ ] Тесты из раздела «Тестирование» написаны и проходят; покрытие не ниже ориентиров CONV §13
-- [ ] Миграции: `alembic upgrade head` с нуля и `downgrade -1 → upgrade` проходят; `alembic heads` = 1
-- [ ] `openapi.json` и `frontend/src/shared/api/generated/` перегенерированы (`make api-client`), если менялся API
-- [ ] Новые UI-строки есть в `pt-BR` (обязательно), `en`, `ru`
-- [ ] Новые env/settings описаны в README и в CONV §2/§3
-- [ ] Сознательные упрощения помечены `ponytail:`
-- [ ] Ручная проверка из «Критериев приёмки» выполнена (staging)
+- [ ] ruff, mypy, import-linter, eslint, tsc are green; CI is green
+- [ ] New logic is covered by tests
+- [ ] Migrations: `alembic upgrade head` from scratch and `downgrade -1 → upgrade` pass; `alembic heads` = 1
+- [ ] `openapi.json` and `frontend/src/shared/api/generated/` are regenerated (`make api-client`) if the API changed
+- [ ] New UI strings exist in `en`, `ru` and `pt-BR`
+- [ ] New env variables/settings are described in the README
+- [ ] Deliberate simplifications are marked with `ponytail:`
 
-## Изменён ли промпт или правила обогащения?
+## Did a prompt or enrichment rule change?
 
-<!-- Если да — приложите отчёт evals (`make eval-rules`, evals/reports/…) с сравнением до/после. -->
+<!-- If so, attach an evals report (`make eval-rules`, evals/reports/…) comparing before and after. -->
 
-- [ ] Нет
-- [ ] Да, отчёт: …
+- [ ] No
+- [ ] Yes, report: …
