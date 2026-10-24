@@ -1,11 +1,11 @@
-# Брифы: сравнение моделей (2026-10-09, язык ru, 20 событий)
+# Briefs: model comparison (2026-10-09, language ru, 20 events)
 
-| Модель | Валидный JSON | С опорой на источники | Среднее, с | p95, с |
+| Model | Valid JSON | Grounded in sources | Mean, s | p95, s |
 |---|---|---|---|---|
 | ollama:qwen3:14b | 20/20 | 20/20 | 52.1 | 76.1 |
 | ollama:gemma3:12b | 20/20 | 20/20 | 46.6 | 68.3 |
 
-Ручная оценка: для каждого брифа поставьте 1–5 за перевод и 1–5 за полезность «Влияние/Что делать».
+Manual review: score each brief 1–5 for translation and 1–5 for the usefulness of "Impact/What to do". The briefs themselves are Russian model output and are left as is.
 
 ## ollama:qwen3:14b · Djokovic cai na estreia do Masters 1.000 de Xangai e vai sair do top-10; Zverev vence convidado chinês
 `01a120e3-4d96-786a-8e5b-f8b76f5d6a56`
@@ -27,7 +27,7 @@
 
 Источники: <a href="https://ge.globo.com/tenis/noticia/2026/10/09/djokovic-cai-na-estreia-do-masters-1000-de-xangai-e-vai-sair-do-top-10-zverev-vence-convidado-chines.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/tenis/djokovic-deixara-o-top-10-do-ranking-apos-queda-na-estreia-em-xangai/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · GP de Singapura: Russell lidera treino livre único, e Bortoleto é 16º
 `01a12062-25d8-735e-bcb0-413fb2e8bb70`
@@ -49,7 +49,7 @@
 
 Источники: <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-russell-lidera-treino-livre-unico-e-bortoleto-e-16o.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-verstappen-faz-pole-sprint-e-bortoleto-e-14o-veja-grid.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/russell-comanda-treino-livre-antes-da-classificacao-sprint-em-singapura/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Fluminense 4x0 Coritiba: gols e melhores momentos do jogo do Brasileirão
 `01a12062-23d4-7d1f-8908-4a35ceef3fe6`
@@ -71,7 +71,7 @@
 
 Источники: <a href="https://ge.globo.com/pr/futebol/brasileirao-serie-a/noticia/2026/10/09/fluminense-4x0-coritiba-gols-e-melhores-momentos-do-jogo-do-brasileirao.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/brasileirao/fluminense-4-x-0-coritiba-veja-os-melhores-momentos-pelo-brasileirao/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Botafogo pede extensão de blindagem contra dívidas em processo de recuperação judicial
 `01a12130-e503-7cb5-b0e7-36abdd77965d`
@@ -92,7 +92,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/botafogo/noticia/2026/10/09/botafogo-pede-extensao-de-blindagem-contra-dividas-em-processo-de-recuperacao-judicial.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Rolou na Segundona: 8ª rodada tem dupla rebaixada, definições no G-2 e vitórias de visitantes
 `01a12122-dec1-7af2-b73f-5367fd759a25`
@@ -113,7 +113,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pb/futebol/paraibano-segunda-divisao/noticia/2026/10/09/rolou-na-segundona-8a-rodada-tem-dupla-rebaixada-definicoes-no-g-2-e-vitorias-de-visitantes.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Escalação do Vitória contra o São Paulo: veja time provável, desfalques e quem volta
 `01a12116-d60b-7c8b-9821-4a1a4a5c0070`
@@ -135,7 +135,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/ba/futebol/times/vitoria/noticia/2026/10/09/escalacao-do-vitoria-contra-o-sao-paulo-veja-time-provavel-desfalques-e-quem-volta.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Cartola 2026: Matheuzinho estoura scouts contra a Chape e faz maior pontuação do ano na Rodada #29
 `01a1211c-697a-7004-8074-d413ac427b68`
@@ -157,7 +157,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/cartola/craque-da-rodada/noticia/2026/10/09/cartola-2026-matheuzinho-estoura-scouts-contra-a-chape-e-faz-maior-pontuacao-do-ano-na-rodada-29.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Enderson destaca superação do Novorizontino na vitória sobre o Náutico: “Espírito de equipe”
 `01a1211c-9065-785b-92d6-b1a07870fae6`
@@ -178,7 +178,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/sp/tem-esporte/futebol/times/novorizontino/noticia/2026/10/09/enderson-destaca-superacao-do-novorizontino-na-vitoria-sobre-o-nautico-espirito-de-equipe.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · STJD aceita pedido do Inter e libera Victor Gabriel para voltar a jogar
 `01a1211f-ecd5-76d9-9594-0893ed2b7486`
@@ -199,7 +199,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/rs/futebol/times/internacional/noticia/2026/10/09/stjd-aceita-pedido-do-inter-e-libera-victor-gabriel-para-voltar-a-jogar.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Técnico do Atlético-MG mostra preocupação com desgaste e explica situação de Fred e Cuello
 `01a1210c-0bcc-7631-8af4-17c1b555cdef`
@@ -220,7 +220,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/atletico-mg/noticia/2026/10/09/tecnico-do-atletico-mg-mostra-preocupacao-com-desgaste-e-explica-situacao-de-fred-e-cuello.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · De olho no título, América reforça elenco com atletas da região para enfrentar o São Raimundo na final do Santareno
 `01a12104-8c68-7a91-a738-690120b9022d`
@@ -241,7 +241,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pa/santarem-regiao/futebol/noticia/2026/10/09/de-olho-no-titulo-america-reforca-elenco-com-atletas-da-regiao-para-enfrentar-o-sao-raimundo-na-final-do-santareno.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · STJD reduz punição de Odair Hellmann, mas técnico ainda desfalca o Athletico; entenda
 `01a12104-9bbc-7569-9b86-c6ae4bcb8405`
@@ -263,7 +263,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pr/futebol/times/athletico-pr/noticia/2026/10/09/stjd-reduz-punicao-de-odair-hellmann-mas-tecnico-ainda-desfalca-o-athletico-entenda.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Rui Costa diz que demitiria Crespo de novo e comenta o drama de Oscar: "Não morreu por milagre"
 `01a12105-ad6c-72dc-a93f-cf228bdeed71`
@@ -286,7 +286,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/abre-aspas/post/2026/10/09/rui-costa-diz-que-demitiria-crespo-de-novo-e-comenta-o-drama-de-oscar-nao-morreu-por-milagre.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Transfer ban: Santos pode sofrer novas punições por dívida com Pedro Caixinha e comissão técnica
 `01a12062-252b-7e63-a304-bc7c7901ac7f`
@@ -307,7 +307,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/sp/santos-e-regiao/futebol/times/santos/noticia/2026/10/09/transfer-ban-santos-pode-sofrer-novas-punicoes-por-divida-com-pedro-caixinha-e-comissao-tecnica.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/sp/santos-e-regiao/futebol/times/santos/noticia/2026/10/09/santos-sofre-tres-novos-transfer-bans-na-fifa-por-divida-com-pedro-caixinha-e-auxiliares.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Revolta do Flamengo com arbitragem e encontro com os ex do Santos: o que o ge viu do campo
 `01a120ff-3606-7f85-a2e7-5d3932bdb8cb`
@@ -329,7 +329,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/flamengo/noticia/2026/10/09/revolta-do-flamengo-com-arbitragem-e-encontro-com-os-ex-do-santos-o-que-o-ge-viu-do-campo.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Palmeiras avalia se Paulinho volta contra o Corinthians, mas auxiliar avisa: "Não pulamos etapas"
 `01a120ff-07dc-7402-b2f9-30c657e556e4`
@@ -351,7 +351,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/palmeiras/noticia/2026/10/09/palmeiras-avalia-se-paulinho-volta-contra-o-corinthians-mas-auxiliar-avisa-nao-pulamos-etapas.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Grêmio sofre transfer ban e fica impedido de registrar jogadores; saiba mais
 `01a120ff-273c-7cb5-aa0e-c71beb237b9e`
@@ -372,7 +372,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/rs/futebol/times/gremio/noticia/2026/10/09/gremio-sofre-transfer-ban-e-fica-impedido-de-registrar-jogadores-saiba-mais.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Atrás só de Abel e Ceni, terceiro técnico mais longevo do Brasil tenta levar Floresta à Série B
 `01a120f9-8a19-7633-9f83-0942c9fa05f0`
@@ -394,7 +394,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/ce/futebol/times/floresta/noticia/2026/10/09/atras-so-de-abel-e-ceni-terceiro-tecnico-mais-longevo-do-brasil-tenta-levar-floresta-a-serie-b.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Liverpool perde Isak e Gakpo para duelo contra o Manchester City
 `01a120f6-47a9-72f8-9f90-53ce95574adc`
@@ -416,7 +416,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://www.cnnbrasil.com.br/esportes/futebol/futebol-internacional/futebol-ingles/liverpool-perde-isak-e-gakpo-para-duelo-contra-o-manchester-city/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Toto Wolff rebate acusações de favorecimento a Antonelli na Mercedes
 `01a120f6-ee0e-7e8c-9810-a164292fbc2c`
@@ -438,7 +438,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/toto-wolff-rebate-acusacoes-de-favorecimento-a-antonelli-na-mercedes/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Djokovic cai na estreia do Masters 1.000 de Xangai e vai sair do top-10; Zverev vence convidado chinês
 `01a120e3-4d96-786a-8e5b-f8b76f5d6a56`
@@ -459,7 +459,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/tenis/noticia/2026/10/09/djokovic-cai-na-estreia-do-masters-1000-de-xangai-e-vai-sair-do-top-10-zverev-vence-convidado-chines.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/tenis/djokovic-deixara-o-top-10-do-ranking-apos-queda-na-estreia-em-xangai/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · GP de Singapura: Russell lidera treino livre único, e Bortoleto é 16º
 `01a12062-25d8-735e-bcb0-413fb2e8bb70`
@@ -482,7 +482,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-russell-lidera-treino-livre-unico-e-bortoleto-e-16o.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-verstappen-faz-pole-sprint-e-bortoleto-e-14o-veja-grid.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/russell-comanda-treino-livre-antes-da-classificacao-sprint-em-singapura/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Fluminense 4x0 Coritiba: gols e melhores momentos do jogo do Brasileirão
 `01a12062-23d4-7d1f-8908-4a35ceef3fe6`
@@ -504,7 +504,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pr/futebol/brasileirao-serie-a/noticia/2026/10/09/fluminense-4x0-coritiba-gols-e-melhores-momentos-do-jogo-do-brasileirao.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/brasileirao/fluminense-4-x-0-coritiba-veja-os-melhores-momentos-pelo-brasileirao/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Botafogo pede extensão de blindagem contra dívidas em processo de recuperação judicial
 `01a12130-e503-7cb5-b0e7-36abdd77965d`
@@ -525,7 +525,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/botafogo/noticia/2026/10/09/botafogo-pede-extensao-de-blindagem-contra-dividas-em-processo-de-recuperacao-judicial.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Rolou na Segundona: 8ª rodada tem dupla rebaixada, definições no G-2 e vitórias de visitantes
 `01a12122-dec1-7af2-b73f-5367fd759a25`
@@ -546,7 +546,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pb/futebol/paraibano-segunda-divisao/noticia/2026/10/09/rolou-na-segundona-8a-rodada-tem-dupla-rebaixada-definicoes-no-g-2-e-vitorias-de-visitantes.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Escalação do Vitória contra o São Paulo: veja time provável, desfalques e quem volta
 `01a12116-d60b-7c8b-9821-4a1a4a5c0070`
@@ -567,7 +567,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/ba/futebol/times/vitoria/noticia/2026/10/09/escalacao-do-vitoria-contra-o-sao-paulo-veja-time-provavel-desfalques-e-quem-volta.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Cartola 2026: Matheuzinho estoura scouts contra a Chape e faz maior pontuação do ano na Rodada #29
 `01a1211c-697a-7004-8074-d413ac427b68`
@@ -588,7 +588,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/cartola/craque-da-rodada/noticia/2026/10/09/cartola-2026-matheuzinho-estoura-scouts-contra-a-chape-e-faz-maior-pontuacao-do-ano-na-rodada-29.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Enderson destaca superação do Novorizontino na vitória sobre o Náutico: “Espírito de equipe”
 `01a1211c-9065-785b-92d6-b1a07870fae6`
@@ -610,7 +610,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/sp/tem-esporte/futebol/times/novorizontino/noticia/2026/10/09/enderson-destaca-superacao-do-novorizontino-na-vitoria-sobre-o-nautico-espirito-de-equipe.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · STJD aceita pedido do Inter e libera Victor Gabriel para voltar a jogar
 `01a1211f-ecd5-76d9-9594-0893ed2b7486`
@@ -631,7 +631,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/rs/futebol/times/internacional/noticia/2026/10/09/stjd-aceita-pedido-do-inter-e-libera-victor-gabriel-para-voltar-a-jogar.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Técnico do Atlético-MG mostra preocupação com desgaste e explica situação de Fred e Cuello
 `01a1210c-0bcc-7631-8af4-17c1b555cdef`
@@ -652,7 +652,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/atletico-mg/noticia/2026/10/09/tecnico-do-atletico-mg-mostra-preocupacao-com-desgaste-e-explica-situacao-de-fred-e-cuello.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · De olho no título, América reforça elenco com atletas da região para enfrentar o São Raimundo na final do Santareno
 `01a12104-8c68-7a91-a738-690120b9022d`
@@ -673,7 +673,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pa/santarem-regiao/futebol/noticia/2026/10/09/de-olho-no-titulo-america-reforca-elenco-com-atletas-da-regiao-para-enfrentar-o-sao-raimundo-na-final-do-santareno.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · STJD reduz punição de Odair Hellmann, mas técnico ainda desfalca o Athletico; entenda
 `01a12104-9bbc-7569-9b86-c6ae4bcb8405`
@@ -695,7 +695,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/pr/futebol/times/athletico-pr/noticia/2026/10/09/stjd-reduz-punicao-de-odair-hellmann-mas-tecnico-ainda-desfalca-o-athletico-entenda.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Rui Costa diz que demitiria Crespo de novo e comenta o drama de Oscar: "Não morreu por milagre"
 `01a12105-ad6c-72dc-a93f-cf228bdeed71`
@@ -716,7 +716,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/abre-aspas/post/2026/10/09/rui-costa-diz-que-demitiria-crespo-de-novo-e-comenta-o-drama-de-oscar-nao-morreu-por-milagre.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Transfer ban: Santos pode sofrer novas punições por dívida com Pedro Caixinha e comissão técnica
 `01a12062-252b-7e63-a304-bc7c7901ac7f`
@@ -737,7 +737,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/sp/santos-e-regiao/futebol/times/santos/noticia/2026/10/09/transfer-ban-santos-pode-sofrer-novas-punicoes-por-divida-com-pedro-caixinha-e-comissao-tecnica.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/sp/santos-e-regiao/futebol/times/santos/noticia/2026/10/09/santos-sofre-tres-novos-transfer-bans-na-fifa-por-divida-com-pedro-caixinha-e-auxiliares.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Revolta do Flamengo com arbitragem e encontro com os ex do Santos: o que o ge viu do campo
 `01a120ff-3606-7f85-a2e7-5d3932bdb8cb`
@@ -759,7 +759,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/flamengo/noticia/2026/10/09/revolta-do-flamengo-com-arbitragem-e-encontro-com-os-ex-do-santos-o-que-o-ge-viu-do-campo.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Palmeiras avalia se Paulinho volta contra o Corinthians, mas auxiliar avisa: "Não pulamos etapas"
 `01a120ff-07dc-7402-b2f9-30c657e556e4`
@@ -780,7 +780,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/futebol/times/palmeiras/noticia/2026/10/09/palmeiras-avalia-se-paulinho-volta-contra-o-corinthians-mas-auxiliar-avisa-nao-pulamos-etapas.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Grêmio sofre transfer ban e fica impedido de registrar jogadores; saiba mais
 `01a120ff-273c-7cb5-aa0e-c71beb237b9e`
@@ -801,7 +801,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/rs/futebol/times/gremio/noticia/2026/10/09/gremio-sofre-transfer-ban-e-fica-impedido-de-registrar-jogadores-saiba-mais.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Atrás só de Abel e Ceni, terceiro técnico mais longevo do Brasil tenta levar Floresta à Série B
 `01a120f9-8a19-7633-9f83-0942c9fa05f0`
@@ -822,7 +822,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://ge.globo.com/ce/futebol/times/floresta/noticia/2026/10/09/atras-so-de-abel-e-ceni-terceiro-tecnico-mais-longevo-do-brasil-tenta-levar-floresta-a-serie-b.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Liverpool perde Isak e Gakpo para duelo contra o Manchester City
 `01a120f6-47a9-72f8-9f90-53ce95574adc`
@@ -843,7 +843,7 @@ Botafogo запрашивает продление моратория на вы�
 
 Источники: <a href="https://www.cnnbrasil.com.br/esportes/futebol/futebol-internacional/futebol-ingles/liverpool-perde-isak-e-gakpo-para-duelo-contra-o-manchester-city/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Toto Wolff rebate acusações de favorecimento a Antonelli na Mercedes
 `01a120f6-ee0e-7e8c-9810-a164292fbc2c`
@@ -864,4 +864,4 @@ Toto Wolff прокомментировал обвинения в том, что
 
 Источники: <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/toto-wolff-rebate-acusacoes-de-favorecimento-a-antonelli-na-mercedes/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5

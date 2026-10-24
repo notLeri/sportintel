@@ -1,89 +1,89 @@
-# Развёртывание SportIntel
+# Deploying SportIntel
 
-Один и тот же способ на любой машине с Docker: Linux-сервер, Mac, Windows (WSL2).
-Всё поднимается одной командой из корня репозитория: `docker compose up -d --build`.
+The same procedure works on any machine with Docker: a Linux server, a Mac, Windows (WSL2).
+Everything starts with one command from the repository root: `docker compose up -d --build`.
 
-| Окружение | Для чего | Как запускать |
+| Environment | Purpose | How to run |
 |---|---|---|
-| **production** | рабочая установка | `compose.yaml` + `.env` с `ENV=production` (этот документ) |
-| **staging** | проверка перед выкатом, есть `/api/v1/docs` | то же, `ENV=staging`, отдельный сервер или домен |
-| **local (всё в Docker)** | показать продукт на своём компьютере | то же, `DOMAIN=localhost` |
-| **разработка** | писать код | `make setup`, `make api`, `make worker`, `make ui` — корневой [README](../README.md) |
+| **production** | the working installation | `compose.yaml` + `.env` with `ENV=production` (this document) |
+| **staging** | checks before a rollout, has `/api/v1/docs` | the same with `ENV=staging`, on a separate server or domain |
+| **local (all in Docker)** | demo the product on your own computer | the same with `DOMAIN=localhost` |
+| **development** | writing code | `make setup`, `make api`, `make worker`, `make ui`; see the root [README](../README.md) |
 
-## Что поднимается
+## What runs
 
 ```
-Интернет ──443/80──▶ caddy (HTTPS, Let's Encrypt) ──▶ web (API + интерфейс)
+Internet ──443/80──▶ caddy (HTTPS, Let's Encrypt) ──▶ web (API + UI)
                                                         │
-                       worker (сбор, события, ИИ, публикация) ──▶ db (PostgreSQL 16 + pgvector)
-                       backup (pg_dump раз в сутки → ./backups) ──┘
-                       ollama (опционально, профиль llm)
+                       worker (collection, events, AI, publishing) ──▶ db (PostgreSQL 16 + pgvector)
+                       backup (pg_dump once a day → ./backups) ──┘
+                       ollama (optional, profile llm)
 ```
 
-- `migrate` — разовый: применяет миграции (и засевает источники и справочники) перед стартом web и worker.
-- База наружу не открыта. Наружу смотрит только Caddy (порты 80 и 443).
-- Данные лежат в Docker volumes `pgdata`, `caddy_data` (сертификаты) и `ollama_models`, а также в папке `./backups`.
+- `migrate` runs once: it applies migrations (and seeds sources and reference data) before web and worker start.
+- The database is not exposed. Only Caddy faces the outside (ports 80 and 443).
+- Data lives in the Docker volumes `pgdata`, `caddy_data` (certificates) and `ollama_models`, plus the `./backups` folder.
 
-## 1. Требования
+## 1. Requirements
 
-- **Docker:** Docker Engine с плагином compose v2 (Linux) или Docker Desktop (macOS, Windows). На Windows репозиторий держите **внутри WSL2** (`~/…`), а не на `C:\`: так быстрее и не портятся права и переводы строк.
-- **Ресурсы:** 2 vCPU, 4 ГБ RAM и 20 ГБ диска без локального ИИ. С Ollama (`COMPOSE_PROFILES=llm`) нужно **16 ГБ RAM и больше** и 40 ГБ диска (две модели ~18 ГБ).
-- **Сеть:** домен с A-записью (и AAAA, если есть IPv6) на IP сервера. Порты **80 и 443** открыты: 80 нужен, чтобы Let's Encrypt выдал сертификат.
+- **Docker:** Docker Engine with the compose v2 plugin (Linux) or Docker Desktop (macOS, Windows). On Windows keep the repository **inside WSL2** (`~/…`), not on `C:\`: it is faster and file permissions and line endings stay intact.
+- **Resources:** 2 vCPU, 4 GB RAM and 20 GB disk without local AI. With Ollama (`COMPOSE_PROFILES=llm`) you need **16 GB RAM or more** and 40 GB disk (two models take ~18 GB).
+- **Network:** a domain with an A record (and AAAA if you have IPv6) pointing to the server IP. Ports **80 and 443** must be open: Let's Encrypt needs port 80 to issue the certificate.
 
-Установка Docker на чистый Ubuntu/Debian: `curl -fsSL https://get.docker.com | sh`. Затем выйдите из сессии и зайдите снова после `sudo usermod -aG docker $USER`.
+Installing Docker on a clean Ubuntu/Debian: `curl -fsSL https://get.docker.com | sh`. Then run `sudo usermod -aG docker $USER`, log out and log back in.
 
-## 2. Установка
+## 2. Installation
 
 ```bash
-git clone <url-репозитория> sportintel && cd sportintel
+git clone https://github.com/notLeri/sportintel.git && cd sportintel
 cp .env.deploy.example .env
-# заполнить в .env: DOMAIN, POSTGRES_PASSWORD, BOOTSTRAP_ADMIN_EMAIL, INITIAL_ADMIN_PASSWORD, блок ИИ
+# fill in .env: DOMAIN, POSTGRES_PASSWORD, BOOTSTRAP_ADMIN_EMAIL, INITIAL_ADMIN_PASSWORD, the AI block
 docker compose up -d --build
 ```
 
-- Первая сборка занимает 5–10 минут: собираются фронт и бэкенд. Следующие быстрее — слои кэшируются.
-- Если обязательная переменная не задана, compose сразу остановится и назовёт её (`set DOMAIN in .env`).
-- Пароль базы: `openssl rand -hex 24`. Только буквы и цифры, потому что пароль входит в URL подключения.
+- The first build takes 5–10 minutes because the frontend and backend are built. Later builds are faster thanks to layer caching.
+- If a required variable is missing, compose stops immediately and names it (`set DOMAIN in .env`).
+- Database password: `openssl rand -hex 24`. Letters and digits only, because the password is part of the connection URL.
 
-## 3. Проверка
+## 3. Check
 
 ```bash
 docker compose ps        # db, web, worker, caddy, backup — running (healthy); migrate — exited (0)
 ```
 
-1. Откройте `https://<DOMAIN>` и войдите как `BOOTSTRAP_ADMIN_EMAIL` с паролем `INITIAL_ADMIN_PASSWORD`.
-2. **Админка → Источники → «Проверить»** у пары источников. Через несколько минут на главной появятся события.
-3. **Админка → Пользователи:** пригласите редакторов и задайте им пароли.
-4. Telegram-публикация — [docs/TELEGRAM_BOT_SETUP.md](../docs/TELEGRAM_BOT_SETUP.md). Затем в `.env`: `TELEGRAM_BOT_TOKEN=…`, `FLAG_TELEGRAM_PUBLISH=true` и `docker compose up -d`.
+1. Open `https://<DOMAIN>` and sign in as `BOOTSTRAP_ADMIN_EMAIL` with the password `INITIAL_ADMIN_PASSWORD`.
+2. **Admin → Sources → "Check"** on a couple of sources. Events appear on the home page within a few minutes.
+3. **Admin → Users:** invite editors and set their passwords.
+4. Telegram publishing: [docs/TELEGRAM_BOT_SETUP.md](../docs/TELEGRAM_BOT_SETUP.md). Then set `TELEGRAM_BOT_TOKEN=…` and `FLAG_TELEGRAM_PUBLISH=true` in `.env` and run `docker compose up -d`.
 
-Админ создаётся из `.env` только один раз, пока в системе нет ни одного активного администратора. После этого `INITIAL_ADMIN_PASSWORD` можно стереть из `.env`.
+The admin is created from `.env` only once, while the system has no active administrator. After that you can remove `INITIAL_ADMIN_PASSWORD` from `.env`.
 
-## 4. Ежедневные команды
+## 4. Everyday commands
 
-Все команды выполняются из корня репозитория.
+Run all commands from the repository root.
 
-| Задача | Команда |
+| Task | Command |
 |---|---|
-| Состояние сервисов | `docker compose ps` |
-| Логи (последние, в реальном времени) | `docker compose logs -f --tail=100 web worker` |
-| **Обновить до новой версии** | `docker compose run --rm backup once` → `git pull` → `docker compose up -d --build` |
-| Применить изменения `.env` | `docker compose up -d` |
-| Перезапустить всё | `docker compose restart` |
-| Остановить (данные сохраняются) | `docker compose down` |
-| Бэкап прямо сейчас | `docker compose run --rm backup once` |
-| Сбросить пароль / создать пользователя | `docker compose run --rm web admin set-password you@corp.com [--role admin]` |
-| Консоль базы | `docker compose exec db psql -U sportintel` |
-| Очередь задач и сбои | **Админка → Конвейер** (или SQL из корневого README, раздел «Очередь задач») |
+| Service status | `docker compose ps` |
+| Logs (recent, live) | `docker compose logs -f --tail=100 web worker` |
+| **Update to a new version** | `docker compose run --rm backup once` → `git pull` → `docker compose up -d --build` |
+| Apply `.env` changes | `docker compose up -d` |
+| Restart everything | `docker compose restart` |
+| Stop (data is kept) | `docker compose down` |
+| Back up right now | `docker compose run --rm backup once` |
+| Reset a password / create a user | `docker compose run --rm web admin set-password you@corp.com [--role admin]` |
+| Database console | `docker compose exec db psql -U sportintel` |
+| Job queue and failures | **Admin → Pipeline** (or the SQL in the root README, section "Job queue") |
 
-При обновлении миграции применяются сами: `migrate` выполняется до старта web и worker. Если миграция упадёт, web и worker останутся на старой версии и не запустятся с новой. Смотрите `docker compose logs migrate`.
+Migrations apply themselves on update: `migrate` runs before web and worker start. If a migration fails, web and worker stay on the old version and do not start with the new one. Check `docker compose logs migrate`.
 
-## 5. Бэкапы и восстановление
+## 5. Backups and restore
 
-- Сервис `backup` делает `pg_dump` при старте и затем каждые `BACKUP_INTERVAL_H` часов (по умолчанию 24). Дампы пишутся в `./backups/sportintel-<время UTC>.dump`, хранятся последние `BACKUP_KEEP` (14).
-- Если свежего дампа нет дольше интервала плюс 2 часа, `backup` в `docker compose ps` становится **unhealthy**.
-- **Копируйте `./backups` за пределы сервера** (rsync, rclone, объектное хранилище). Дамп на том же диске не спасёт при потере сервера.
+- The `backup` service runs `pg_dump` at startup and then every `BACKUP_INTERVAL_H` hours (24 by default). Dumps go to `./backups/sportintel-<UTC time>.dump`; the last `BACKUP_KEEP` (14) are kept.
+- If there is no fresh dump for longer than the interval plus 2 hours, `backup` turns **unhealthy** in `docker compose ps`.
+- **Copy `./backups` off the server** (rsync, rclone, object storage). A dump on the same disk will not save you if the server is lost.
 
-Восстановление (например, на новом сервере после установки по шагу 2):
+Restore (for example on a new server after installing it with step 2):
 
 ```bash
 docker compose stop web worker
@@ -91,55 +91,55 @@ docker compose run --rm backup restore /backups/sportintel-20261012T030000Z.dump
 docker compose up -d
 ```
 
-Проверяйте восстановление хотя бы раз в квартал: поднимите копию на отдельной машине и войдите в неё.
+Test a restore at least once a quarter: bring up a copy on a separate machine and sign in to it.
 
-## 6. Искусственный интеллект
+## 6. Artificial intelligence
 
-Вариант выбирается в `.env`. Применить: `docker compose up -d`.
+Pick an option in `.env` and apply it with `docker compose up -d`.
 
-| Вариант | `.env` | Заметки |
+| Option | `.env` | Notes |
 |---|---|---|
-| Без ИИ | `AI_PROVIDER=none` | правила и шаблоны; брифов и переводов нет |
-| Anthropic | `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY=…` | платно, быстро |
-| Ollama на этом сервере | `AI_PROVIDER=ollama`, `COMPOSE_PROFILES=llm` | модели скачиваются сами (`ollama-pull`): `LLM_MODEL` (брифы, `qwen3:14b`) и `TRANSLATION_MODEL` (переводы, `gemma3:12b`), ~18 ГБ; ≥16 ГБ RAM; без GPU бриф идёт минуты |
-| Ollama на другой машине | `AI_PROVIDER=ollama`, `OLLAMA_URL=http://<ip>:11434` | порт Ollama не открывать в интернет — только частная сеть (Tailscale) |
+| No AI | `AI_PROVIDER=none` | rules and templates; no briefs or translations |
+| Anthropic | `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY=…` | paid, fast |
+| Ollama on this server | `AI_PROVIDER=ollama`, `COMPOSE_PROFILES=llm` | models download themselves (`ollama-pull`): `LLM_MODEL` (briefs, `qwen3:14b`) and `TRANSLATION_MODEL` (translations, `gemma3:12b`), ~18 GB; ≥16 GB RAM; without a GPU a brief takes minutes |
+| Ollama on another machine | `AI_PROVIDER=ollama`, `OLLAMA_URL=http://<ip>:11434` | never expose the Ollama port to the internet, only to a private network (Tailscale) |
 
-Модели, которые использует приложение, задаются в **Админка → Настройки** (`llm_model`, `translation_model`). Они должны совпадать с `LLM_MODEL` и `TRANSLATION_MODEL`.
+The models the app uses are set in **Admin → Settings** (`llm_model`, `translation_model`). They must match `LLM_MODEL` and `TRANSLATION_MODEL`.
 
-## 7. Вход
+## 7. Sign-in
 
-- **По e-mail и паролю** работает всегда. Пароли задаёт администратор в «Пользователях» или командой `set-password`. После 5 неудачных попыток за 15 минут вход для этой пары e-mail и IP блокируется на оставшееся время окна.
-- **Google (OIDC)** включается, если заданы все три `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` (корневой README, раздел «Вход»). Если не задана ни одна, кнопки Google нет. Если задана часть, web не стартует и называет недостающие.
+- **E-mail and password** always work. Passwords are set by an administrator in "Users" or with the `set-password` command. After 5 failed attempts within 15 minutes, sign-in for that e-mail and IP pair is blocked for the rest of the window.
+- **Google (OIDC)** turns on when all three of `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET` are set (root README, section "Sign-in"). If none is set, there is no Google button. If only some are set, web refuses to start and names the missing ones.
 
-## 8. Отказоустойчивость: что уже сделано
+## 8. Resilience: what is already in place
 
-| Сбой | Что происходит |
+| Failure | What happens |
 |---|---|
-| Процесс упал или сервер перезагрузился | `restart: unless-stopped`: всё поднимается само, в правильном порядке (db → migrate → web/worker → caddy) |
-| База временно недоступна | web не падает и отвечает 503 на `/readyz`, после возврата базы работает дальше. worker перезапускается Docker-ом. Зависшие задачи возвращает сверка `platform.reconcile` (каждые 5 мин) |
-| Перезапуск или обновление web | Caddy держит запросы до 30 с, пока web не вернётся, вместо мгновенного 502 |
-| Остановка worker | SIGTERM: worker перестаёт брать задачи и дорабатывает текущие (до 90 с) |
-| Диск забивается логами | ротация: 5 × 10 МБ на контейнер |
-| Потеря данных | ежедневный дамп, 14 копий, healthcheck «свежий дамп есть» |
-| Перезапуск Caddy | сертификаты в volume `caddy_data`, лимиты Let's Encrypt не тратятся |
-| Тихие сбои (источник молчит, очередь растёт) | оповещение в Telegram при `ALERT_TELEGRAM_*` |
+| A process crashes or the server reboots | `restart: unless-stopped`: everything comes back by itself, in the right order (db → migrate → web/worker → caddy) |
+| The database is briefly unavailable | web does not crash and answers 503 on `/readyz`, then carries on once the database is back. Docker restarts the worker. Stuck jobs are re-enqueued by the `platform.reconcile` check (every 5 min) |
+| web restarts or updates | Caddy holds requests for up to 30 s until web is back, instead of returning 502 at once |
+| The worker stops | SIGTERM: the worker stops taking jobs and finishes the current ones (up to 90 s) |
+| Logs fill the disk | rotation: 5 × 10 MB per container |
+| Data loss | daily dump, 14 copies, a "fresh dump exists" healthcheck |
+| Caddy restarts | certificates live in the `caddy_data` volume, so Let's Encrypt limits are not used up |
+| Silent failures (a source goes quiet, a queue grows) | Telegram alert when `ALERT_TELEGRAM_*` is set |
 
-**Чего нет — это ограничения одной машины:**
-- Сервер — единая точка отказа: если он умер, сервис недоступен до восстановления из бэкапа на новом сервере. Время восстановления — минуты плюс копирование дампа.
-- Потеря данных — не больше чем за `BACKUP_INTERVAL_H` часов.
+**What is missing: the limits of a single machine.**
+- The server is a single point of failure: if it dies, the service is down until it is restored from a backup on a new server. Recovery takes minutes plus copying the dump.
+- At most `BACKUP_INTERVAL_H` hours of data can be lost.
 
-Как убрать эти ограничения — [docs/OPERATIONS.md](../docs/OPERATIONS.md), раздел «Масштабирование».
+How to remove these limits: [docs/OPERATIONS.md](../docs/OPERATIONS.md), section "Scaling".
 
-Рекомендуется внешний мониторинг: любой бесплатный uptime-сервис, проверяющий `https://<DOMAIN>/readyz` раз в минуту.
+External monitoring is recommended: any free uptime service that checks `https://<DOMAIN>/readyz` once a minute.
 
-## 9. Частые проблемы
+## 9. Common problems
 
-| Симптом | Причина и решение |
+| Symptom | Cause and fix |
 |---|---|
-| `set DOMAIN in .env` (или другая переменная) | не заполнен `.env`, см. шаг 2 |
-| Сайт не открывается, в `docker compose logs caddy` ошибки ACME | DNS ещё не указывает на сервер или закрыты порты 80/443. Проверьте `dig <DOMAIN>` и файрвол |
-| `bind: address already in use` на 80/443 | порт занят другим веб-сервером (nginx, apache). Остановите его |
-| web `unhealthy`, в логах ошибки подключения к базе | смотрите `docker compose logs db migrate`. Если `POSTGRES_PASSWORD` сменили после первого запуска, база помнит старый: верните его |
-| `migrate` exited (1) | `docker compose logs migrate`. Обновление остановлено, данные не тронуты |
-| Ollama падает или очень медленно | мало RAM. Возьмите модель меньше (`LLM_MODEL=gemma3:4b` и то же в настройках) или Anthropic |
-| Windows: `/bin/sh^M: bad interpreter` | репозиторий склонирован с CRLF вне WSL. Клонируйте внутри WSL2 |
+| `set DOMAIN in .env` (or another variable) | `.env` is not filled in, see step 2 |
+| The site does not open, ACME errors in `docker compose logs caddy` | DNS does not point to the server yet, or ports 80/443 are closed. Check `dig <DOMAIN>` and the firewall |
+| `bind: address already in use` on 80/443 | another web server (nginx, apache) holds the port. Stop it |
+| web is `unhealthy`, database connection errors in the logs | see `docker compose logs db migrate`. If `POSTGRES_PASSWORD` was changed after the first start, the database still expects the old one: put it back |
+| `migrate` exited (1) | `docker compose logs migrate`. The update stopped, data is untouched |
+| Ollama crashes or is very slow | not enough RAM. Use a smaller model (`LLM_MODEL=gemma3:4b` and the same in settings) or Anthropic |
+| Windows: `/bin/sh^M: bad interpreter` | the repository was cloned with CRLF outside WSL. Clone it inside WSL2 |

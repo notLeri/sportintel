@@ -1,5 +1,5 @@
-# Скрипты и конфиги, которые исполняются в Linux-контейнерах: всегда LF,
-# иначе checkout на Windows (CRLF) ломает `sh` и Caddy.
+# Scripts and configs executed in Linux containers: always LF,
+# otherwise a Windows (CRLF) checkout breaks `sh` and Caddy.
 *.sh text eol=lf
 deploy/Caddyfile text eol=lf
 compose.yaml text eol=lf

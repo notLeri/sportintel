@@ -99,7 +99,7 @@ class ProblemFieldError(BaseModel):
 
 
 class ProblemDetail(BaseModel):
-    """Тело ошибки RFC 9457 (CONV §5.2) — для контракта OpenAPI и TS-типов."""
+    """RFC 9457 error body, for the OpenAPI contract and TS types."""
 
     type: str
     title: str

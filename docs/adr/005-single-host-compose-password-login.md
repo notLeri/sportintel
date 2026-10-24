@@ -1,49 +1,49 @@
-# ADR-005. Одна машина с Docker Compose и вход по паролю
+# ADR-005. A single machine with Docker Compose and password sign-in
 
-- **Статус:** принято
-- **Дата:** 2026-10-12
+- **Status:** accepted
+- **Date:** 2026-10-12
 
-**Контекст.** Продукт нужно разворачивать «под ключ» на чистой машине с Docker: Linux-сервер, Mac или Windows (WSL2). Бюджет почти нулевой (ADR-004). ARCHITECTURE §29 предполагал managed-платформу и managed PostgreSQL, а VM + Compose + Caddy упоминался только как бюджетный вариант. Кроме того, вне `local/ci/e2e` приложение не стартовало без Google OIDC. Для установки у нового клиента это ручной шаг в Google Cloud Console, и он требует корпоративного IdP, которого может не быть.
+**Context.** The product must deploy turnkey on a clean machine with Docker: a Linux server, a Mac or Windows (WSL2). The budget is close to zero (ADR-004). ARCHITECTURE §29 assumed a managed platform and managed PostgreSQL, with VM + Compose + Caddy mentioned only as a budget option. Also, outside `local/ci/e2e` the app did not start without Google OIDC. For a new installation that is a manual step in Google Cloud Console, and it requires a corporate IdP that may not exist.
 
-**Решение.**
-1. **Развёртывание:** корневой `compose.yaml`, одна машина. Сервисы:
-   - `db` — PostgreSQL 16 + pgvector, без открытого порта;
-   - `migrate` — разовый;
-   - `web`, `worker` — один образ;
-   - `caddy` — HTTPS по Let's Encrypt;
-   - `backup` — `pg_dump` по расписанию;
-   - `ollama` — опционально, профиль `llm`.
+**Decision.**
+1. **Deployment:** the root `compose.yaml`, one machine. Services:
+   - `db`: PostgreSQL 16 + pgvector, no exposed port;
+   - `migrate`: runs once;
+   - `web`, `worker`: one image;
+   - `caddy`: HTTPS via Let's Encrypt;
+   - `backup`: scheduled `pg_dump`;
+   - `ollama`: optional, profile `llm`.
 
-   Конфигурация — один `.env` по шаблону `.env.deploy.example`. Установка и обновление — одна команда: `docker compose up -d --build`. Без скриптов-установщиков: compose одинаково работает на всех ОС, а `${VAR:?…}` сам проверяет обязательные переменные.
-2. **Вход:**
-   - e-mail + пароль работает всегда. Хэш — `hashlib.scrypt` из стандартной библиотеки. Лимит — 5 неудач на пару e-mail + IP за 15 минут.
-   - OIDC включается, только если заданы все три `OIDC_*`. Если не задана ни одна, кнопки Google нет. Если задана часть, это ошибка конфигурации.
-   - Первый admin создаётся при старте web из `BOOTSTRAP_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD`, пока в системе нет активного admin.
-   - Сброс пароля: в интерфейсе или командой `sportintel-admin set-password`.
-3. **Минимальная отказоустойчивость** без второй машины:
+   Configuration is a single `.env` based on `.env.deploy.example`. Installing and updating is one command: `docker compose up -d --build`. No installer scripts: compose behaves the same on every OS, and `${VAR:?…}` checks required variables by itself.
+2. **Sign-in:**
+   - e-mail + password always works. The hash is `hashlib.scrypt` from the standard library. Limit: 5 failures per e-mail + IP pair in 15 minutes.
+   - OIDC turns on only when all three `OIDC_*` are set. If none is set, there is no Google button. A partial set is a configuration error.
+   - The first admin is created when web starts, from `BOOTSTRAP_ADMIN_EMAIL` + `INITIAL_ADMIN_PASSWORD`, while there is no active admin.
+   - Password reset: in the UI or with `sportintel-admin set-password`.
+3. **Minimal resilience** without a second machine:
    - `restart: unless-stopped`;
-   - healthcheck-и (`/readyz`, `/healthz` worker, `pg_isready`, свежесть дампа);
-   - порядок старта по зависимостям;
-   - graceful stop worker (90 с);
-   - Caddy ждёт web до 30 с при перезапуске;
-   - ротация логов Docker;
-   - ежедневный дамп с хранением 14 копий;
-   - очистка старых задач очереди (`platform.purge_old_jobs`).
+   - healthchecks (`/readyz`, the worker's `/healthz`, `pg_isready`, dump freshness);
+   - startup order by dependencies;
+   - graceful worker stop (90 s);
+   - Caddy waits up to 30 s for web during a restart;
+   - Docker log rotation;
+   - a daily dump with 14 copies kept;
+   - cleanup of old queue jobs (`platform.purge_old_jobs`).
 
-**Почему.**
-- Одна машина и Compose — самый дешёвый и переносимый вариант, понятный без DevOps.
-- Образ уже один на все роли (§29.1), поэтому код не меняется.
-- Пароль убирает зависимость от IdP для небольших команд (до ~20 человек). Серверные сессии, CSRF и cookie `__Host-sid` остаются прежними (§11).
+**Why.**
+- One machine and Compose is the cheapest and most portable option, understandable without DevOps.
+- The image already serves every role (§29.1), so the code does not change.
+- Passwords remove the IdP dependency for small teams (up to ~20 people). Server-side sessions, CSRF and the `__Host-sid` cookie stay the same (§11).
 
-**Альтернативы.**
-- Managed-платформа (Cloud Run и т. п.) — платно и привязывает к облаку. Остаётся путём масштабирования (docs/OPERATIONS.md §5).
-- Kubernetes — избыточен.
-- Bash/PowerShell-установщик — две реализации одной логики, а `.env` + compose достаточно.
-- argon2/bcrypt — новая зависимость, тогда как scrypt есть в стандартной библиотеке.
-- Magic link — нужна почта (SMTP), то есть ещё один сервис.
+**Alternatives.**
+- A managed platform (Cloud Run etc.): paid and ties you to a cloud. It remains the scaling path (docs/OPERATIONS.md §5).
+- Kubernetes: overkill.
+- A Bash/PowerShell installer: two implementations of the same logic, while `.env` + compose is enough.
+- argon2/bcrypt: a new dependency, while scrypt is in the standard library.
+- Magic links: need e-mail (SMTP), i.e. one more service.
 
-**Компромиссы.**
-- Сервер — единая точка отказа. RPO равен интервалу бэкапа (по умолчанию 24 ч), RTO — время установки на новую машину плюс восстановление дампа.
-- Своё хранение паролей: MFA нет, сброс — только через администратора. Пересмотреть, когда появится корпоративный IdP (включить OIDC) или пользователей станет больше ~20.
-- Счётчик неудачных входов живёт в памяти одного процесса web. При нескольких репликах web счётчик нужно перенести в БД.
-- Пересмотреть всё решение по сигналам из docs/OPERATIONS.md §4.
+**Trade-offs.**
+- The server is a single point of failure. RPO equals the backup interval (24 h by default); RTO is the time to install a new machine plus restore the dump.
+- Self-managed passwords: no MFA, reset only through an administrator. Revisit when a corporate IdP appears (turn on OIDC) or there are more than ~20 users.
+- The failed sign-in counter lives in the memory of a single web process. With several web replicas it must move to the database.
+- Revisit the whole decision based on the signals in docs/OPERATIONS.md §4.

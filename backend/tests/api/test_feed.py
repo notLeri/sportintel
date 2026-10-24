@@ -72,7 +72,9 @@ async def test_autodraft_feed_and_take(make_app, client_for, db: Database) -> No
         await event_repo(u).save(e, e.version)
     assert (await autodraft.run(db, repo_for, CLOCK)).rebuilt == 1
 
-    c = client_for(make_app())
+    app = make_app()
+    app.state.clock = CLOCK  # the feed window counts from the app clock, not the wall clock
+    c = client_for(app)
     me = await dev_login(c, "feed@corp.com", "editor")
     h = {"X-CSRF-Token": me["csrf_token"]}
     feed = (await c.get("/api/v1/feed")).json()

@@ -1,11 +1,11 @@
-# Брифы: сравнение моделей (2026-10-09, язык ru, 6 событий)
+# Briefs: model comparison (2026-10-09, language ru, 6 events)
 
-| Модель | Валидный JSON | С опорой на источники | Среднее, с | p95, с |
+| Model | Valid JSON | Grounded in sources | Mean, s | p95, s |
 |---|---|---|---|---|
 | ollama:qwen3:14b | 6/6 | 6/6 | 47.3 | 52.0 |
 | ollama:gemma3:12b | 6/6 | 6/6 | 50.2 | 60.3 |
 
-Ручная оценка: для каждого брифа поставьте 1–5 за перевод и 1–5 за полезность «Влияние/Что делать».
+Manual review: score each brief 1–5 for translation and 1–5 for the usefulness of "Impact/What to do". The briefs themselves are Russian model output and are left as is.
 
 ## ollama:qwen3:14b · Djokovic cai na estreia do Masters 1.000 de Xangai e vai sair do top-10; Zverev vence convidado chinês
 `01a120e3-4d96-786a-8e5b-f8b76f5d6a56`
@@ -28,7 +28,7 @@
 
 Источники: <a href="https://ge.globo.com/tenis/noticia/2026/10/09/djokovic-cai-na-estreia-do-masters-1000-de-xangai-e-vai-sair-do-top-10-zverev-vence-convidado-chines.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/tenis/djokovic-deixara-o-top-10-do-ranking-apos-queda-na-estreia-em-xangai/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · GP de Singapura: Russell lidera treino livre único, e Bortoleto é 16º
 `01a12062-25d8-735e-bcb0-413fb2e8bb70`
@@ -51,7 +51,7 @@ George Russell лидирует в свободной тренировке пе�
 
 Источники: <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-russell-lidera-treino-livre-unico-e-bortoleto-e-16o.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-verstappen-faz-pole-sprint-e-bortoleto-e-14o-veja-grid.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/russell-comanda-treino-livre-antes-da-classificacao-sprint-em-singapura/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Fluminense 4x0 Coritiba: gols e melhores momentos do jogo do Brasileirão
 `01a12062-23d4-7d1f-8908-4a35ceef3fe6`
@@ -74,7 +74,7 @@ George Russell лидирует в свободной тренировке пе�
 
 Источники: <a href="https://ge.globo.com/pr/futebol/brasileirao-serie-a/noticia/2026/10/09/fluminense-4x0-coritiba-gols-e-melhores-momentos-do-jogo-do-brasileirao.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/brasileirao/fluminense-4-x-0-coritiba-veja-os-melhores-momentos-pelo-brasileirao/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Botafogo pede extensão de blindagem contra dívidas em processo de recuperação judicial
 `01a12130-e503-7cb5-b0e7-36abdd77965d`
@@ -97,7 +97,7 @@ Botafogo официально запросил продление моратор
 
 Источники: <a href="https://ge.globo.com/futebol/times/botafogo/noticia/2026/10/09/botafogo-pede-extensao-de-blindagem-contra-dividas-em-processo-de-recuperacao-judicial.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Rolou na Segundona: 8ª rodada tem dupla rebaixada, definições no G-2 e vitórias de visitantes
 `01a12122-dec1-7af2-b73f-5367fd759a25`
@@ -120,7 +120,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/pb/futebol/paraibano-segunda-divisao/noticia/2026/10/09/rolou-na-segundona-8a-rodada-tem-dupla-rebaixada-definicoes-no-g-2-e-vitorias-de-visitantes.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:qwen3:14b · Escalação do Vitória contra o São Paulo: veja time provável, desfalques e quem volta
 `01a12116-d60b-7c8b-9821-4a1a4a5c0070`
@@ -143,7 +143,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/ba/futebol/times/vitoria/noticia/2026/10/09/escalacao-do-vitoria-contra-o-sao-paulo-veja-time-provavel-desfalques-e-quem-volta.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Djokovic cai na estreia do Masters 1.000 de Xangai e vai sair do top-10; Zverev vence convidado chinês
 `01a120e3-4d96-786a-8e5b-f8b76f5d6a56`
@@ -165,7 +165,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/tenis/noticia/2026/10/09/djokovic-cai-na-estreia-do-masters-1000-de-xangai-e-vai-sair-do-top-10-zverev-vence-convidado-chines.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/tenis/djokovic-deixara-o-top-10-do-ranking-apos-queda-na-estreia-em-xangai/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · GP de Singapura: Russell lidera treino livre único, e Bortoleto é 16º
 `01a12062-25d8-735e-bcb0-413fb2e8bb70`
@@ -188,7 +188,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-russell-lidera-treino-livre-unico-e-bortoleto-e-16o.ghtml">ge (Globo Esporte)</a>, <a href="https://ge.globo.com/motor/formula-1/noticia/2026/10/09/gp-de-singapura-verstappen-faz-pole-sprint-e-bortoleto-e-14o-veja-grid.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/automobilismo/russell-comanda-treino-livre-antes-da-classificacao-sprint-em-singapura/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Fluminense 4x0 Coritiba: gols e melhores momentos do jogo do Brasileirão
 `01a12062-23d4-7d1f-8908-4a35ceef3fe6`
@@ -211,7 +211,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/pr/futebol/brasileirao-serie-a/noticia/2026/10/09/fluminense-4x0-coritiba-gols-e-melhores-momentos-do-jogo-do-brasileirao.ghtml">ge (Globo Esporte)</a>, <a href="https://www.cnnbrasil.com.br/esportes/brasileirao/fluminense-4-x-0-coritiba-veja-os-melhores-momentos-pelo-brasileirao/">CNN Brasil</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Botafogo pede extensão de blindagem contra dívidas em processo de recuperação judicial
 `01a12130-e503-7cb5-b0e7-36abdd77965d`
@@ -233,7 +233,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/futebol/times/botafogo/noticia/2026/10/09/botafogo-pede-extensao-de-blindagem-contra-dividas-em-processo-de-recuperacao-judicial.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Rolou na Segundona: 8ª rodada tem dupla rebaixada, definições no G-2 e vitórias de visitantes
 `01a12122-dec1-7af2-b73f-5367fd759a25`
@@ -255,7 +255,7 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/pb/futebol/paraibano-segunda-divisao/noticia/2026/10/09/rolou-na-segundona-8a-rodada-tem-dupla-rebaixada-definicoes-no-g-2-e-vitorias-de-visitantes.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5
 
 ## ollama:gemma3:12b · Escalação do Vitória contra o São Paulo: veja time provável, desfalques e quem volta
 `01a12116-d60b-7c8b-9821-4a1a4a5c0070`
@@ -277,4 +277,4 @@ Atlético Santa Rita продолжает свою хорошую игру и в
 
 Источники: <a href="https://ge.globo.com/ba/futebol/times/vitoria/noticia/2026/10/09/escalacao-do-vitoria-contra-o-sao-paulo-veja-time-provavel-desfalques-e-quem-volta.ghtml">ge (Globo Esporte)</a>
 ```
-Оценка: перевод _/5, польза _/5
+Score: translation _/5, usefulness _/5

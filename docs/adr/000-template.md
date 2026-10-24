@@ -1,14 +1,14 @@
-# ADR-NNN. <Решение>
+# ADR-NNN. <Decision>
 
-- **Статус:** предложено | принято | заменено ADR-MMM
-- **Дата:** YYYY-MM-DD
+- **Status:** proposed | accepted | superseded by ADR-MMM
+- **Date:** YYYY-MM-DD
 
-**Контекст.** Какая проблема и какие ограничения.
+**Context.** The problem and the constraints.
 
-**Решение.** Что выбрано.
+**Decision.** What was chosen.
 
-**Почему.** Главные причины.
+**Why.** The main reasons.
 
-**Альтернативы.** Что рассматривали и почему отказались.
+**Alternatives.** What was considered and why it was rejected.
 
-**Компромиссы.** Чем платим; когда пересмотреть.
+**Trade-offs.** What it costs; when to revisit.

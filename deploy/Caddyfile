@@ -1,9 +1,9 @@
-# Обратный прокси с автоматическим HTTPS (Let's Encrypt) для домена из .env.
-# DOMAIN=localhost — локальный сертификат Caddy (браузер предупредит один раз).
+# Reverse proxy with automatic HTTPS (Let's Encrypt) for the domain from .env.
+# DOMAIN=localhost uses Caddy's local certificate (the browser warns once).
 {$DOMAIN} {
 	encode zstd gzip
 	reverse_proxy web:8000 {
-		# web перезапускается — Caddy ждёт его до 30 с, а не сразу отдаёт 502
+		# while web restarts, Caddy waits up to 30 s instead of returning 502 at once
 		lb_try_duration 30s
 	}
 }

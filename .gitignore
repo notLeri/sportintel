@@ -17,12 +17,12 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 
-# Env (только .env.example в репозитории)
+# Env (only the examples are committed)
 .env*
 !.env.example
 !.env.deploy.example
 
-# Дампы базы боевой установки (compose.yaml → backup)
+# Database dumps of the production setup (compose.yaml → backup)
 /backups/
 
 # OS / IDE
@@ -30,7 +30,7 @@ test-results/
 .idea/
 .vscode/
 
-# Impeccable: рабочие артефакты дизайн-сессий (скриншоты, эскизы, логи выбора)
+# Impeccable: design-session working files (screenshots, sketches, choice logs)
 .impeccable/review/
 .impeccable/mocks/
 .impeccable/questions/

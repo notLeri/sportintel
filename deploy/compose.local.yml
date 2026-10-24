@@ -1,6 +1,6 @@
-# Локальное окружение. Только БД:      docker compose -f deploy/compose.local.yml up -d db
-# Всё приложение (образ):              docker compose -f deploy/compose.local.yml --profile full up --build
-# Локальная LM (ADR-004):              docker compose -f deploy/compose.local.yml --profile llm up -d ollama
+# Local environment. Database only:   docker compose -f deploy/compose.local.yml up -d db
+# The whole app (image):              docker compose -f deploy/compose.local.yml --profile full up --build
+# Local LLM (ADR-004):                 docker compose -f deploy/compose.local.yml --profile llm up -d ollama
 name: sportintel
 
 x-app: &app
@@ -10,13 +10,13 @@ x-app: &app
   image: sportintel:local
   env_file: ../.env
   environment:
-    # В контейнере БД доступна по имени сервиса, а не localhost из .env.
+    # Inside a container the database is reached by service name, not localhost from .env.
     DATABASE_URL: postgresql+psycopg://sportintel:sportintel@db:5432/sportintel
     DATABASE_URL_MIGRATOR: postgresql+psycopg://sportintel:sportintel@db:5432/sportintel
     STATIC_DIR: /app/static
-    # localhost из .env внутри контейнера — сам контейнер; Ollama хоста (или профиля llm) — тут.
+    # localhost from .env means the container itself; the host's Ollama (or the llm profile) is here.
     OLLAMA_URL: http://host.docker.internal:11434
-  extra_hosts: ["host.docker.internal:host-gateway"]  # Linux; Docker Desktop знает имя сам
+  extra_hosts: ["host.docker.internal:host-gateway"]  # Linux; Docker Desktop knows the name already
   read_only: true
   tmpfs: [/tmp]
   depends_on:
@@ -66,7 +66,7 @@ services:
       migrate:
         condition: service_completed_successfully
 
-  # ADR-004: опциональная локальная LM. Модели: make llm-pull. ~8 ГБ RAM для 7B q4.
+  # ADR-004: optional local LLM. Models: make llm-pull. ~8 GB RAM for a 7B q4.
   ollama:
     image: ollama/ollama
     profiles: [llm]

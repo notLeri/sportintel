@@ -251,7 +251,7 @@ class BadCredentials(Unauthenticated):
 
 @router.post("/password-login", openapi_extra=PUBLIC, response_model=MeResponse)
 async def password_login(body: PasswordLoginRequest, request: Request) -> JSONResponse:
-    """Вход по e-mail и паролю — доступен всегда, в т.ч. без OIDC (ответ — как у GET /me)."""
+    """Sign in with e-mail and password: always available, including without OIDC (response as in GET /me)."""
     ctx = _ctx(request)
     email = body.email.strip().lower()
     client_ip = request.client.host if request.client else None

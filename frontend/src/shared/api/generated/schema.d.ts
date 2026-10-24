@@ -13,7 +13,7 @@ export interface paths {
         };
         /**
          * Progress
-         * @description Что ИИ пишет сейчас (сколько прошло из обычного) и сколько ждут очереди.
+         * @description What AI is writing now (elapsed versus usual) and how much is waiting in the queues.
          */
         get: operations["progress_api_v1_ai_progress_get"];
         put?: never;
@@ -189,13 +189,13 @@ export interface paths {
         get?: never;
         /**
          * Pin Post
-         * @description Закрепить пост события на время (перетаскивание на календарь). Только готовый к отправке.
+         * @description Pin an event post to a time (dragging onto the calendar). Only posts ready to send.
          */
         put: operations["pin_post_api_v1_channels__channel_id__pins__event_id__put"];
         post?: never;
         /**
          * Unpin Post
-         * @description Открепить: пост возвращается в обычную очередь по расписанию.
+         * @description Unpin: the post returns to the regular scheduled queue.
          */
         delete: operations["unpin_post_api_v1_channels__channel_id__pins__event_id__delete"];
         options?: never;
@@ -214,7 +214,7 @@ export interface paths {
         put?: never;
         /**
          * Send Post Now
-         * @description Отправить один готовый пост сразу — вне расписания и закрепления (как «Запустить сейчас»).
+         * @description Send one ready post right away, outside the schedule and pins (like "Run now").
          */
         post: operations["send_post_now_api_v1_channels__channel_id__posts__event_id__send_post"];
         delete?: never;
@@ -249,7 +249,7 @@ export interface paths {
         };
         /**
          * Channel Schedule
-         * @description Когда канал запустится и что отправит: те же правила, что у публикации, без отправки.
+         * @description When the channel will run and what it will send: the same rules as publishing, without sending.
          */
         get: operations["channel_schedule_api_v1_channels__channel_id__schedule_get"];
         put?: never;
@@ -271,7 +271,7 @@ export interface paths {
         put?: never;
         /**
          * Check Channel Access
-         * @description Бот видит канал и может публиковать? В канал ничего не отправляется.
+         * @description Can the bot see the channel and post to it? Nothing is sent to the channel.
          */
         post: operations["check_channel_access_api_v1_channels__channel_id__check_post"];
         delete?: never;
@@ -308,7 +308,7 @@ export interface paths {
         put?: never;
         /**
          * Send Test Message
-         * @description Настоящее сообщение в канал (его увидят подписчики). Работает и без FLAG_TELEGRAM_PUBLISH.
+         * @description A real message to the channel (subscribers will see it). Works even without FLAG_TELEGRAM_PUBLISH.
          */
         post: operations["send_test_message_api_v1_channels__channel_id__test_post"];
         delete?: never;
@@ -363,7 +363,7 @@ export interface paths {
         put?: never;
         /**
          * Draft Copied
-         * @description Фиксация копирования поста (BE-T3.13); каждое копирование — отдельная запись.
+         * @description Records that a post was copied; every copy is a separate entry.
          */
         post: operations["draft_copied_api_v1_drafts__draft_id__copied_post"];
         delete?: never;
@@ -400,7 +400,7 @@ export interface paths {
         put?: never;
         /**
          * Translate Draft
-         * @description Перевод текущей версии на ru/en — новая версия; одинаковый текст переводится один раз (кеш).
+         * @description Translate the current version to ru/en as a new version; identical text is translated once (cached).
          */
         post: operations["translate_draft_api_v1_drafts__draft_id__translate_post"];
         delete?: never;
@@ -626,8 +626,8 @@ export interface paths {
         put?: never;
         /**
          * Approve Post
-         * @description «Одобрить»: текущий вариант поста — в «Готово»; уйдёт в каналы по их расписанию.
-         *     Работает и для первого автоматического варианта у нового события.
+         * @description Approve: the current post version becomes "Ready" and goes to channels on their schedules.
+         *     Also works for the first automatic version of a new event.
          */
         post: operations["approve_post_api_v1_feed__event_id__approve_post"];
         delete?: never;
@@ -647,8 +647,9 @@ export interface paths {
         put?: never;
         /**
          * Prepare Post
-         * @description «Подготовить пост»: событие берётся в работу (если ещё не взято) и получает новый пост —
-         *     от ИИ по формату редакции на языке канала или по шаблону. Модель — вне транзакции.
+         * @description Prepare post: the event is taken into work (if not already) and gets a new post,
+         *     written by AI in the editorial format in the channel's language, or from a template.
+         *     The model runs outside the transaction.
          */
         post: operations["prepare_post_api_v1_feed__event_id__prepare_post"];
         delete?: never;
@@ -668,8 +669,8 @@ export interface paths {
         put?: never;
         /**
          * Schedule Post
-         * @description «Запланировать»: одобрить текущий пост и закрепить его в канале на время.
-         *     Всё в одной транзакции: если пост в канал не уйдёт (язык, фильтры), ничего не меняется.
+         * @description Schedule: approve the current post and pin it in a channel at a time.
+         *     All in one transaction: if the post would not go to the channel (language, filters), nothing changes.
          */
         post: operations["schedule_post_api_v1_feed__event_id__schedule_post"];
         delete?: never;
@@ -711,7 +712,7 @@ export interface paths {
         head?: never;
         /**
          * Patch Me
-         * @description Предпочтения пользователя (BE-T5.3): язык, часовой пояс, горячие клавиши.
+         * @description User preferences: language, time zone, hotkeys.
          */
         patch: operations["patch_me_api_v1_me_patch"];
         trace?: never;
@@ -1124,7 +1125,7 @@ export interface paths {
         put?: never;
         /**
          * Dev Login
-         * @description Только local/e2e: вход без IdP. Маршрут регистрируется условно (main.py).
+         * @description local/e2e only: sign-in without an IdP. The route is registered conditionally (main.py).
          */
         post: operations["dev_login_auth_dev_login_post"];
         delete?: never;
@@ -1178,7 +1179,7 @@ export interface paths {
         put?: never;
         /**
          * Password Login
-         * @description Вход по e-mail и паролю — доступен всегда, в т.ч. без OIDC (ответ — как у GET /me).
+         * @description Sign in with e-mail and password: always available, including without OIDC (response as in GET /me).
          */
         post: operations["password_login_auth_password_login_post"];
         delete?: never;
@@ -1613,7 +1614,7 @@ export interface components {
         };
         /**
          * ChannelCheck
-         * @description Проверка подключения без публикации.
+         * @description Connection check without publishing.
          */
         ChannelCheck: {
             /** Bot Username */
@@ -1897,7 +1898,7 @@ export interface components {
         };
         /**
          * DraftChannel
-         * @description Канал с утверждением: публикует текущую версию после «Готово», если язык совпадает.
+         * @description Approval channel: publishes the current version after "Ready" if the language matches.
          */
         DraftChannel: {
             /** Active */
@@ -2134,7 +2135,7 @@ export interface components {
         };
         /**
          * EventBrief
-         * @description Схема ответа модели (constrained decoding в Ollama / tool input в Anthropic).
+         * @description Model response schema (constrained decoding in Ollama / tool input in Anthropic).
          */
         EventBrief: {
             /**
@@ -2829,7 +2830,7 @@ export interface components {
         };
         /**
          * PlannedPost
-         * @description Готовый к отправке пост события — то, что перетаскивают на календарь.
+         * @description An event post ready to send: what gets dragged onto the calendar.
          */
         PlannedPost: {
             /**
@@ -2850,7 +2851,7 @@ export interface components {
         };
         /**
          * ProblemDetail
-         * @description Тело ошибки RFC 9457 (CONV §5.2) — для контракта OpenAPI и TS-типов.
+         * @description RFC 9457 error body, for the OpenAPI contract and TS types.
          */
         ProblemDetail: {
             /** Code */
@@ -3355,7 +3356,7 @@ export interface components {
         SourceTier: "OFFICIAL" | "A" | "B" | "C" | "UNTRUSTED";
         /**
          * SourceUpdate
-         * @description PATCH: отсутствующее поле не меняется; null у nullable — сбросить (model_fields_set).
+         * @description PATCH: a missing field is left unchanged; null on a nullable field resets it (model_fields_set).
          */
         SourceUpdate: {
             /** Active */

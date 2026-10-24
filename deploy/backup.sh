@@ -1,7 +1,7 @@
 #!/bin/sh
-# Бэкап PostgreSQL: loop — дамп сразу и затем каждые BACKUP_INTERVAL_H часов;
-# once — один дамп сейчас; restore <файл> — восстановить базу из дампа (web и worker остановить).
-# Хранится BACKUP_KEEP последних дампов в /backups (на хосте — ./backups).
+# PostgreSQL backup: loop dumps now and then every BACKUP_INTERVAL_H hours;
+# once dumps now; restore <file> restores the database from a dump (stop web and worker first).
+# The last BACKUP_KEEP dumps are kept in /backups (./backups on the host).
 set -eu
 KEEP="${BACKUP_KEEP:-14}"
 INTERVAL_H="${BACKUP_INTERVAL_H:-24}"
@@ -9,7 +9,7 @@ INTERVAL_H="${BACKUP_INTERVAL_H:-24}"
 dump() {
 	f="/backups/sportintel-$(date -u +%Y%m%dT%H%M%SZ).dump"
 	pg_dump -Fc -f "$f.part"
-	mv "$f.part" "$f"  # недописанный дамп не выглядит готовым
+	mv "$f.part" "$f"  # an unfinished dump never looks complete
 	ls -1t /backups/sportintel-*.dump | tail -n +"$((KEEP + 1))" | xargs -r rm --
 	echo "backup: $f ($(du -h "$f" | cut -f1))"
 }
@@ -19,7 +19,7 @@ once) dump ;;
 loop)
 	until pg_isready -q; do sleep 2; done
 	while :; do
-		dump || echo "backup: FAILED" >&2  # healthcheck покажет, что свежего дампа нет
+		dump || echo "backup: FAILED" >&2  # the healthcheck will report the missing fresh dump
 		sleep "$((INTERVAL_H * 3600))"
 	done
 	;;

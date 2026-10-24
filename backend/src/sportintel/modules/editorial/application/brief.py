@@ -18,7 +18,7 @@ LANG_NAMES = {"ru": "Russian", "en": "English", "pt-BR": "Brazilian Portuguese"}
 
 
 class EventBrief(BaseModel):
-    """Схема ответа модели (constrained decoding в Ollama / tool input в Anthropic)."""
+    """Model response schema (constrained decoding in Ollama / tool input in Anthropic)."""
 
     # Даты нет: модель её выдумывала (eval 2026-10-09) — дату события подставляет код.
     headline: str = Field(max_length=140, description="What happened, one line")

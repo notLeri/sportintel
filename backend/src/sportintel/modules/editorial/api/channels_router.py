@@ -86,7 +86,7 @@ class QueuedPost(BaseModel):
 
 
 class PlannedPost(BaseModel):
-    """Готовый к отправке пост события — то, что перетаскивают на календарь."""
+    """An event post ready to send: what gets dragged onto the calendar."""
 
     event_id: uuid.UUID
     headline: str
@@ -112,7 +112,7 @@ class ChannelTestResult(BaseModel):
 
 
 class ChannelCheck(BaseModel):
-    """Проверка подключения без публикации."""
+    """Connection check without publishing."""
 
     title: str
     username: str | None  # есть — канал публичный
@@ -241,7 +241,7 @@ async def check_channel_access(
     request: Request,
     _: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> ChannelCheck:
-    """Бот видит канал и может публиковать? В канал ничего не отправляется."""
+    """Can the bot see the channel and post to it? Nothing is sent to the channel."""
     async with request.app.state.db.uow() as uow:
         ch = await _get(uow, channel_id)
     token = request.app.state.settings.telegram_bot_token
@@ -265,7 +265,7 @@ async def send_test_message(
     request: Request,
     _: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> ChannelTestResult:
-    """Настоящее сообщение в канал (его увидят подписчики). Работает и без FLAG_TELEGRAM_PUBLISH."""
+    """A real message to the channel (subscribers will see it). Works even without FLAG_TELEGRAM_PUBLISH."""
     async with request.app.state.db.uow() as uow:
         ch = await _get(uow, channel_id)
     try:
@@ -350,7 +350,7 @@ async def channel_schedule(
     request: Request,
     _: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> ChannelSchedule:
-    """Когда канал запустится и что отправит: те же правила, что у публикации, без отправки."""
+    """When the channel will run and what it will send: the same rules as publishing, without sending."""
     state = request.app.state
     now = state.clock.now()
     async with state.db.uow() as uow:
@@ -404,7 +404,7 @@ async def pin_post(
     request: Request,
     user: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> None:
-    """Закрепить пост события на время (перетаскивание на календарь). Только готовый к отправке."""
+    """Pin an event post to a time (dragging onto the calendar). Only posts ready to send."""
     state = request.app.state
     now = state.clock.now()
     if body.publish_at.tzinfo is None or not now <= body.publish_at <= now + PIN_AHEAD:
@@ -435,7 +435,7 @@ async def unpin_post(
     request: Request,
     user: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> None:
-    """Открепить: пост возвращается в обычную очередь по расписанию."""
+    """Unpin: the post returns to the regular scheduled queue."""
     async with request.app.state.db.uow() as uow:
         await _get(uow, channel_id)
         await SqlChannelRepository(uow.session).unpin(channel_id, event_id)
@@ -452,7 +452,7 @@ async def send_post_now(
     request: Request,
     user: Annotated[identity.CurrentUser, identity.require(P.CHANNELS_MANAGE)],
 ) -> RunResult:
-    """Отправить один готовый пост сразу — вне расписания и закрепления (как «Запустить сейчас»)."""
+    """Send one ready post right away, outside the schedule and pins (like "Run now")."""
     if not flags.is_enabled("TELEGRAM_PUBLISH"):
         raise ValidationFailed(
             details=[FieldError("mode", "publish_disabled", "FLAG_TELEGRAM_PUBLISH is off")]
