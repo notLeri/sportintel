@@ -1211,7 +1211,7 @@
         "type": "object"
       },
       "ChannelCheck": {
-        "description": "Проверка подключения без публикации.",
+        "description": "Connection check without publishing.",
         "properties": {
           "bot_username": {
             "title": "Bot Username",
@@ -2005,7 +2005,7 @@
         "type": "object"
       },
       "DraftChannel": {
-        "description": "Канал с утверждением: публикует текущую версию после «Готово», если язык совпадает.",
+        "description": "Approval channel: publishes the current version after \"Ready\" if the language matches.",
         "properties": {
           "active": {
             "title": "Active",
@@ -2736,7 +2736,7 @@
         "type": "object"
       },
       "EventBrief": {
-        "description": "Схема ответа модели (constrained decoding в Ollama / tool input в Anthropic).",
+        "description": "Model response schema (constrained decoding in Ollama / tool input in Anthropic).",
         "properties": {
           "actions": {
             "description": "Concrete next steps for an editor or a trader, e.g. what to monitor",
@@ -4874,7 +4874,7 @@
         "type": "object"
       },
       "PlannedPost": {
-        "description": "Готовый к отправке пост события — то, что перетаскивают на календарь.",
+        "description": "An event post ready to send: what gets dragged onto the calendar.",
         "properties": {
           "event_id": {
             "format": "uuid",
@@ -4928,7 +4928,7 @@
         "type": "object"
       },
       "ProblemDetail": {
-        "description": "Тело ошибки RFC 9457 (CONV §5.2) — для контракта OpenAPI и TS-типов.",
+        "description": "RFC 9457 error body, for the OpenAPI contract and TS types.",
         "properties": {
           "code": {
             "title": "Code",
@@ -6238,7 +6238,7 @@
         "type": "string"
       },
       "SourceUpdate": {
-        "description": "PATCH: отсутствующее поле не меняется; null у nullable — сбросить (model_fields_set).",
+        "description": "PATCH: a missing field is left unchanged; null on a nullable field resets it (model_fields_set).",
         "properties": {
           "active": {
             "anyOf": [
@@ -7033,7 +7033,7 @@
   "paths": {
     "/api/v1/ai/progress": {
       "get": {
-        "description": "Что ИИ пишет сейчас (сколько прошло из обычного) и сколько ждут очереди.",
+        "description": "What AI is writing now (elapsed versus usual) and how much is waiting in the queues.",
         "operationId": "progress_api_v1_ai_progress_get",
         "responses": {
           "200": {
@@ -8044,7 +8044,7 @@
     },
     "/api/v1/channels/{channel_id}/pins/{event_id}": {
       "delete": {
-        "description": "Открепить: пост возвращается в обычную очередь по расписанию.",
+        "description": "Unpin: the post returns to the regular scheduled queue.",
         "operationId": "unpin_post_api_v1_channels__channel_id__pins__event_id__delete",
         "parameters": [
           {
@@ -8113,7 +8113,7 @@
         "x-permission": "channels.manage"
       },
       "put": {
-        "description": "Закрепить пост события на время (перетаскивание на календарь). Только готовый к отправке.",
+        "description": "Pin an event post to a time (dragging onto the calendar). Only posts ready to send.",
         "operationId": "pin_post_api_v1_channels__channel_id__pins__event_id__put",
         "parameters": [
           {
@@ -8194,7 +8194,7 @@
     },
     "/api/v1/channels/{channel_id}/posts/{event_id}:send": {
       "post": {
-        "description": "Отправить один готовый пост сразу — вне расписания и закрепления (как «Запустить сейчас»).",
+        "description": "Send one ready post right away, outside the schedule and pins (like \"Run now\").",
         "operationId": "send_post_now_api_v1_channels__channel_id__posts__event_id__send_post",
         "parameters": [
           {
@@ -8339,7 +8339,7 @@
     },
     "/api/v1/channels/{channel_id}/schedule": {
       "get": {
-        "description": "Когда канал запустится и что отправит: те же правила, что у публикации, без отправки.",
+        "description": "When the channel will run and what it will send: the same rules as publishing, without sending.",
         "operationId": "channel_schedule_api_v1_channels__channel_id__schedule_get",
         "parameters": [
           {
@@ -8407,7 +8407,7 @@
     },
     "/api/v1/channels/{channel_id}:check": {
       "post": {
-        "description": "Бот видит канал и может публиковать? В канал ничего не отправляется.",
+        "description": "Can the bot see the channel and post to it? Nothing is sent to the channel.",
         "operationId": "check_channel_access_api_v1_channels__channel_id__check_post",
         "parameters": [
           {
@@ -8542,7 +8542,7 @@
     },
     "/api/v1/channels/{channel_id}:test": {
       "post": {
-        "description": "Настоящее сообщение в канал (его увидят подписчики). Работает и без FLAG_TELEGRAM_PUBLISH.",
+        "description": "A real message to the channel (subscribers will see it). Works even without FLAG_TELEGRAM_PUBLISH.",
         "operationId": "send_test_message_api_v1_channels__channel_id__test_post",
         "parameters": [
           {
@@ -8828,7 +8828,7 @@
     },
     "/api/v1/drafts/{draft_id}:copied": {
       "post": {
-        "description": "Фиксация копирования поста (BE-T3.13); каждое копирование — отдельная запись.",
+        "description": "Records that a post was copied; every copy is a separate entry.",
         "operationId": "draft_copied_api_v1_drafts__draft_id__copied_post",
         "parameters": [
           {
@@ -8976,7 +8976,7 @@
     },
     "/api/v1/drafts/{draft_id}:translate": {
       "post": {
-        "description": "Перевод текущей версии на ru/en — новая версия; одинаковый текст переводится один раз (кеш).",
+        "description": "Translate the current version to ru/en as a new version; identical text is translated once (cached).",
         "operationId": "translate_draft_api_v1_drafts__draft_id__translate_post",
         "parameters": [
           {
@@ -10599,7 +10599,7 @@
     },
     "/api/v1/feed/{event_id}:approve": {
       "post": {
-        "description": "«Одобрить»: текущий вариант поста — в «Готово»; уйдёт в каналы по их расписанию.\nРаботает и для первого автоматического варианта у нового события.",
+        "description": "Approve: the current post version becomes \"Ready\" and goes to channels on their schedules.\nAlso works for the first automatic version of a new event.",
         "operationId": "approve_post_api_v1_feed__event_id__approve_post",
         "parameters": [
           {
@@ -10660,7 +10660,7 @@
     },
     "/api/v1/feed/{event_id}:prepare": {
       "post": {
-        "description": "«Подготовить пост»: событие берётся в работу (если ещё не взято) и получает новый пост —\nот ИИ по формату редакции на языке канала или по шаблону. Модель — вне транзакции.",
+        "description": "Prepare post: the event is taken into work (if not already) and gets a new post,\nwritten by AI in the editorial format in the channel's language, or from a template.\nThe model runs outside the transaction.",
         "operationId": "prepare_post_api_v1_feed__event_id__prepare_post",
         "parameters": [
           {
@@ -10731,7 +10731,7 @@
     },
     "/api/v1/feed/{event_id}:schedule": {
       "post": {
-        "description": "«Запланировать»: одобрить текущий пост и закрепить его в канале на время.\nВсё в одной транзакции: если пост в канал не уйдёт (язык, фильтры), ничего не меняется.",
+        "description": "Schedule: approve the current post and pin it in a channel at a time.\nAll in one transaction: if the post would not go to the channel (language, filters), nothing changes.",
         "operationId": "schedule_post_api_v1_feed__event_id__schedule_post",
         "parameters": [
           {
@@ -10922,7 +10922,7 @@
         "x-permission": "self.read"
       },
       "patch": {
-        "description": "Предпочтения пользователя (BE-T5.3): язык, часовой пояс, горячие клавиши.",
+        "description": "User preferences: language, time zone, hotkeys.",
         "operationId": "patch_me_api_v1_me_patch",
         "requestBody": {
           "content": {
@@ -13291,7 +13291,7 @@
     },
     "/auth/dev-login": {
       "post": {
-        "description": "Только local/e2e: вход без IdP. Маршрут регистрируется условно (main.py).",
+        "description": "local/e2e only: sign-in without an IdP. The route is registered conditionally (main.py).",
         "operationId": "dev_login_auth_dev_login_post",
         "requestBody": {
           "content": {
@@ -13478,7 +13478,7 @@
     },
     "/auth/password-login": {
       "post": {
-        "description": "Вход по e-mail и паролю — доступен всегда, в т.ч. без OIDC (ответ — как у GET /me).",
+        "description": "Sign in with e-mail and password: always available, including without OIDC (response as in GET /me).",
         "operationId": "password_login_auth_password_login_post",
         "requestBody": {
           "content": {

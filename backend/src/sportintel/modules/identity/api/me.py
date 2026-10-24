@@ -112,7 +112,7 @@ class MePatch(BaseModel):
 async def patch_me(
     body: MePatch, request: Request, user: Annotated[CurrentUser, require(Permission.SELF_READ)]
 ) -> MeResponse:
-    """Предпочтения пользователя (BE-T5.3): язык, часовой пояс, горячие клавиши."""
+    """User preferences: language, time zone, hotkeys."""
     patch = {
         k: (v.value if isinstance(v, Locale) else v)
         for k, v in body.model_dump(exclude_unset=True).items()
@@ -148,7 +148,7 @@ class DevLoginRequest(BaseModel):
 
 @dev_router.post("/dev-login", openapi_extra=route_permission("public"), response_model=MeResponse)
 async def dev_login(body: DevLoginRequest, request: Request) -> JSONResponse:
-    """Только local/e2e: вход без IdP. Маршрут регистрируется условно (main.py)."""
+    """local/e2e only: sign-in without an IdP. The route is registered conditionally (main.py)."""
     state = request.app.state
     now = state.clock.now()
     async with state.db.uow() as uow:

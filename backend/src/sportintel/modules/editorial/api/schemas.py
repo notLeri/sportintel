@@ -60,7 +60,7 @@ class VersionBrief(BaseModel):
 
 
 class DraftChannel(BaseModel):
-    """Канал с утверждением: публикует текущую версию после «Готово», если язык совпадает."""
+    """Approval channel: publishes the current version after "Ready" if the language matches."""
 
     name: str
     language: str

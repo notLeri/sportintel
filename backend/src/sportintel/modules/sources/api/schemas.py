@@ -113,7 +113,7 @@ class SourceCreate(BaseModel):
 
 
 class SourceUpdate(BaseModel):
-    """PATCH: отсутствующее поле не меняется; null у nullable — сбросить (model_fields_set)."""
+    """PATCH: a missing field is left unchanged; null on a nullable field resets it (model_fields_set)."""
 
     name: str | None = Field(default=None, max_length=120)
     base_url: str | None = Field(default=None, max_length=2048)

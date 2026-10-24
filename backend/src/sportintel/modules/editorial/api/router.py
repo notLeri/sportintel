@@ -270,7 +270,7 @@ async def draft_copied(
     request: Request,
     user: Annotated[identity.CurrentUser, identity.require(P.DRAFTS_WRITE)],
 ) -> Response:
-    """Фиксация копирования поста (BE-T3.13); каждое копирование — отдельная запись."""
+    """Records that a post was copied; every copy is a separate entry."""
     async with request.app.state.db.uow() as uow:
         repo = _repo(uow)
         d = await repo.get(draft_id)
@@ -298,7 +298,7 @@ async def translate_draft(
     response: Response,
     user: Annotated[identity.CurrentUser, identity.require(P.DRAFTS_WRITE)],
 ) -> DraftDetail:
-    """Перевод текущей версии на ru/en — новая версия; одинаковый текст переводится один раз (кеш)."""
+    """Translate the current version to ru/en as a new version; identical text is translated once (cached)."""
     state = request.app.state
     async with state.db.uow() as uow:
         d = await _repo(uow).get(draft_id)

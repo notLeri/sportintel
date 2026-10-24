@@ -72,7 +72,7 @@ def _calls_per_event(st: dict[str, Any] | None) -> float:
 async def progress(
     request: Request, _: Annotated[identity.CurrentUser, identity.require(P.EVENTS_READ)]
 ) -> AiProgress:
-    """Что ИИ пишет сейчас (сколько прошло из обычного) и сколько ждут очереди."""
+    """What AI is writing now (elapsed versus usual) and how much is waiting in the queues."""
     state = request.app.state
     backlog = await editorial.ai_backlog(state.db, state.clock)
     langs: Any = await settings_store.get(state.db, "languages")

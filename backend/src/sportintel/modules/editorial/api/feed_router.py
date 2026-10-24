@@ -216,8 +216,9 @@ async def prepare_post(
     expected_version: Annotated[int, Depends(parse_if_match)],
     user: Annotated[identity.CurrentUser, identity.require(P.DRAFTS_WRITE)],
 ) -> Response:
-    """«Подготовить пост»: событие берётся в работу (если ещё не взято) и получает новый пост —
-    от ИИ по формату редакции на языке канала или по шаблону. Модель — вне транзакции."""
+    """Prepare post: the event is taken into work (if not already) and gets a new post,
+    written by AI in the editorial format in the channel's language, or from a template.
+    The model runs outside the transaction."""
     state = request.app.state
     limit_ai_generate(user.id)
     mode = await drafts_api._mode(request, body.mode)
@@ -311,8 +312,8 @@ async def approve_post(
     expected_version: Annotated[int, Depends(parse_if_match)],
     user: Annotated[identity.CurrentUser, identity.require(P.EVENTS_TRANSITION)],
 ) -> Response:
-    """«Одобрить»: текущий вариант поста — в «Готово»; уйдёт в каналы по их расписанию.
-    Работает и для первого автоматического варианта у нового события."""
+    """Approve: the current post version becomes "Ready" and goes to channels on their schedules.
+    Also works for the first automatic version of a new event."""
     state = request.app.state
     async with state.db.uow() as uow:
         await uow.advisory_xact_lock(f"draft:{event_id}")
@@ -333,8 +334,8 @@ async def schedule_post(
     expected_version: Annotated[int, Depends(parse_if_match)],
     user: Annotated[identity.CurrentUser, identity.require(P.EVENTS_TRANSITION)],
 ) -> Response:
-    """«Запланировать»: одобрить текущий пост и закрепить его в канале на время.
-    Всё в одной транзакции: если пост в канал не уйдёт (язык, фильтры), ничего не меняется."""
+    """Schedule: approve the current post and pin it in a channel at a time.
+    All in one transaction: if the post would not go to the channel (language, filters), nothing changes."""
     state = request.app.state
     now = state.clock.now()
     if body.publish_at.tzinfo is None or not now <= body.publish_at <= now + PIN_AHEAD:
